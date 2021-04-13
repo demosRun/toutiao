@@ -1,0 +1,32 @@
+<template lang="pug">
+.home.clear.main.w1000
+</template>
+
+<script>
+  module.exports = {
+    show: function () {
+      fetch("http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/2021_04_13_2-01.htm")
+      .then(response => response.text())
+      .then(result => {
+        console.log(result)
+        this.$el.innerHTML = result
+      })
+      .catch(error => console.log('error', error));
+      
+    },
+    copyText: function () {
+      owo.tool.notice('复制成功!')
+    },
+    huaxian: function () {
+      let parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode
+      parentElement = parentElement.innerHTML
+      parentElement = parentElement.replace(etSelectedText(), `<span class="underline">${etSelectedText()}</span>`)
+      window.getSelection().focusNode.parentElement.innerHTML = parentElement
+    }
+  }
+</script>
+
+
+<style lang="less">
+
+</style>

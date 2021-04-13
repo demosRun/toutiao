@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <!-- 页面的元信息 -->
+    <title>测试预览页面</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=1000, user-scalable=yes"/>
+    <meta name="format-detection" content="telephone=no, email=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="white"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="filetype" content="1"/>
+    <meta name="publishedtype" content="1"/>
+    <meta name="pagetype" content="2"/>
+    <meta name="description" content="{TAG_59447_TAG}"/>
+    <meta name="keywords" content="{TAG_59446_TAG}"/>
+    <meta name="catalogs" content="{TAG_83943_TAG}"/>
+    
+      <!-- 页面主样式文件 -->
+      <link charset="utf-8"  rel="stylesheet" href="./static/css/owo.core.css">
+      
+    <!-- 附属css文件 -->
+    <link rel="stylesheet" href="./static/css/main.css" charset="utf-8">
+    <link rel="stylesheet" href="http://paper.people.com.cn/rmrb/tplimg/default.css" charset="utf-8">
+    <link rel="stylesheet" href="http://paper.people.com.cn/rmrb/tplimg/swiper.min.css" charset="utf-8">
+      
+  </head>
+  <body>
+    
+    <!-- 页面[page]-->
+    <div class="home clear main w1000 page" template="page" style="display: block;"></div>
+    
+<!-- 框架script文件 -->
+<script src="./static/js/owo.core.js" type="text/javascript" charset="UTF-8"></script>
+<script type="text/javascript" charset="UTF-8">
+owo.script = {
+  "page": {
+    "show": function show() {
+      var _this = this;
+
+      fetch("http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/2021_04_13_2-01.htm").then(function (response) {
+        return response.text();
+      }).then(function (result) {
+        console.log(result);
+        _this.$el.innerHTML = result;
+      })["catch"](function (error) {
+        return console.log('error', error);
+      });
+    },
+    "copyText": function copyText() {
+      owo.tool.notice('复制成功!');
+    },
+    "huaxian": function huaxian() {
+      var parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode;
+      parentElement = parentElement.innerHTML;
+      parentElement = parentElement.replace(etSelectedText(), "<span class=\"underline\">" + etSelectedText() + "</span>");
+      window.getSelection().focusNode.parentElement.innerHTML = parentElement;
+    }
+  }
+};
+</script>
+
+    <script src="https://cunchu.site/owo/script/idangerous.swiper2.7.6.min.js" type="text/javascript"  charset="UTF-8"></script>
+    <script src="./static/js/main.js" type="text/javascript"  charset="UTF-8"></script>
+
+    <script src="./static/js/notice.js" type="text/javascript"  charset="UTF-8"></script>
+  </body>
+</html>

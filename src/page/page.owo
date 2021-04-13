@@ -1,0 +1,181 @@
+<template lang="pug">
+.home.clear
+  .left-bar.fl
+    select
+      option(value ="2021") 2021年4月1日版
+    img.shousuo(src="@|shousuo.svg|")
+    .map
+    ul
+  .paper-show.fl
+    .paper-box
+      h1 《求是》杂志发表习近平总书记重要文章<br>在党史学习教育动员大会上的讲话
+      h5 《 人民日报 》（ 2021年04月01日   第 01 版）
+      .line 
+      p 新华社北京3月31日电  4月1日出版的第7期《求是》杂志<b>sss</b>将发表中共中央总书记、国家主席、中央军委主席习近平的重要文章《在党史学习教育动员大会上的讲话》。
+      p 文章强调，在全党开展党史学习教育，是党中央立足党的百年历史新起点、统筹中华民族伟大复兴战略全局和世界百年未有之大变局、为动员全党全国满怀信心投身全面建设社会主义现代化国家而作出的重大决策。全党同志要做到学史明理、学史增信、学史崇德、学史力行，学党史、悟思想、办实事、开新局，以昂扬姿态奋力开启全面建设社会主义现代化国家新征程，以优异成绩迎接建党一百周年！
+      p 文章指出，开展党史学习教育意义重大。我们党历来重视党史学习教育。在庆祝我们党百年华诞的重大时刻，在“两个一百年”奋斗目标历史交汇的关键节点，在全党集中开展党史学习教育，正当其时，十分必要。在全党开展党史学习教育，是牢记初心使命、推进中华民族伟大复兴历史伟业的必然要求，是坚定信仰信念、在新时代坚持和发展中国特色社会主义的必然要求，是推进党的自我革命、永葆党的生机活力的必然要求。
+      p 文章指出，开展党史学习教育要突出重点。第一，进一步感悟思想伟力，增强用党的创新理论武装全党的政治自觉。第二，进一步把握历史发展规律和大势，始终掌握党和国家事业发展的历史主动。第三，进一步深化对党的性质宗旨的认识，始终保持马克思主义政党的鲜明本色。第四，进一步总结党的历史经验，不断提高应对风险挑战的能力水平。第五，进一步发扬革命精神，始终保持艰苦奋斗的昂扬精神。第六，进一步增强党的团结和集中统一，确保全党步调一致向前进。
+      p 文章指出，在全党开展党史学习教育要务求实效。全党要高度重视，提高思想站位，立足实际、守正创新，高标准高质量完成学习教育各项任务。一是要加强组织领导。二是要树立正确党史观。三是要切实为群众办实事解难题。四是要注重方式方法创新。要在全社会广泛开展党史、新中国史、改革开放史、社会主义发展史宣传教育，普及党史知识，推动党史学习教育深入群众、深入基层、深入人心。
+  #menu
+    .menu(o-tap="copyText()") 复制
+    .menu(o-tap="huaxian()") 划线
+    .menu(o-tap="beijing()") 加背景
+    .menu(o-tap="biji()") 做笔记
+  
+  </div>
+</template>
+
+<script>
+  module.exports = {
+    show: function () {
+      fetch("http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getData")
+      .then(response => response.json())
+      .then(result => {
+        console.log(result)
+        this.query('.left-bar ul').innerHTML = result.list
+        this.query('.left-bar .map').innerHTML = result.map
+      })
+      .catch(error => console.log('error', error));
+      
+    },
+    copyText: function () {
+      owo.tool.notice('复制成功!')
+    },
+    huaxian: function () {
+      let parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode
+      parentElement = parentElement.innerHTML
+      parentElement = parentElement.replace(etSelectedText(), `<span class="underline">${etSelectedText()}</span>`)
+      window.getSelection().focusNode.parentElement.innerHTML = parentElement
+    }
+  }
+</script>
+
+
+<style lang="less">
+.left-bar {
+  width: 400px;
+  text-align: left;
+  line-height: 34px;
+  font-size: 18px;
+  background-color: white;
+  box-shadow: 2px 1px 7px #ccc;
+  position: relative;
+  ul {
+    height: calc(100% - 635px);
+    overflow: auto;
+  }
+}
+.home, .left-bar, .news-list {
+  height: 100%;
+}
+.news-list {
+  font-size: 18px;
+  line-height: 1.7;
+  padding: 0 10px;
+  background-color: aliceblue;
+}
+li {
+  padding: 5px 0;
+  padding-left: 20px;
+  padding-right: 5px;
+  border-bottom: 1px solid #caebfb;
+  background-image: url('@|doit.svg|');
+  background-repeat: no-repeat;
+  background-size: 20px;
+  background-position: 0px 12px;
+}
+.shousuo {
+  position: absolute;
+  right: -43px;
+  bottom: 5px;
+}
+.paper-show {
+  width: calc(100% - 400px);
+  height: 100%;
+  position: relative;
+}
+.paper-box {
+  width: 88%;
+  height: 97%;
+  background-color: white;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+.paper-box {
+  padding: 25px;
+  border-radius: 5px;
+  padding-top: 20px;
+  box-shadow: 1px 1px 4px #ccc;
+  h2 {
+    line-height: 54px;
+    font-size: 22px;
+  }
+  h4 {
+    line-height: 34px;
+    color: #666;
+    font-size: 16px;
+  }
+  h1 {
+    line-height: 35px;
+    color: #000;
+    margin-bottom: 20px;
+  }
+  .line {
+    border-bottom: 1px solid #ccc;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    width: 80%;
+  }
+  p {
+    font-size: 20px;
+    line-height: 1.7;
+    text-indent: 2em;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+  h5 {
+    color: #666;
+    font-size: 15px;
+  }
+}
+select {
+  width: 100%;
+  text-align: center;
+  padding: 0 10px;
+  background-color: gainsboro;
+  line-height: 40px;
+}
+#menu {
+  width: 125px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px #888, 1px 0 1px #ccc;
+  position: absolute;
+  border-radius: 3px;
+  font-size: 20px;
+  line-height: 40px;
+  background-color: aliceblue;
+  height: 0;
+  user-select: none;
+}
+.menu {
+  height: 30px;
+  line-height: 30px;
+  text-align: left;
+  font-size: 18px;
+  padding: 0 10px;
+}
+.menu:hover {
+  cursor: pointer;
+  background-color: gainsboro;
+}
+.map {
+  width: 400px;
+  height: 600px;
+  position: relative;
+}
+</style>
