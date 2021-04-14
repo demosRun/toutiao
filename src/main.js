@@ -29,31 +29,21 @@ const Tool = {
         randomString:function(n){const str = 'abcdefghijklmnopqrstuvwxyz9876543210';let tmp = '',i = 0,l = str.length;for (i = 0; i < n; i++) {tmp += str.charAt(Math.floor(Math.random() * l));}return tmp;},
     },
 }
-// document.querySelector('.paper-box').oncontextmenu=function(e){
-//   //取消默认的浏览器自带右键 很重要！！
-  
-//   e.preventDefault();
-//   //获取我们自定义的右键菜单
-//   var menu=document.querySelector("#menu");
-//   //根据事件对象中鼠标点击的位置，进行定位
-//   menu.style.left=e.clientX+'px';
-//   menu.style.top=e.clientY+'px';
-//   //改变自定义菜单的高宽，让它显示出来
-//   menu.style.height='125px';
-// }
-// //关闭右键菜单，很简单
-// window.onclick=function(e){
-//   // 用户触发click事件就可以关闭了，因为绑定在window上，按事件冒泡处理，不会影响菜单的功能
-//   document.querySelector('#menu').style.height = 0;
-// }
-// function etSelectedText() {
-//   if (window.getSelection) {
-//     return window.getSelection().toString();
-//   } else if (document.selection) {
-//     return document.selection.createRange().text;
-//   }
-//   return ''
-// }
+
+
+//关闭右键菜单，很简单
+window.onclick=function(e){
+  // 用户触发click事件就可以关闭了，因为绑定在window上，按事件冒泡处理，不会影响菜单的功能
+  document.querySelector('#menu').style.height = 0;
+}
+function etSelectedText() {
+  if (window.getSelection) {
+    return window.getSelection().toString();
+  } else if (document.selection) {
+    return document.selection.createRange().text;
+  }
+  return ''
+}
 
 // window.onhashchange = function(ev) {
 //   const temp = location.hash.replace('#', '')

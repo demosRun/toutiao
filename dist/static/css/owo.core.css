@@ -54,5 +54,67 @@ li {
   list-style: none;
 }
 
+#menu {
+  width: 125px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px #888, 1px 0 1px #ccc;
+  position: absolute;
+  border-radius: 3px;
+  font-size: 20px;
+  line-height: 40px;
+  background-color: aliceblue;
+  height: 0;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  top: 1137px;
+  left: 1150px;
+  right: 0;
+  margin: auto;
+}
 
+.menu {
+  height: 30px;
+  line-height: 30px;
+  text-align: left;
+  font-size: 18px;
+  padding: 0 10px;
+}
+
+.menu:hover {
+  cursor: pointer;
+  background-color: gainsboro;
+}
+
+.underline {
+  cursor: pointer;
+}
+
+#tool-menu {
+  position: absolute;
+  left: 1150px;
+  right: 0;
+  margin: auto;
+  width: 125px;
+  cursor: pointer;
+  display: none;
+}
+
+#tool-menu .text {
+  display: block;
+  background-color: #f4f4f4;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.beijing {
+  background: #ff0;
+}
+
+.memo {
+  background: #f4f4f4;
+  border-bottom: 1px dashed #ccc;
+  cursor: pointer;
+}
 

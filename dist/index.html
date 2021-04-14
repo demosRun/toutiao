@@ -29,24 +29,18 @@
   <body>
     
     <!-- 页面[page]-->
-    <div class="home clear main w1000 page" template="page" style="display: block;"></div>
+    <div class="dubao-box page" template="page" style="display: block;"><div id="menu"><div class="menu" o-tap="copyText()">复制</div><div class="menu" o-tap="huaxian()">划线</div><div class="menu" o-tap="beijing()">加背景</div><div class="menu" o-tap="biji()">做笔记</div><div class="menu" o-tap="langdu()">朗读</div></div><div id="tool-menu"><img class="tool-clear" src="./static/resource/clear.svg" o-tap="clear()"><div class="text"></div></div><div class="home clear main w1000"></div></div>
     
 <!-- 框架script文件 -->
 <script src="./static/js/owo.core.js" type="text/javascript" charset="UTF-8"></script>
 <script type="text/javascript" charset="UTF-8">
 owo.script = {
   "page": {
-    "show": function show() {
-      var _this = this;
-
-      fetch("http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/2021_04_13_2-01.htm").then(function (response) {
-        return response.text();
-      }).then(function (result) {
-        console.log(result);
-        _this.$el.innerHTML = result;
-      })["catch"](function (error) {
-        return console.log('error', error);
-      });
+    "data": {
+      "activeEl": null
+    },
+    "created": function created(params) {
+      getData('2021');
     },
     "copyText": function copyText() {
       owo.tool.notice('复制成功!');
@@ -54,8 +48,96 @@ owo.script = {
     "huaxian": function huaxian() {
       var parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode;
       parentElement = parentElement.innerHTML;
-      parentElement = parentElement.replace(etSelectedText(), "<span class=\"underline\">" + etSelectedText() + "</span>");
+      parentElement = parentElement.replace(etSelectedText(), "<span class=\"dubao underline\">" + etSelectedText() + "</span>");
       window.getSelection().focusNode.parentElement.innerHTML = parentElement;
+      this.query('#menu').style.height = '0';
+      this.initText();
+    },
+    "beijing": function beijing() {
+      var parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode;
+      parentElement = parentElement.innerHTML;
+      parentElement = parentElement.replace(etSelectedText(), "<span class=\"dubao beijing\">" + etSelectedText() + "</span>");
+      window.getSelection().focusNode.parentElement.innerHTML = parentElement;
+      this.query('#menu').style.height = '0';
+      this.initText();
+    },
+    "biji": function biji() {
+      var parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode;
+      parentElement = parentElement.innerHTML;
+      var word = prompt("请输入笔记内容!", "");
+
+      if (word) {
+        parentElement = parentElement.replace(etSelectedText(), "<span class=\"dubao memo\" text=\"" + word + "\">" + etSelectedText() + "</span>");
+        window.getSelection().focusNode.parentElement.innerHTML = parentElement;
+        this.query('#menu').style.height = '0';
+        this.initText();
+      }
+    },
+    "initText": function initText() {
+      var _this = this;
+
+      this.queryAll('.dubao').forEach(function (element) {
+        element.onmouseenter = function (e) {
+          _this.data.activeEl = e.target; // 判断是否是标注
+
+          if (e.target.getAttribute("text")) {
+            document.querySelector('#tool-menu .text').innerText = e.target.getAttribute("text");
+            document.querySelector('#tool-menu .text').style.display = 'block';
+            document.querySelector('#tool-menu .tool-clear').style.display = 'none';
+          } else {
+            document.querySelector('#tool-menu .text').style.display = 'none';
+            document.querySelector('#tool-menu .tool-clear').style.display = 'block';
+          }
+
+          document.querySelector('#tool-menu').style.top = e.clientY - 30 + 'px';
+          document.querySelector('#tool-menu').style.display = 'block';
+        }; // element.onmouseleave = function (e) {
+        //   document.querySelector('#tool-menu').style.display = 'none'
+        // }
+
+      });
+    },
+    "initPaper": function initPaper() {
+      var _this2 = this;
+
+      // document.querySelector('.article').oncontextmenu=function(e){
+      //   //取消默认的浏览器自带右键 很重要！！
+      //   e.preventDefault();
+      //   //获取我们自定义的右键菜单
+      //   var menu=document.querySelector("#menu");
+      //   //根据事件对象中鼠标点击的位置，进行定位
+      //   menu.style.left=e.clientX+'px';
+      //   menu.style.top=e.clientY+'px';
+      //   //改变自定义菜单的高宽，让它显示出来
+      //   menu.style.height='125px';
+      // }
+      window.onmouseup = function () {
+        var selectText = etSelectedText();
+
+        if (selectText.length) {
+          var parent = window.getSelection().baseNode.parentElement;
+          var textIndex = parent.innerText.indexOf(selectText);
+          _this2.query('#menu').style.top = parent.offsetTop + Math.ceil(textIndex / 35) * 27 + 'px';
+          _this2.query('#menu').style.height = 'auto';
+          document.querySelector('#tool-menu').style.display = 'none';
+        } else {
+          _this2.query('#menu').style.height = '0';
+        }
+      };
+
+      this.initText();
+    },
+    "langdu": function langdu() {
+      var selectText = etSelectedText();
+      var audio = new Audio("http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=4&text=" + selectText); //这里的路径写上mp3文件在项目中的绝对路径
+
+      audio.play(); //播放
+
+      this.query('#menu').style.height = '0';
+    },
+    "clear": function clear() {
+      this.data.activeEl.outerHTML = this.data.activeEl.innerHTML;
+      document.querySelector('#tool-menu').style.display = 'none';
     }
   }
 };

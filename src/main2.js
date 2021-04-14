@@ -29,23 +29,23 @@ const Tool = {
         randomString:function(n){const str = 'abcdefghijklmnopqrstuvwxyz9876543210';let tmp = '',i = 0,l = str.length;for (i = 0; i < n; i++) {tmp += str.charAt(Math.floor(Math.random() * l));}return tmp;},
     },
 }
-document.querySelector('.paper-box').oncontextmenu=function(e){
-  //取消默认的浏览器自带右键 很重要！！
+// document.querySelector('.paper-box').oncontextmenu=function(e){
+//   //取消默认的浏览器自带右键 很重要！！
   
-  e.preventDefault();
-  //获取我们自定义的右键菜单
-  var menu=document.querySelector("#menu");
-  //根据事件对象中鼠标点击的位置，进行定位
-  menu.style.left=e.clientX+'px';
-  menu.style.top=e.clientY+'px';
-  //改变自定义菜单的高宽，让它显示出来
-  menu.style.height='125px';
-}
+//   e.preventDefault();
+//   //获取我们自定义的右键菜单
+//   var menu=document.querySelector("#menu");
+//   //根据事件对象中鼠标点击的位置，进行定位
+//   menu.style.left=e.clientX+'px';
+//   menu.style.top=e.clientY+'px';
+//   //改变自定义菜单的高宽，让它显示出来
+//   menu.style.height='125px';
+// }
 //关闭右键菜单，很简单
-window.onclick=function(e){
-  // 用户触发click事件就可以关闭了，因为绑定在window上，按事件冒泡处理，不会影响菜单的功能
-  document.querySelector('#menu').style.height = 0;
-}
+// window.onclick=function(e){
+//   // 用户触发click事件就可以关闭了，因为绑定在window上，按事件冒泡处理，不会影响菜单的功能
+//   document.querySelector('#menu').style.height = 0;
+// }
 function etSelectedText() {
   if (window.getSelection) {
     return window.getSelection().toString();
@@ -57,11 +57,17 @@ function etSelectedText() {
 
 window.onhashchange = function(ev) {
   const temp = location.hash.replace('#', '')
-  fetch(`http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getPaper/${temp}`)
+  getData(temp)
+}
+
+function getData (part) {
+  fetch("http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/" + part)
   .then(response => response.text())
   .then(result => {
-    console.log(result)
-    document.querySelector('.paper-box').innerHTML = result
+    // console.log(result)
+    document.querySelector('.home').innerHTML = result
+    owo.script.page.initPaper()
   })
-  .catch(error => console.log('error', error))
+  .catch(error => console.log('error', error));
+  
 }

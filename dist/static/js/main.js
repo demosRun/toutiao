@@ -41,31 +41,33 @@ const Tool = {
 //   //改变自定义菜单的高宽，让它显示出来
 //   menu.style.height='125px';
 // }
-// //关闭右键菜单，很简单
+//关闭右键菜单，很简单
 // window.onclick=function(e){
 //   // 用户触发click事件就可以关闭了，因为绑定在window上，按事件冒泡处理，不会影响菜单的功能
 //   document.querySelector('#menu').style.height = 0;
 // }
-// function etSelectedText() {
-//   if (window.getSelection) {
-//     return window.getSelection().toString();
-//   } else if (document.selection) {
-//     return document.selection.createRange().text;
-//   }
-//   return ''
-// }
+function etSelectedText() {
+  if (window.getSelection) {
+    return window.getSelection().toString();
+  } else if (document.selection) {
+    return document.selection.createRange().text;
+  }
+  return ''
+}
 
-// window.onhashchange = function(ev) {
-//   const temp = location.hash.replace('#', '')
-//   fetch(`http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getPaper/${temp}`)
-//   .then(response => response.text())
-//   .then(result => {
-//     console.log(result)
-//     document.querySelector('.paper-box').innerHTML = result
-//   })
-//   .catch(error => console.log('error', error))
-// }
+window.onhashchange = function(ev) {
+  const temp = location.hash.replace('#', '')
+  getData(temp)
+}
 
-array.forEach(element => {
+function getData (part) {
+  fetch("http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/" + part)
+  .then(response => response.text())
+  .then(result => {
+    // console.log(result)
+    document.querySelector('.home').innerHTML = result
+    owo.script.page.initPaper()
+  })
+  .catch(error => console.log('error', error));
   
-});
+}

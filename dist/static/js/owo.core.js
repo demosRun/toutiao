@@ -1,4 +1,4 @@
-// Tue Apr 13 2021 17:04:43 GMT+0800 (GMT+08:00)
+// Wed Apr 14 2021 16:17:31 GMT+0800 (GMT+08:00)
 var owo = {tool: {},state: {},event: {}};
 /* 方法合集 */
 var _owo = {
@@ -277,6 +277,14 @@ _owo.cutStringArray = function (original, before, after, index, inline) {
 
 
 
+
+// 计算$dom
+var idList = document.querySelectorAll('[id]')
+owo.id = {}
+for (var ind = 0; ind < idList.length; ind++) {
+  var item = idList[ind]
+  owo.id[item.getAttribute('id')] = item
+}
 
 // 判断是否为手机
 _owo.isMobi = navigator.userAgent.toLowerCase().match(/(ipod|ipad|iphone|android|coolpad|mmp|smartphone|midp|wap|xoom|symbian|j2me|blackberry|wince)/i) != null

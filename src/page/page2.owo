@@ -1,18 +1,24 @@
 <template lang="pug">
-.home.clear.main.w1000
+.dubao-box
+  #menu
+    .menu(o-tap="copyText()") 复制
+    .menu(o-tap="huaxian()") 划线
+    .menu(o-tap="beijing()") 加背景
+    .menu(o-tap="biji()") 做笔记
+    .menu(o-tap="langdu()") 朗读
+  #tool-menu
+    img.tool-clear(src="@|clear.svg|" o-tap="clear()")
+    .text
+  .home.clear.main.w1000
 </template>
 
 <script>
   module.exports = {
-    show: function () {
-      fetch("http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/2021_04_13_2-01.htm")
-      .then(response => response.text())
-      .then(result => {
-        console.log(result)
-        this.$el.innerHTML = result
-      })
-      .catch(error => console.log('error', error));
-      
+    data: {
+      activeEl: null
+    },
+    created: function (params) {
+      getData('2021')
     },
     copyText: function () {
       owo.tool.notice('复制成功!')
@@ -20,13 +26,145 @@
     huaxian: function () {
       let parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode
       parentElement = parentElement.innerHTML
-      parentElement = parentElement.replace(etSelectedText(), `<span class="underline">${etSelectedText()}</span>`)
+      parentElement = parentElement.replace(etSelectedText(), `<span class="dubao underline">${etSelectedText()}</span>`)
       window.getSelection().focusNode.parentElement.innerHTML = parentElement
+      this.query('#menu').style.height = '0'
+      this.initText()
+    },
+    beijing: function () {
+      let parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode
+      parentElement = parentElement.innerHTML
+      parentElement = parentElement.replace(etSelectedText(), `<span class="dubao beijing">${etSelectedText()}</span>`)
+      window.getSelection().focusNode.parentElement.innerHTML = parentElement
+      this.query('#menu').style.height = '0'
+      this.initText()
+    },
+    biji: function () {
+      let parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode
+      parentElement = parentElement.innerHTML
+      var word = prompt("请输入笔记内容!","");
+      if (word) {
+        parentElement = parentElement.replace(etSelectedText(), `<span class="dubao memo" text="${word}">${etSelectedText()}</span>`)
+        window.getSelection().focusNode.parentElement.innerHTML = parentElement
+        this.query('#menu').style.height = '0'
+        this.initText()
+      }
+    },
+    initText: function () {
+      this.queryAll('.dubao').forEach(element => {
+        element.onmouseenter = (e) => {
+          this.data.activeEl = e.target
+          // 判断是否是标注
+          if (e.target.getAttribute("text")) {
+            document.querySelector('#tool-menu .text').innerText = e.target.getAttribute("text")
+            document.querySelector('#tool-menu .text').style.display = 'block'
+            document.querySelector('#tool-menu .tool-clear').style.display = 'none'
+          } else {
+            document.querySelector('#tool-menu .text').style.display = 'none'
+            document.querySelector('#tool-menu .tool-clear').style.display = 'block'
+          }
+          document.querySelector('#tool-menu').style.top = e.clientY - 30 + 'px'
+          document.querySelector('#tool-menu').style.display = 'block'
+        }
+        // element.onmouseleave = function (e) {
+        //   document.querySelector('#tool-menu').style.display = 'none'
+        // }
+      });
+    },
+    initPaper: function () {
+      // document.querySelector('.article').oncontextmenu=function(e){
+      //   //取消默认的浏览器自带右键 很重要！！
+        
+      //   e.preventDefault();
+      //   //获取我们自定义的右键菜单
+      //   var menu=document.querySelector("#menu");
+      //   //根据事件对象中鼠标点击的位置，进行定位
+      //   menu.style.left=e.clientX+'px';
+      //   menu.style.top=e.clientY+'px';
+      //   //改变自定义菜单的高宽，让它显示出来
+      //   menu.style.height='125px';
+      // }
+      window.onmouseup = () => {
+        const selectText = etSelectedText()
+        if (selectText.length) {
+          const parent = window.getSelection().baseNode.parentElement
+          const textIndex = parent.innerText.indexOf(selectText)
+
+          this.query('#menu').style.top = (parent.offsetTop + ((Math.ceil(textIndex / 35)) * 27)) + 'px'
+          this.query('#menu').style.height = 'auto'
+          document.querySelector('#tool-menu').style.display = 'none'
+        } else {
+          this.query('#menu').style.height = '0'
+        }
+      }
+      this.initText()
+    },
+    langdu: function () {
+      const selectText = etSelectedText()
+      var audio= new Audio(`http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=4&text=${selectText}`);//这里的路径写上mp3文件在项目中的绝对路径
+      audio.play();//播放
+      this.query('#menu').style.height = '0'
+    },
+    clear: function () {
+      this.data.activeEl.outerHTML = this.data.activeEl.innerHTML
+      document.querySelector('#tool-menu').style.display = 'none'
     }
   }
 </script>
 
 
 <style lang="less">
-
+#menu {
+  width: 125px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px #888, 1px 0 1px #ccc;
+  position: absolute;
+  border-radius: 3px;
+  font-size: 20px;
+  line-height: 40px;
+  background-color: aliceblue;
+  height: 0;
+  user-select: none;
+  top: 1137px;
+  left: 1150px;
+  right: 0;
+  margin: auto;
+}
+.menu {
+  height: 30px;
+  line-height: 30px;
+  text-align: left;
+  font-size: 18px;
+  padding: 0 10px;
+}
+.menu:hover {
+  cursor: pointer;
+  background-color: gainsboro;
+}
+.underline {
+  cursor: pointer;
+}
+#tool-menu {
+  position: absolute;
+  left: 1150px;
+  right: 0;
+  margin: auto;
+  width: 125px;
+  cursor: pointer;
+  display: none;
+  .text {
+    display: block;
+    background-color: #f4f4f4;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+}
+.beijing {
+  background: #ff0;
+}
+.memo {
+  background: #f4f4f4;
+  border-bottom: 1px dashed #ccc;
+  cursor: pointer;
+}
 </style>

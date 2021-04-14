@@ -239,7 +239,7 @@ padding: 5px 0;
 .main .article-box .article .sec span{
 margin-top:10px;
 }
-.main .swiper-box .swiper-container .swiper-slide{
+.main .right-main .swiper-box .swiper-container .swiper-slide {
   text-align: center;
   background: #d00;
   color: #fff;
@@ -249,17 +249,16 @@ margin-top:10px;
   margin-right:1px;
   text-indent: 0;
 }
-.main .swiper-box .swiper-container .swiper-slide a{
+.main .swiper-box .swiper-container .swiper-slide a {
   color: #fff;
   font-size: 12px;
 }
-.curr-news span{
+.curr-news span {
   display: inline-block;
   color: #fff;
   background: #d00;
   padding:5px 15px;
   font-size:16px;
-  height:25px;
   line-height:25px;
 }
 .main .right-main .date-box span{
