@@ -118,3 +118,13 @@ li {
   cursor: pointer;
 }
 
+.tingshu {
+  position: absolute;
+  left: 900px;
+  top: 43px;
+  right: 0;
+  margin: auto;
+  cursor: pointer;
+  z-index: 999;
+}
+

@@ -6,6 +6,7 @@
     .menu(o-tap="beijing()") 加背景
     .menu(o-tap="biji()") 做笔记
     .menu(o-tap="langdu()") 朗读
+  img.tingshu(src="@|tingshu.svg|" o-tap="tingquanwen()")
   #tool-menu
     img.tool-clear(src="@|clear.svg|" o-tap="clear()")
     .text
@@ -108,6 +109,11 @@
     clear: function () {
       this.data.activeEl.outerHTML = this.data.activeEl.innerHTML
       document.querySelector('#tool-menu').style.display = 'none'
+    },
+    tingquanwen: function () {
+      const selectText = document.querySelector('#ozoom').innerText
+      var audio= new Audio(`http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=4&text=${selectText}`);//这里的路径写上mp3文件在项目中的绝对路径
+      audio.play();//播放
     }
   }
 </script>
@@ -166,5 +172,14 @@
   background: #f4f4f4;
   border-bottom: 1px dashed #ccc;
   cursor: pointer;
+}
+.tingshu {
+  position: absolute;
+  left: 900px;
+  top: 43px;
+  right: 0;
+  margin: auto;
+  cursor: pointer;
+  z-index: 999;
 }
 </style>

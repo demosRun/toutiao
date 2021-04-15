@@ -59,9 +59,9 @@ window.onhashchange = function(ev) {
   const temp = location.hash.replace('#', '')
   getData(temp)
 }
-
+var userID = 1
 function getData (part) {
-  fetch("http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/" + part)
+  fetch(`http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/${userID}/` + part)
   .then(response => response.text())
   .then(result => {
     // console.log(result)

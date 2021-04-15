@@ -29,7 +29,7 @@
   <body>
     
     <!-- 页面[page]-->
-    <div class="dubao-box page" template="page" style="display: block;"><div id="menu"><div class="menu" o-tap="copyText()">复制</div><div class="menu" o-tap="huaxian()">划线</div><div class="menu" o-tap="beijing()">加背景</div><div class="menu" o-tap="biji()">做笔记</div><div class="menu" o-tap="langdu()">朗读</div></div><div id="tool-menu"><img class="tool-clear" src="./static/resource/clear.svg" o-tap="clear()"><div class="text"></div></div><div class="home clear main w1000"></div></div>
+    <div class="dubao-box page" template="page" style="display: block;"><div id="menu"><div class="menu" o-tap="copyText()">复制</div><div class="menu" o-tap="huaxian()">划线</div><div class="menu" o-tap="beijing()">加背景</div><div class="menu" o-tap="biji()">做笔记</div><div class="menu" o-tap="langdu()">朗读</div></div><img class="tingshu" src="./static/resource/tingshu.svg" o-tap="tingquanwen()"><div id="tool-menu"><img class="tool-clear" src="./static/resource/clear.svg" o-tap="clear()"><div class="text"></div></div><div class="home clear main w1000"></div></div>
     
 <!-- 框架script文件 -->
 <script src="./static/js/owo.core.js" type="text/javascript" charset="UTF-8"></script>
@@ -138,6 +138,12 @@ owo.script = {
     "clear": function clear() {
       this.data.activeEl.outerHTML = this.data.activeEl.innerHTML;
       document.querySelector('#tool-menu').style.display = 'none';
+    },
+    "tingquanwen": function tingquanwen() {
+      var selectText = document.querySelector('#ozoom').innerText;
+      var audio = new Audio("http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=4&text=" + selectText); //这里的路径写上mp3文件在项目中的绝对路径
+
+      audio.play(); //播放
     }
   }
 };
