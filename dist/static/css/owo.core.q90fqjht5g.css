@@ -1,0 +1,207 @@
+body, html, .page, .page-box {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.owo-animation {
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+.owo-animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+.owo-animation-forward {
+  z-index: 99;
+}
+
+img {
+  border: none;
+}
+
+[route-active="false"] {
+  display: none;
+}
+
+/* 清除浮动 */
+.clear:after {
+  content: "";
+  height: 0;
+  line-height: 0;
+  display: block;
+  visibility: hidden;
+  clear: both;
+  zoom: 1;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
+[o-animation="shrink"] {
+  -webkit-animation: shrink 1s linear alternate infinite;
+  animation: shrink 1s linear alternate infinite;
+}
+@-webkit-keyframes shrink{
+  0%{-webkit-transform:scale(0.9);}
+  100%{-webkit-transform:scale(1);}
+}
+@keyframes shrink{
+  0%{transform:scale(0.9);}
+  100%{transform:scale(1);}
+}
+
+#menu {
+  width: 280px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px #888;
+  position: absolute;
+  border-radius: 5px;
+  font-size: 20px;
+  line-height: 40px;
+  background-color: white;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  top: 1137px;
+  left: 1150px;
+  right: 0;
+  margin: auto;
+  display: flex;
+  z-index: 99;
+  padding: 5px;
+}
+
+.menu {
+  height: 25px;
+  line-height: 25px;
+  text-align: left;
+  font-size: 16px;
+  padding: 0 10px;
+  color: #333;
+  border-right: 1px solid #ccc;
+}
+
+.menu:hover {
+  cursor: pointer;
+  background-color: gainsboro;
+}
+
+.menu:last-child {
+  border-right: none;
+}
+
+.underline {
+  cursor: pointer;
+}
+
+#tool-menu {
+  position: absolute;
+  left: 1150px;
+  right: 0;
+  margin: auto;
+  width: 125px;
+  cursor: pointer;
+  display: none;
+  z-index: 999;
+  box-shadow: 0 1px 6px #888;
+  background-color: white;
+  border-radius: 5px;
+}
+
+#tool-menu .text {
+  display: block;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.beijing {
+  background: #ff0;
+}
+
+.memo {
+  background: #f4f4f4;
+  border-bottom: 1px dashed #ccc;
+  cursor: pointer;
+}
+
+.tingshu {
+  position: absolute;
+  left: 900px;
+  top: 43px;
+  right: 0;
+  margin: auto;
+  cursor: pointer;
+  z-index: 999;
+}
+
+.swiper-box {
+  display: none;
+}
+
+.memo {
+  background-image: url('../resource/biji.png');
+  padding-right: 20px;
+  background-size: 20px;
+  background-repeat: no-repeat;
+  background-position: center right;
+  margin-right: 2px;
+}
+
+.baocun {
+  position: fixed;
+  right: 30px;
+  bottom: 15px;
+  cursor: pointer;
+}
+
+.text {
+  display: none !important;
+}
+
+.biji-show .tool-clear {
+  right: 0px;
+  top: -30px;
+  display: block;
+  border-top: 1px solid #ccc;
+  margin: 0 10px;
+  color: #666;
+  font-size: 14px;
+}
+
+.tool-clear {
+  padding: 5px;
+  text-align: center;
+}
+
+.biji-show .text {
+  display: block !important;
+}
+
+#menu.no-show {
+  padding: 0;
+  height: 0;
+}
+
+.dubao .memo {
+  background-color: transparent;
+  border-bottom: none;
+}
+
