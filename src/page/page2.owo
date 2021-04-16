@@ -1,15 +1,14 @@
 <template lang="pug">
 .dubao-box
-  #menu
+  #menu.no-show
     .menu(o-tap="copyText()") 复制
     .menu(o-tap="huaxian()") 划线
     .menu(o-tap="beijing()") 加背景
     .menu(o-tap="biji()") 做笔记
-    .menu(o-tap="langdu()") 朗读
-  img.tingshu(src="@|tingshu.svg|" o-tap="tingquanwen()")
+  img.tingshu(src="@|tingshu.png|" o-tap="langdu()" o-animation="shrink")
   #tool-menu
-    img.tool-clear(src="@|clear.svg|" o-tap="clear()")
     .text
+    .tool-clear(o-tap="clear()") 清除标记
   .home.clear.main.w1000
 </template>
 
@@ -19,6 +18,11 @@
       activeEl: null
     },
     created: function (params) {
+      var word = prompt("请输入用户手机号：","");
+      if (word) {
+        userID = word
+        
+      }
       getData('2021')
     },
     copyText: function () {
@@ -29,42 +33,46 @@
       parentElement = parentElement.innerHTML
       parentElement = parentElement.replace(etSelectedText(), `<span class="dubao underline">${etSelectedText()}</span>`)
       window.getSelection().focusNode.parentElement.innerHTML = parentElement
-      this.query('#menu').style.height = '0'
+      this.query('#menu').classList.add('no-show')
       this.initText()
+      this.save()
     },
     beijing: function () {
       let parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode
       parentElement = parentElement.innerHTML
       parentElement = parentElement.replace(etSelectedText(), `<span class="dubao beijing">${etSelectedText()}</span>`)
       window.getSelection().focusNode.parentElement.innerHTML = parentElement
-      this.query('#menu').style.height = '0'
+      this.query('#menu').classList.add('no-show')
       this.initText()
+      this.save()
     },
     biji: function () {
       let parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode
       parentElement = parentElement.innerHTML
       var word = prompt("请输入笔记内容!","");
+      console.log(word)
       if (word) {
-        parentElement = parentElement.replace(etSelectedText(), `<span class="dubao memo" text="${word}">${etSelectedText()}</span>`)
+        parentElement = parentElement.replace(etSelectedText(), `<span class="dubao memo" text="${escape(word)}">${etSelectedText()}</span>`)
         window.getSelection().focusNode.parentElement.innerHTML = parentElement
-        this.query('#menu').style.height = '0'
+        this.query('#menu').classList.add('no-show')
         this.initText()
+        this.save()
       }
     },
     initText: function () {
       this.queryAll('.dubao').forEach(element => {
         element.onmouseenter = (e) => {
           this.data.activeEl = e.target
+          console.log(e)
           // 判断是否是标注
           if (e.target.getAttribute("text")) {
-            document.querySelector('#tool-menu .text').innerText = e.target.getAttribute("text")
-            document.querySelector('#tool-menu .text').style.display = 'block'
-            document.querySelector('#tool-menu .tool-clear').style.display = 'none'
+            document.querySelector('#tool-menu .text').innerText = unescape(e.target.getAttribute("text"))
+            document.querySelector('#tool-menu').classList.add('biji-show')
           } else {
-            document.querySelector('#tool-menu .text').style.display = 'none'
-            document.querySelector('#tool-menu .tool-clear').style.display = 'block'
+            document.querySelector('#tool-menu').classList.remove('biji-show')
           }
-          document.querySelector('#tool-menu').style.top = e.clientY - 30 + 'px'
+          document.querySelector('#tool-menu').style.left = (e.layerX - 100) + 'px'
+          document.querySelector('#tool-menu').style.top = e.pageY - 50 + 'px'
           document.querySelector('#tool-menu').style.display = 'block'
         }
         // element.onmouseleave = function (e) {
@@ -85,35 +93,68 @@
       //   //改变自定义菜单的高宽，让它显示出来
       //   menu.style.height='125px';
       // }
-      window.onmouseup = () => {
+      window.onmouseup = (e) => {
+        console.log(e)
         const selectText = etSelectedText()
         if (selectText.length) {
           const parent = window.getSelection().baseNode.parentElement
           const textIndex = parent.innerText.indexOf(selectText)
-
-          this.query('#menu').style.top = (parent.offsetTop + ((Math.ceil(textIndex / 35)) * 27)) + 'px'
-          this.query('#menu').style.height = 'auto'
+          this.query('#menu').style.left = (e.layerX - 100) + 'px'
+          this.query('#menu').style.top = (e.pageY - 60) + 'px'
           document.querySelector('#tool-menu').style.display = 'none'
+          this.query('#menu').classList.remove('no-show')
         } else {
-          this.query('#menu').style.height = '0'
+          this.query('#menu').classList.add('no-show')
         }
       }
       this.initText()
     },
     langdu: function () {
-      const selectText = etSelectedText()
-      var audio= new Audio(`http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=4&text=${selectText}`);//这里的路径写上mp3文件在项目中的绝对路径
-      audio.play();//播放
-      this.query('#menu').style.height = '0'
+      const selectText = document.querySelector('#ozoom').innerText
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "text/plain");
+
+      var raw = selectText;
+
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+      };
+
+      fetch("http://154.8.196.163:5000/", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+          var audio= new Audio(`http://154.8.196.163:5000/${result}`);//这里的路径写上mp3文件在项目中的绝对路径
+          audio.play();//播放
+        })
+        .catch(error => console.log('error', error));
+      
+      this.query('#menu').classList.add('no-show')
     },
     clear: function () {
       this.data.activeEl.outerHTML = this.data.activeEl.innerHTML
       document.querySelector('#tool-menu').style.display = 'none'
+      this.save()
     },
     tingquanwen: function () {
       const selectText = document.querySelector('#ozoom').innerText
       var audio= new Audio(`http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=4&text=${selectText}`);//这里的路径写上mp3文件在项目中的绝对路径
       audio.play();//播放
+    },
+    save: function () {
+      fetch(`http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveAll/${userID}/` + activePart,  {
+        method: 'POST',
+        headers: {},
+        body:document.querySelector('.home').innerHTML,
+        redirect: 'follow'
+      })
+      .then(response => response.text())
+      .then(result => {
+        owo.tool.toast('数据保存成功!')
+      })
+      .catch(error => console.log('error', error));
     }
   }
 </script>
@@ -121,31 +162,38 @@
 
 <style lang="less">
 #menu {
-  width: 125px;
+  width: 280px;
   overflow: hidden;
-  box-shadow: 0 1px 6px #888, 1px 0 1px #ccc;
+  box-shadow: 0 1px 6px #888;
   position: absolute;
-  border-radius: 3px;
+  border-radius: 5px;
   font-size: 20px;
   line-height: 40px;
-  background-color: aliceblue;
-  height: 0;
+  background-color: white;
   user-select: none;
   top: 1137px;
   left: 1150px;
   right: 0;
   margin: auto;
+  display: flex;
+  z-index: 99;
+  padding: 5px;
 }
 .menu {
-  height: 30px;
-  line-height: 30px;
+  height: 25px;
+  line-height: 25px;
   text-align: left;
-  font-size: 18px;
+  font-size: 16px;
   padding: 0 10px;
+  color: #333;
+  border-right: 1px solid #ccc;
 }
 .menu:hover {
   cursor: pointer;
   background-color: gainsboro;
+}
+.menu:last-child {
+  border-right: none;
 }
 .underline {
   cursor: pointer;
@@ -158,9 +206,13 @@
   width: 125px;
   cursor: pointer;
   display: none;
+  z-index: 999;
+  box-shadow: 0 1px 6px #888;
+  background-color: white;
+  border-radius: 5px;
   .text {
     display: block;
-    background-color: #f4f4f4;
+    
     padding: 5px 10px;
     border-radius: 5px;
   }
@@ -181,5 +233,49 @@
   margin: auto;
   cursor: pointer;
   z-index: 999;
+}
+.swiper-box {
+  display: none;
+}
+.memo {
+  background-image: url('@|biji.png|');
+  padding-right: 20px;
+  background-size: 20px;
+  background-repeat: no-repeat;
+  background-position: center right;
+  margin-right: 2px;
+}
+.baocun {
+  position: fixed;
+  right: 30px;
+  bottom: 15px;
+  cursor: pointer;
+}
+.text {
+  display: none !important;
+}
+.biji-show .tool-clear {
+  right: 0px;
+  top: -30px;
+  display: block;
+  border-top: 1px solid #ccc;
+  margin: 0 10px;
+  color: #666;
+  font-size: 14px;
+}
+.tool-clear {
+  padding: 5px;
+  text-align: center;
+}
+.biji-show .text {
+  display: block !important;
+}
+#menu.no-show {
+  padding: 0;
+  height: 0;
+}
+.dubao .memo {
+  background-color: transparent;
+  border-bottom: none
 }
 </style>

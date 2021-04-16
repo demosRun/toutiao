@@ -29,7 +29,7 @@
   <body>
     
     <!-- 页面[page]-->
-    <div class="dubao-box page" template="page" style="display: block;"><div id="menu"><div class="menu" o-tap="copyText()">复制</div><div class="menu" o-tap="huaxian()">划线</div><div class="menu" o-tap="beijing()">加背景</div><div class="menu" o-tap="biji()">做笔记</div><div class="menu" o-tap="langdu()">朗读</div></div><img class="tingshu" src="./static/resource/tingshu.svg" o-tap="tingquanwen()"><div id="tool-menu"><img class="tool-clear" src="./static/resource/clear.svg" o-tap="clear()"><div class="text"></div></div><div class="home clear main w1000"></div></div>
+    <div class="dubao-box page" template="page" style="display: block;"><div class="no-show" id="menu"><div class="menu" o-tap="copyText()">复制</div><div class="menu" o-tap="huaxian()">划线</div><div class="menu" o-tap="beijing()">加背景</div><div class="menu" o-tap="biji()">做笔记</div></div><img class="tingshu" src="./static/resource/tingshu.png" o-tap="langdu()" o-animation="shrink"><div id="tool-menu"><div class="text"></div><div class="tool-clear" o-tap="clear()">清除标记</div></div><div class="home clear main w1000"></div></div>
     
 <!-- 框架script文件 -->
 <script src="./static/js/owo.core.js" type="text/javascript" charset="UTF-8"></script>
@@ -40,6 +40,12 @@ owo.script = {
       "activeEl": null
     },
     "created": function created(params) {
+      var word = prompt("请输入用户手机号：", "");
+
+      if (word) {
+        userID = word;
+      }
+
       getData('2021');
     },
     "copyText": function copyText() {
@@ -50,27 +56,31 @@ owo.script = {
       parentElement = parentElement.innerHTML;
       parentElement = parentElement.replace(etSelectedText(), "<span class=\"dubao underline\">" + etSelectedText() + "</span>");
       window.getSelection().focusNode.parentElement.innerHTML = parentElement;
-      this.query('#menu').style.height = '0';
+      this.query('#menu').classList.add('no-show');
       this.initText();
+      this.save();
     },
     "beijing": function beijing() {
       var parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode;
       parentElement = parentElement.innerHTML;
       parentElement = parentElement.replace(etSelectedText(), "<span class=\"dubao beijing\">" + etSelectedText() + "</span>");
       window.getSelection().focusNode.parentElement.innerHTML = parentElement;
-      this.query('#menu').style.height = '0';
+      this.query('#menu').classList.add('no-show');
       this.initText();
+      this.save();
     },
     "biji": function biji() {
       var parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode;
       parentElement = parentElement.innerHTML;
       var word = prompt("请输入笔记内容!", "");
+      console.log(word);
 
       if (word) {
-        parentElement = parentElement.replace(etSelectedText(), "<span class=\"dubao memo\" text=\"" + word + "\">" + etSelectedText() + "</span>");
+        parentElement = parentElement.replace(etSelectedText(), "<span class=\"dubao memo\" text=\"" + escape(word) + "\">" + etSelectedText() + "</span>");
         window.getSelection().focusNode.parentElement.innerHTML = parentElement;
-        this.query('#menu').style.height = '0';
+        this.query('#menu').classList.add('no-show');
         this.initText();
+        this.save();
       }
     },
     "initText": function initText() {
@@ -78,18 +88,18 @@ owo.script = {
 
       this.queryAll('.dubao').forEach(function (element) {
         element.onmouseenter = function (e) {
-          _this.data.activeEl = e.target; // 判断是否是标注
+          _this.data.activeEl = e.target;
+          console.log(e); // 判断是否是标注
 
           if (e.target.getAttribute("text")) {
-            document.querySelector('#tool-menu .text').innerText = e.target.getAttribute("text");
-            document.querySelector('#tool-menu .text').style.display = 'block';
-            document.querySelector('#tool-menu .tool-clear').style.display = 'none';
+            document.querySelector('#tool-menu .text').innerText = unescape(e.target.getAttribute("text"));
+            document.querySelector('#tool-menu').classList.add('biji-show');
           } else {
-            document.querySelector('#tool-menu .text').style.display = 'none';
-            document.querySelector('#tool-menu .tool-clear').style.display = 'block';
+            document.querySelector('#tool-menu').classList.remove('biji-show');
           }
 
-          document.querySelector('#tool-menu').style.top = e.clientY - 30 + 'px';
+          document.querySelector('#tool-menu').style.left = e.layerX - 100 + 'px';
+          document.querySelector('#tool-menu').style.top = e.pageY - 50 + 'px';
           document.querySelector('#tool-menu').style.display = 'block';
         }; // element.onmouseleave = function (e) {
         //   document.querySelector('#tool-menu').style.display = 'none'
@@ -111,39 +121,71 @@ owo.script = {
       //   //改变自定义菜单的高宽，让它显示出来
       //   menu.style.height='125px';
       // }
-      window.onmouseup = function () {
+      window.onmouseup = function (e) {
+        console.log(e);
         var selectText = etSelectedText();
 
         if (selectText.length) {
           var parent = window.getSelection().baseNode.parentElement;
           var textIndex = parent.innerText.indexOf(selectText);
-          _this2.query('#menu').style.top = parent.offsetTop + Math.ceil(textIndex / 35) * 27 + 'px';
-          _this2.query('#menu').style.height = 'auto';
+          _this2.query('#menu').style.left = e.layerX - 100 + 'px';
+          _this2.query('#menu').style.top = e.pageY - 60 + 'px';
           document.querySelector('#tool-menu').style.display = 'none';
+
+          _this2.query('#menu').classList.remove('no-show');
         } else {
-          _this2.query('#menu').style.height = '0';
+          _this2.query('#menu').classList.add('no-show');
         }
       };
 
       this.initText();
     },
     "langdu": function langdu() {
-      var selectText = etSelectedText();
-      var audio = new Audio("http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=4&text=" + selectText); //这里的路径写上mp3文件在项目中的绝对路径
+      var selectText = document.querySelector('#ozoom').innerText;
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "text/plain");
+      var raw = selectText;
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+      };
+      fetch("http://154.8.196.163:5000/", requestOptions).then(function (response) {
+        return response.text();
+      }).then(function (result) {
+        var audio = new Audio("http://154.8.196.163:5000/" + result); //这里的路径写上mp3文件在项目中的绝对路径
 
-      audio.play(); //播放
-
-      this.query('#menu').style.height = '0';
+        audio.play(); //播放
+      })["catch"](function (error) {
+        return console.log('error', error);
+      });
+      this.query('#menu').classList.add('no-show');
     },
     "clear": function clear() {
       this.data.activeEl.outerHTML = this.data.activeEl.innerHTML;
       document.querySelector('#tool-menu').style.display = 'none';
+      this.save();
     },
     "tingquanwen": function tingquanwen() {
       var selectText = document.querySelector('#ozoom').innerText;
       var audio = new Audio("http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=4&text=" + selectText); //这里的路径写上mp3文件在项目中的绝对路径
 
       audio.play(); //播放
+    },
+    "save": function save() {
+      fetch("http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveAll/" + userID + "/" + activePart, {
+        method: 'POST',
+        headers: {},
+        body: document.querySelector('.home').innerHTML,
+        redirect: 'follow'
+      }).then(function (response) {
+        return response.text();
+      }).then(function (result) {
+        owo.tool.toast('数据保存成功!');
+      })["catch"](function (error) {
+        return console.log('error', error);
+      });
     }
   }
 };
@@ -153,5 +195,6 @@ owo.script = {
     <script src="./static/js/main.js" type="text/javascript"  charset="UTF-8"></script>
 
     <script src="./static/js/notice.js" type="text/javascript"  charset="UTF-8"></script>
+    <script src="./static/js/toast.js" type="text/javascript"  charset="UTF-8"></script>
   </body>
 </html>

@@ -192,7 +192,7 @@ html, body {
 }
 
 span.underline {
-  border-bottom: 4px solid #f00;
+  border-bottom: 2px solid #f00;
 }
 
 body,div{
@@ -303,3 +303,23 @@ body{
   overflow: auto;
 }
 }
+
+::selection {
+  background: rgba(32, 178, 170, .6);
+  color: #fdffe7;
+  }
+  
+  ::-moz-selection {
+  background: rgba(32, 178, 170, .6);
+  color: #fdffe7;
+  }
+  
+  ::selection {
+  background: rgba(32, 178, 170, .6);
+  color: #fdffe7;
+  }
+  
+  ::-moz-selection {
+  background: rgba(32, 178, 170, .6);
+  color: #fdffe7;
+  }

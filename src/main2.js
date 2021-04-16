@@ -14,19 +14,19 @@ function decode(s) {
   return unescape(s.replace(/\\(u[0-9a-fA-F]{4})/gm, '%$1'));
 }  
 
-const Tool = {
+var Tool = {
     wow:{
         isMillisecondStamp:function(num){if(num.length===10){return num*1000;}else if(num.length===13) {return num;}else {console.log(num+"不是一个标准的时间戳！");return false;}},
         ifStringGetElementById:function(target){if(typeof target==="string") {return document.getElementById(target);}else {return target;}},
     },
     text: {
         //分割字符串
-        cutString:function(original,before,after,index){index = index || 0;if (typeof index === "number") {const P = original.indexOf(before, index);if (P > -1) {if (after) {const f = original.indexOf(after, P + 1);return (f>-1)? original.slice(P + before.toString().length, f):console.error("Tool [在文本中找不到 参数三 "+after+"]");} else {return original.slice(P + before.toString().length);}} else {console.error("Tool [在文本中找不到 参数一 " + before + "]");return}} else {console.error("Tool [sizeTransition:" + index + "不是一个整数!]");}},
+        cutString:function(original,before,after,index){index = index || 0;if (typeof index === "number") {var P = original.indexOf(before, index);if (P > -1) {if (after) {var f = original.indexOf(after, P + 1);return (f>-1)? original.slice(P + before.toString().length, f):console.error("Tool [在文本中找不到 参数三 "+after+"]");} else {return original.slice(P + before.toString().length);}} else {console.error("Tool [在文本中找不到 参数一 " + before + "]");return}} else {console.error("Tool [sizeTransition:" + index + "不是一个整数!]");}},
         //根据一个基点分割字符串  实例：http://myweb-10017157.cos.myqcloud.com/20161212/%E7%BB%83%E4%B9%A0.zip
-        cutStringPoint:function (original,str, before, after,order, index) {index = index || 0;if (typeof index === "number") {const O = original.indexOf(str, index);const P = (order[0]==="1")?original.lastIndexOf(before, O):original.indexOf(before, O);if (P > -1) {if (after) {let f ;switch (order[1]){case "1":f = original.indexOf(after, P + 1);break;case "2":f = original.indexOf(after, O + 1);break;case "3":f = original.lastIndexOf(after, O + 1);break;}return (f>-1)? original.slice(P + before.toString().length, f):console.error("Tool [在文本中找不到 参数三 "+after+"]");}else {return original.slice(P + before.toString().length);}}else {console.error("Tool [在文本中找不到 参数一 " + before + "]");}} else {console.error("Tool [sizeTransition:" + index + "不是一个整数!]");}},
+        cutStringPoint:function (original,str, before, after,order, index) {index = index || 0;if (typeof index === "number") {var O = original.indexOf(str, index);var P = (order[0]==="1")?original.lastIndexOf(before, O):original.indexOf(before, O);if (P > -1) {if (after) {var f ;switch (order[1]){case "1":f = original.indexOf(after, P + 1);break;case "2":f = original.indexOf(after, O + 1);break;case "3":f = original.lastIndexOf(after, O + 1);break;}return (f>-1)? original.slice(P + before.toString().length, f):console.error("Tool [在文本中找不到 参数三 "+after+"]");}else {return original.slice(P + before.toString().length);}}else {console.error("Tool [在文本中找不到 参数一 " + before + "]");}} else {console.error("Tool [sizeTransition:" + index + "不是一个整数!]");}},
         //分割字符串组
         cutStringArray:function(original,before,after,index){var aa=[],ab=0;while(original.indexOf(before,index)>0){aa[ab]=Tool.text.cutString(original,before,after,index);index=original.indexOf(before,index)+1;ab++;}return aa;},
-        randomString:function(n){const str = 'abcdefghijklmnopqrstuvwxyz9876543210';let tmp = '',i = 0,l = str.length;for (i = 0; i < n; i++) {tmp += str.charAt(Math.floor(Math.random() * l));}return tmp;},
+        randomString:function(n){var str = 'abcdefghijklmnopqrstuvwxyz9876543210';var tmp = '',i = 0,l = str.length;for (i = 0; i < n; i++) {tmp += str.charAt(Math.floor(Math.random() * l));}return tmp;},
     },
 }
 // document.querySelector('.paper-box').oncontextmenu=function(e){
@@ -56,11 +56,13 @@ function etSelectedText() {
 }
 
 window.onhashchange = function(ev) {
-  const temp = location.hash.replace('#', '')
+  var temp = location.hash.replace('#', '')
   getData(temp)
 }
 var userID = 1
+var activePart = ''
 function getData (part) {
+  activePart = part
   fetch(`http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/${userID}/` + part)
   .then(response => response.text())
   .then(result => {

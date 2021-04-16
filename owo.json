@@ -73,6 +73,11 @@
 			"name": "notice",
 			"afterbody": true,
 			"src": "./owo_modules/notice.js"
+		},
+		{
+			"name": "toast",
+			"afterbody": true,
+			"src": "./owo_modules/toast.js"
 		}
 	],
 	"styleList": [
