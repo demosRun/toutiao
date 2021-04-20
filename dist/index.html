@@ -43,9 +43,10 @@ owo.script = {
       if (!localStorage.getItem("userInfo")) {
         showPhoneInput(function (e) {
           console.log(e.target);
+          userID = userID + '-pc';
           userID = document.querySelector('.shouji-input input').value;
           localStorage.setItem("userInfo", userID);
-          document.querySelector('.shouji-input').style.display = 'none';
+          document.querySelector('.shouji-box').style.display = 'none';
         });
       } else {
         userID = localStorage.getItem("userInfo");
@@ -75,30 +76,21 @@ owo.script = {
       this.save();
     },
     "biji": function biji() {
-      var _this = this;
-
-      document.querySelector('.biji-box').style.display = 'block';
-      document.querySelector('.biji-input textarea').value = '';
       var parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode;
       parentElement = parentElement.innerHTML;
-      var selectText = etSelectedText();
-      showBijiInput(function (e) {
-        word = document.querySelector('.biji-input textarea').value;
+      var word = prompt("请输入笔记内容!", "");
+      console.log(word);
 
-        if (word) {
-          parentElement = parentElement.replace(selectText, "<span class=\"dubao memo\" text=\"" + escape(word) + "\">" + selectText + "</span>");
-          parentElement.innerHTML = parentElement;
-
-          _this.query('#menu').classList.add('no-show');
-
-          _this.initText();
-
-          _this.save();
-        }
-      });
+      if (word) {
+        parentElement = parentElement.replace(etSelectedText(), "<span class=\"dubao memo\" text=\"" + escape(word) + "\">" + etSelectedText() + "</span>");
+        window.getSelection().focusNode.parentElement.innerHTML = parentElement;
+        this.query('#menu').classList.add('no-show');
+        this.initText();
+        this.save();
+      }
     },
     "initText": function initText() {
-      var _this2 = this;
+      var _this = this;
 
       console.log('重新生成!');
 
@@ -106,7 +98,7 @@ owo.script = {
         var element = this.queryAll('.article .dubao')[index];
 
         element.onmouseover = function (e) {
-          _this2.data.activeEl = e.target;
+          _this.data.activeEl = e.target;
           console.log(e); // 判断是否是标注
 
           if (e.target.getAttribute("text")) {
@@ -132,7 +124,7 @@ owo.script = {
       document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wode()">我的空间</li>';
     },
     "initPaper": function initPaper() {
-      var _this3 = this;
+      var _this2 = this;
 
       // document.querySelector('.article').oncontextmenu=function(e){
       //   //取消默认的浏览器自带右键 很重要！！
@@ -154,13 +146,13 @@ owo.script = {
             var parent = window.getSelection().baseNode ? window.getSelection().baseNode.parentElement : window.getSelection().focusNode;
             console.log(parent);
             var textIndex = parent.innerText.indexOf(selectText);
-            _this3.query('#menu').style.left = e.layerX - 100 + 'px';
-            _this3.query('#menu').style.top = e.pageY - 60 + 'px';
+            _this2.query('#menu').style.left = e.layerX - 100 + 'px';
+            _this2.query('#menu').style.top = e.pageY - 60 + 'px';
             document.querySelector('#tool-menu').style.display = 'none';
 
-            _this3.query('#menu').classList.remove('no-show');
+            _this2.query('#menu').classList.remove('no-show');
           } else {
-            _this3.query('#menu').classList.add('no-show');
+            _this2.query('#menu').classList.add('no-show');
           }
         };
       }

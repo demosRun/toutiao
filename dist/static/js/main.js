@@ -91,7 +91,7 @@ function wode () {
     console.log(response);
     var newhtml = '<div class="news"><ul class="news-list">'
     response.forEach(function (element) {
-      newhtml += "<li><span>·</span><a href=" + element.key + ">" + element.titleStr +"</a></li>"
+      newhtml += "<li><span>·</span><a href=" + element.key + ">" + element.titleStr +'</a><span class="tool shanchu icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
     })
     newhtml += "</ul></div>"
     if (document.querySelector('.article-box')) {
@@ -115,4 +115,18 @@ function showPhoneInput (callBack) {
 function showBijiInput (callBack) {
   document.querySelector('.biji-box').style.display = 'block'
   document.querySelector('.biji-box .button').onclick = callBack
+}
+
+
+function shanchu(name) {
+  var settings = {
+    "url": "http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/delete/" + userID + "/" + name,
+    "method": "GET",
+    "timeout": 0,
+  };
+  
+  $.ajax(settings).done(function (response) {
+    wode()
+    alert('删除成功!')
+  })
 }

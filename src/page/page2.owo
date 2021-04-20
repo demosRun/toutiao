@@ -32,9 +32,10 @@
       if (!localStorage.getItem("userInfo")) {
         showPhoneInput((e) => {
           console.log(e.target)
+          userID = userID + '-pc'
           userID = document.querySelector('.shouji-input input').value
           localStorage.setItem("userInfo", userID)
-          document.querySelector('.shouji-input').style.display = 'none'
+          document.querySelector('.shouji-box').style.display = 'none'
         })
       } else {
         userID = localStorage.getItem("userInfo")
@@ -63,22 +64,17 @@
       this.save()
     },
     biji: function () {
-      document.querySelector('.biji-box').style.display = 'block'
-      document.querySelector('.biji-input textarea').value = ''
       let parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode
       parentElement = parentElement.innerHTML
-      let selectText = etSelectedText()
-      showBijiInput((e) => {
-        word = document.querySelector('.biji-input textarea').value
-        if (word) {
-          parentElement = parentElement.replace(selectText, `<span class="dubao memo" text="${escape(word)}">${selectText}</span>`)
-          parentElement.innerHTML = parentElement
-          this.query('#menu').classList.add('no-show')
-          this.initText()
-          this.save()
-        }
-        
-      })
+      var word = prompt("请输入笔记内容!","");
+      console.log(word)
+      if (word) {
+        parentElement = parentElement.replace(etSelectedText(), `<span class="dubao memo" text="${escape(word)}">${etSelectedText()}</span>`)
+        window.getSelection().focusNode.parentElement.innerHTML = parentElement
+        this.query('#menu').classList.add('no-show')
+        this.initText()
+        this.save()
+      }
     },
     initText: function () {
       console.log('重新生成!')
@@ -384,6 +380,11 @@
     position: absolute;
     right: -21px;
     top: -21px;
+  }
+}
+.news-list li{
+  a {
+    margin-right: 10px;
   }
 }
 </style>

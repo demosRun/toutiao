@@ -275,3 +275,7 @@ li {
   top: -21px;
 }
 
+.news-list li a {
+  margin-right: 10px;
+}
+
