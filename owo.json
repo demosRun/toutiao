@@ -65,6 +65,10 @@
 			"src": "https://cunchu.site/owo/script/idangerous.swiper2.7.6.min.js"
 		},
 		{
+			"name": "jquery1.11.0",
+			"src": "https://cunchu.site/owo/script/jquery-1.11.1.min.js"
+		},
+		{
 			"name": "main",
 			"src": "./src/main2.js",
 			"resource": true
@@ -82,13 +86,13 @@
 	],
 	"styleList": [
 		{
+			"name": "people",
+			"src": "http://paper.people.com.cn/rmrb/tplimg/default.css"
+		},
+		{
 			"name": "main",
 			"src": "./src/main.css",
 			"resource": true
-		},
-		{
-			"name": "people",
-			"src": "http://paper.people.com.cn/rmrb/tplimg/default.css"
 		},
 		{
 			"name": "idangerous.swiper2.7.6",
@@ -132,13 +136,7 @@
 			"merge": false,
 			"allAnimate": false,
 			"title": "{TAG_14226_TAG}",
-			"handleLink": true,
-			"scriptList": [
-				{
-					"name": "jquery1.11.0",
-					"src": "https://cunchu.site/owo/script/jquery-1.11.1.min.js"
-				}
-			]
+			"handleLink": true
 		}
 	}
 }

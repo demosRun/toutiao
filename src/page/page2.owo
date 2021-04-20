@@ -5,11 +5,22 @@
     .menu(o-tap="huaxian()") 划线
     .menu(o-tap="beijing()") 加背景
     .menu(o-tap="biji()") 做笔记
-  img.tingshu(src="@|tingshu.png|" o-tap="langdu()" o-animation="shrink")
+  //- img.tingshu(src="@|tingshu.png|" o-tap="langdu()" o-animation="shrink")
   #tool-menu
     .text
     .tool-clear(o-tap="clear()") 清除标记
   .home.clear.main.w1000
+  .biji-box.shalid
+    .biji-input
+      <svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg>
+      .title 请输入笔记内容
+      textarea
+      .button 确认
+  .shouji-box.shalid
+    .shouji-input
+      .title 请输入手机号以便保存您的阅读历史:
+      input(type="text")
+      .button 确认
 </template>
 
 <script>
@@ -18,12 +29,17 @@
       activeEl: null
     },
     created: function (params) {
-      var word = prompt("请输入用户手机号：","");
-      if (word) {
-        userID = word
-        
+      if (!localStorage.getItem("userInfo")) {
+        showPhoneInput((e) => {
+          console.log(e.target)
+          userID = document.querySelector('.shouji-input input').value
+          localStorage.setItem("userInfo", userID)
+          document.querySelector('.shouji-input').style.display = 'none'
+        })
+      } else {
+        userID = localStorage.getItem("userInfo")
       }
-      getData('2021')
+      getData('now')
     },
     copyText: function () {
       owo.tool.notice('复制成功!')
@@ -47,21 +63,28 @@
       this.save()
     },
     biji: function () {
+      document.querySelector('.biji-box').style.display = 'block'
+      document.querySelector('.biji-input textarea').value = ''
       let parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode
       parentElement = parentElement.innerHTML
-      var word = prompt("请输入笔记内容!","");
-      console.log(word)
-      if (word) {
-        parentElement = parentElement.replace(etSelectedText(), `<span class="dubao memo" text="${escape(word)}">${etSelectedText()}</span>`)
-        window.getSelection().focusNode.parentElement.innerHTML = parentElement
-        this.query('#menu').classList.add('no-show')
-        this.initText()
-        this.save()
-      }
+      let selectText = etSelectedText()
+      showBijiInput((e) => {
+        word = document.querySelector('.biji-input textarea').value
+        if (word) {
+          parentElement = parentElement.replace(selectText, `<span class="dubao memo" text="${escape(word)}">${selectText}</span>`)
+          parentElement.innerHTML = parentElement
+          this.query('#menu').classList.add('no-show')
+          this.initText()
+          this.save()
+        }
+        
+      })
     },
     initText: function () {
-      this.queryAll('.dubao').forEach(element => {
-        element.onmouseenter = (e) => {
+      console.log('重新生成!')
+      for (let index = 0; index < this.queryAll('.article .dubao').length; index++) {
+        const element = this.queryAll('.article .dubao')[index];
+        element.onmouseover = (e) => {
           this.data.activeEl = e.target
           console.log(e)
           // 判断是否是标注
@@ -74,11 +97,16 @@
           document.querySelector('#tool-menu').style.left = (e.layerX - 100) + 'px'
           document.querySelector('#tool-menu').style.top = e.pageY - 50 + 'px'
           document.querySelector('#tool-menu').style.display = 'block'
+        } 
+      }
+      if (document.querySelector('#go-top')) {
+        document.querySelector('#go-top').onclick = function(){
+          document.body.scrollTop = document.documentElement.scrollTop = 0;
         }
-        // element.onmouseleave = function (e) {
-        //   document.querySelector('#tool-menu').style.display = 'none'
-        // }
-      });
+      }
+      
+      console.log(document.querySelector('.right.nav'))
+      document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wode()">我的空间</li>'
     },
     initPaper: function () {
       // document.querySelector('.article').oncontextmenu=function(e){
@@ -93,20 +121,24 @@
       //   //改变自定义菜单的高宽，让它显示出来
       //   menu.style.height='125px';
       // }
-      window.onmouseup = (e) => {
-        console.log(e)
-        const selectText = etSelectedText()
-        if (selectText.length) {
-          const parent = window.getSelection().baseNode.parentElement
-          const textIndex = parent.innerText.indexOf(selectText)
-          this.query('#menu').style.left = (e.layerX - 100) + 'px'
-          this.query('#menu').style.top = (e.pageY - 60) + 'px'
-          document.querySelector('#tool-menu').style.display = 'none'
-          this.query('#menu').classList.remove('no-show')
-        } else {
-          this.query('#menu').classList.add('no-show')
+      if (document.querySelector('.article-box .article')) {
+        document.querySelector('.article-box .article').onmouseup = (e) => {
+          console.log(e)
+          const selectText = etSelectedText()
+          if (selectText.length) {
+            const parent = window.getSelection().baseNode ? window.getSelection().baseNode.parentElement : window.getSelection().focusNode
+            console.log(parent)
+            const textIndex = parent.innerText.indexOf(selectText)
+            this.query('#menu').style.left = (e.layerX - 100) + 'px'
+            this.query('#menu').style.top = (e.pageY - 60) + 'px'
+            document.querySelector('#tool-menu').style.display = 'none'
+            this.query('#menu').classList.remove('no-show')
+          } else {
+            this.query('#menu').classList.add('no-show')
+          }
         }
       }
+      
       this.initText()
     },
     langdu: function () {
@@ -228,22 +260,16 @@
 .tingshu {
   position: absolute;
   left: 900px;
-  top: 43px;
+  top: 143px;
   right: 0;
   margin: auto;
   cursor: pointer;
   z-index: 999;
 }
-.swiper-box {
-  display: none;
-}
 .memo {
-  background-image: url('@|biji.png|');
-  padding-right: 20px;
   background-size: 20px;
   background-repeat: no-repeat;
   background-position: center right;
-  margin-right: 2px;
 }
 .baocun {
   position: fixed;
@@ -277,5 +303,87 @@
 .dubao .memo {
   background-color: transparent;
   border-bottom: none
+}
+// .swiper-box {
+//   display: none;
+// }
+.shalid {
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  display: none;
+  .button {
+    width: 100px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 5px;
+    color: white;
+    background-color: #009fe9;
+    cursor: pointer;
+    user-select: none;
+  }
+}
+.biji-input {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  width: 600px;
+  height: 400px;
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px;
+  .title {
+    line-height: 40px;
+    font-weight: bold;
+    font-size: 20px;
+  }
+  textarea {
+    width: 100%;
+    height: 290px;
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 10px;
+  }
+  svg {
+    position: absolute;
+    right: -21px;
+    top: -21px;
+  }
+}
+
+.shouji-input {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  width: 450px;
+  height: 165px;
+  background-color: white;
+  border-radius: 5px;
+  padding: 20px;
+  input {
+    width: 100%;
+    border: 1px solid #ccc;
+    height: 40px;
+    border-radius: 3px;
+    margin: 14px 0;
+        padding: 0 10px;
+  }
+  svg {
+    position: absolute;
+    right: -21px;
+    top: -21px;
+  }
 }
 </style>

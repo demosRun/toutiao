@@ -7,11 +7,11 @@ owo.tool.notice = function (text, config) {
   remind.style.cssText = 'position: fixed;right: -200px;bottom: 5%;background-color: #009fe9;color: white;padding: 5px 10px;border-radius: 5px 0 0 5px;width: 180px;transition: right 0.4s, opacity 0.4s;font-size: 16px;line-height: 1.6;cursor: pointer;box-shadow: 1px 2px 7px #c4d3da;'
   remind.innerHTML = text
   container.appendChild(remind)
-  setTimeout(() => {
+  setTimeout(function () {
     remind.style.right = '0'
-    setTimeout(() => {
+    setTimeout(function () {
       remind.style.right = '-200px'
-      setTimeout(() => {
+      setTimeout(function () {
         document.getElementById('remind').outerHTML = ''
       }, 400);
     }, showTime);

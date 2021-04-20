@@ -1,217 +1,228 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
-<head>
-  <!-- 页面的元信息 -->
-  <title>{TAG_14226_TAG}</title>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=1000, user-scalable=yes" />
-  <meta name="format-detection" content="telephone=no, email=no" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="white" />
-  <meta name="renderer" content="webkit" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="filetype" content="1" />
-  <meta name="publishedtype" content="1" />
-  <meta name="pagetype" content="2" />
-  <meta name="description" content="{TAG_59447_TAG}" />
-  <meta name="keywords" content="{TAG_59446_TAG}" />
-  <meta name="catalogs" content="{TAG_83943_TAG}" />
-
-  <!-- 页面主样式文件 -->
-  <link charset="utf-8" rel="stylesheet" href="./static/css/owo.core.q90fqjht5g.css">
-
-  <!-- 附属css文件 -->
-  <link rel="stylesheet" href="./static/css/main.css" charset="utf-8">
-  <link rel="stylesheet" href="./static/resource/default.css" charset="utf-8">
-  <link rel="stylesheet" href="./static/resource/swiper.min.css" charset="utf-8">
-
-</head>
-
-<body>
-
-  <!-- 页面[page]-->
-  <div class="dubao-box page" template="page" style="display: block;">
-    <div class="no-show" id="menu">
-      <div class="menu" o-tap="copyText()">复制</div>
-      <div class="menu" o-tap="huaxian()">划线</div>
-      <div class="menu" o-tap="beijing()">加背景</div>
-      <div class="menu" o-tap="biji()">做笔记</div>
-    </div>
-    <img class="tingshu" src="./static/resource/tingshu.png" o-tap="langdu()" o-animation="shrink">
-    <div id="tool-menu">
-      <div class="text"></div>
-      <div class="tool-clear" o-tap="clear()">清除标记</div>
-    </div>
-    <div class="home clear main w1000"></div>
-  </div>
-
-  <!-- 框架script文件 -->
-  <script src="./static/js/owo.core.q90fqjht5g.js" type="text/javascript" charset="UTF-8"></script>
-  <script type="text/javascript" charset="UTF-8">
-    owo.script = {
-      "page": {
-        "data": {
-          "activeEl": null
-        },
-        "created": function created(params) {
-          var word = prompt("请输入用户手机号：", "");
-
-          if (word) {
-            userID = word;
-          }
-
-          getData('2021');
-        },
-        "copyText": function copyText() {
-          owo.tool.notice('复制成功!');
-        },
-        "huaxian": function huaxian() {
-          var parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode;
-          parentElement = parentElement.innerHTML;
-          parentElement = parentElement.replace(etSelectedText(), "<span class=\"dubao underline\">" + etSelectedText() + "</span>");
-          window.getSelection().focusNode.parentElement.innerHTML = parentElement;
-          this.query('#menu').classList.add('no-show');
-          this.initText();
-          this.save();
-        },
-        "beijing": function beijing() {
-          var parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode;
-          parentElement = parentElement.innerHTML;
-          parentElement = parentElement.replace(etSelectedText(), "<span class=\"dubao beijing\">" + etSelectedText() + "</span>");
-          window.getSelection().focusNode.parentElement.innerHTML = parentElement;
-          this.query('#menu').classList.add('no-show');
-          this.initText();
-          this.save();
-        },
-        "biji": function biji() {
-          var parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode;
-          parentElement = parentElement.innerHTML;
-          var word = prompt("请输入笔记内容!", "");
-          console.log(word);
-
-          if (word) {
-            parentElement = parentElement.replace(etSelectedText(), "<span class=\"dubao memo\" text=\"" + escape(word) + "\">" + etSelectedText() + "</span>");
-            window.getSelection().focusNode.parentElement.innerHTML = parentElement;
-            this.query('#menu').classList.add('no-show');
-            this.initText();
-            this.save();
-          }
-        },
-        "initText": function initText() {
-          var _this = this;
-
-          this.queryAll('.dubao').forEach(function(element) {
-            element.onmouseenter = function(e) {
-              _this.data.activeEl = e.target;
-              console.log(e); // 判断是否是标注
-
-              if (e.target.getAttribute("text")) {
-                document.querySelector('#tool-menu .text').innerText = unescape(e.target.getAttribute("text"));
-                document.querySelector('#tool-menu').classList.add('biji-show');
-              } else {
-                document.querySelector('#tool-menu').classList.remove('biji-show');
-              }
-
-              document.querySelector('#tool-menu').style.left = e.layerX - 100 + 'px';
-              document.querySelector('#tool-menu').style.top = e.pageY - 50 + 'px';
-              document.querySelector('#tool-menu').style.display = 'block';
-            }; // element.onmouseleave = function (e) {
-            //   document.querySelector('#tool-menu').style.display = 'none'
-            // }
-
-          });
-        },
-        "initPaper": function initPaper() {
-          var _this2 = this;
-
-          // document.querySelector('.article').oncontextmenu=function(e){
-          //   //取消默认的浏览器自带右键 很重要！！
-          //   e.preventDefault();
-          //   //获取我们自定义的右键菜单
-          //   var menu=document.querySelector("#menu");
-          //   //根据事件对象中鼠标点击的位置，进行定位
-          //   menu.style.left=e.clientX+'px';
-          //   menu.style.top=e.clientY+'px';
-          //   //改变自定义菜单的高宽，让它显示出来
-          //   menu.style.height='125px';
-          // }
-          window.onmouseup = function(e) {
-            console.log(e);
-            var selectText = etSelectedText();
-
-            if (selectText.length) {
-              var parent = window.getSelection().baseNode.parentElement;
-              var textIndex = parent.innerText.indexOf(selectText);
-              _this2.query('#menu').style.left = e.layerX - 100 + 'px';
-              _this2.query('#menu').style.top = e.pageY - 60 + 'px';
-              document.querySelector('#tool-menu').style.display = 'none';
-
-              _this2.query('#menu').classList.remove('no-show');
-            } else {
-              _this2.query('#menu').classList.add('no-show');
-            }
-          };
-
-          this.initText();
-        },
-        "langdu": function langdu() {
-          var selectText = document.querySelector('#ozoom').innerText;
-          var myHeaders = new Headers();
-          myHeaders.append("Content-Type", "text/plain");
-          var raw = selectText;
-          var requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: raw,
-            redirect: 'follow'
-          };
-          fetch("http://154.8.196.163:5000/", requestOptions).then(function(response) {
-            return response.text();
-          }).then(function(result) {
-            var audio = new Audio("http://154.8.196.163:5000/" + result); //这里的路径写上mp3文件在项目中的绝对路径
-
-            audio.play(); //播放
-          })["catch"](function(error) {
-            return console.log('error', error);
-          });
-          this.query('#menu').classList.add('no-show');
-        },
-        "clear": function clear() {
-          this.data.activeEl.outerHTML = this.data.activeEl.innerHTML;
-          document.querySelector('#tool-menu').style.display = 'none';
-          this.save();
-        },
-        "tingquanwen": function tingquanwen() {
-          var selectText = document.querySelector('#ozoom').innerText;
-          var audio = new Audio("http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=4&text=" + selectText); //这里的路径写上mp3文件在项目中的绝对路径
-
-          audio.play(); //播放
-        },
-        "save": function save() {
-          fetch("http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveAll/" + userID + "/" + activePart, {
-            method: 'POST',
-            headers: {},
-            body: document.querySelector('.home').innerHTML,
-            redirect: 'follow'
-          }).then(function(response) {
-            return response.text();
-          }).then(function(result) {
-            owo.tool.toast('数据保存成功!');
-          })["catch"](function(error) {
-            return console.log('error', error);
-          });
-        }
+  <head>
+    <!-- 页面的元信息 -->
+    <title>测试预览页面</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=1000, user-scalable=yes"/>
+    <meta name="format-detection" content="telephone=no, email=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="white"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="filetype" content="1"/>
+    <meta name="publishedtype" content="1"/>
+    <meta name="pagetype" content="2"/>
+    <meta name="description" content="{TAG_59447_TAG}"/>
+    <meta name="keywords" content="{TAG_59446_TAG}"/>
+    <meta name="catalogs" content="{TAG_83943_TAG}"/>
+    
+      <!-- 页面主样式文件 -->
+      <link charset="utf-8"  rel="stylesheet" href="./static/css/owo.core.css">
+      
+    <!-- 附属css文件 -->
+    <link rel="stylesheet" href="http://paper.people.com.cn/rmrb/tplimg/default.css" charset="utf-8">
+    <link rel="stylesheet" href="./static/css/main.css" charset="utf-8">
+    <link rel="stylesheet" href="http://paper.people.com.cn/rmrb/tplimg/swiper.min.css" charset="utf-8">
+      
+  </head>
+  <body>
+    
+    <!-- 页面[page]-->
+    <div class="dubao-box page" template="page" style="display: block;"><div class="no-show" id="menu"><div class="menu" o-tap="copyText()">复制</div><div class="menu" o-tap="huaxian()">划线</div><div class="menu" o-tap="beijing()">加背景</div><div class="menu" o-tap="biji()">做笔记</div></div><div id="tool-menu"><div class="text"></div><div class="tool-clear" o-tap="clear()">清除标记</div></div><div class="home clear main w1000"></div><div class="biji-box shalid"><div class="biji-input"><svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg><div class="title">请输入笔记内容</div><textarea></textarea><div class="button">确认</div></div></div><div class="shouji-box shalid"><div class="shouji-input"><div class="title">请输入手机号以便保存您的阅读历史:</div><input type="text"><div class="button">确认</div></div></div></div>
+    
+<!-- 框架script文件 -->
+<script src="./static/js/owo.core.js" type="text/javascript" charset="UTF-8"></script>
+<script type="text/javascript" charset="UTF-8">
+owo.script = {
+  "page": {
+    "data": {
+      "activeEl": null
+    },
+    "created": function created(params) {
+      if (!localStorage.getItem("userInfo")) {
+        showPhoneInput(function (e) {
+          console.log(e.target);
+          userID = document.querySelector('.shouji-input input').value;
+          localStorage.setItem("userInfo", userID);
+          document.querySelector('.shouji-input').style.display = 'none';
+        });
+      } else {
+        userID = localStorage.getItem("userInfo");
       }
-    };
-  </script>
 
-  <script src="./static/js/idangerous.swiper2.7.6.min.js" type="text/javascript" charset="UTF-8"></script>
-  <script src="./static/js/main.js" type="text/javascript" charset="UTF-8"></script>
-  <script src="./static/js/jquery-1.11.1.min.js" type="text/javascript" charset="UTF-8"></script>
+      getData('now');
+    },
+    "copyText": function copyText() {
+      owo.tool.notice('复制成功!');
+    },
+    "huaxian": function huaxian() {
+      var parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode;
+      parentElement = parentElement.innerHTML;
+      parentElement = parentElement.replace(etSelectedText(), "<span class=\"dubao underline\">" + etSelectedText() + "</span>");
+      window.getSelection().focusNode.parentElement.innerHTML = parentElement;
+      this.query('#menu').classList.add('no-show');
+      this.initText();
+      this.save();
+    },
+    "beijing": function beijing() {
+      var parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode;
+      parentElement = parentElement.innerHTML;
+      parentElement = parentElement.replace(etSelectedText(), "<span class=\"dubao beijing\">" + etSelectedText() + "</span>");
+      window.getSelection().focusNode.parentElement.innerHTML = parentElement;
+      this.query('#menu').classList.add('no-show');
+      this.initText();
+      this.save();
+    },
+    "biji": function biji() {
+      var _this = this;
 
-  <script src="./static/js/notice.js" type="text/javascript" charset="UTF-8"></script>
-  <script src="./static/js/toast.js" type="text/javascript" charset="UTF-8"></script>
-</body>
+      document.querySelector('.biji-box').style.display = 'block';
+      document.querySelector('.biji-input textarea').value = '';
+      var parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode;
+      parentElement = parentElement.innerHTML;
+      var selectText = etSelectedText();
+      showBijiInput(function (e) {
+        word = document.querySelector('.biji-input textarea').value;
 
+        if (word) {
+          parentElement = parentElement.replace(selectText, "<span class=\"dubao memo\" text=\"" + escape(word) + "\">" + selectText + "</span>");
+          parentElement.innerHTML = parentElement;
+
+          _this.query('#menu').classList.add('no-show');
+
+          _this.initText();
+
+          _this.save();
+        }
+      });
+    },
+    "initText": function initText() {
+      var _this2 = this;
+
+      console.log('重新生成!');
+
+      for (var index = 0; index < this.queryAll('.article .dubao').length; index++) {
+        var element = this.queryAll('.article .dubao')[index];
+
+        element.onmouseover = function (e) {
+          _this2.data.activeEl = e.target;
+          console.log(e); // 判断是否是标注
+
+          if (e.target.getAttribute("text")) {
+            document.querySelector('#tool-menu .text').innerText = unescape(e.target.getAttribute("text"));
+            document.querySelector('#tool-menu').classList.add('biji-show');
+          } else {
+            document.querySelector('#tool-menu').classList.remove('biji-show');
+          }
+
+          document.querySelector('#tool-menu').style.left = e.layerX - 100 + 'px';
+          document.querySelector('#tool-menu').style.top = e.pageY - 50 + 'px';
+          document.querySelector('#tool-menu').style.display = 'block';
+        };
+      }
+
+      if (document.querySelector('#go-top')) {
+        document.querySelector('#go-top').onclick = function () {
+          document.body.scrollTop = document.documentElement.scrollTop = 0;
+        };
+      }
+
+      console.log(document.querySelector('.right.nav'));
+      document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wode()">我的空间</li>';
+    },
+    "initPaper": function initPaper() {
+      var _this3 = this;
+
+      // document.querySelector('.article').oncontextmenu=function(e){
+      //   //取消默认的浏览器自带右键 很重要！！
+      //   e.preventDefault();
+      //   //获取我们自定义的右键菜单
+      //   var menu=document.querySelector("#menu");
+      //   //根据事件对象中鼠标点击的位置，进行定位
+      //   menu.style.left=e.clientX+'px';
+      //   menu.style.top=e.clientY+'px';
+      //   //改变自定义菜单的高宽，让它显示出来
+      //   menu.style.height='125px';
+      // }
+      if (document.querySelector('.article-box .article')) {
+        document.querySelector('.article-box .article').onmouseup = function (e) {
+          console.log(e);
+          var selectText = etSelectedText();
+
+          if (selectText.length) {
+            var parent = window.getSelection().baseNode ? window.getSelection().baseNode.parentElement : window.getSelection().focusNode;
+            console.log(parent);
+            var textIndex = parent.innerText.indexOf(selectText);
+            _this3.query('#menu').style.left = e.layerX - 100 + 'px';
+            _this3.query('#menu').style.top = e.pageY - 60 + 'px';
+            document.querySelector('#tool-menu').style.display = 'none';
+
+            _this3.query('#menu').classList.remove('no-show');
+          } else {
+            _this3.query('#menu').classList.add('no-show');
+          }
+        };
+      }
+
+      this.initText();
+    },
+    "langdu": function langdu() {
+      var selectText = document.querySelector('#ozoom').innerText;
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "text/plain");
+      var raw = selectText;
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+      };
+      fetch("http://154.8.196.163:5000/", requestOptions).then(function (response) {
+        return response.text();
+      }).then(function (result) {
+        var audio = new Audio("http://154.8.196.163:5000/" + result); //这里的路径写上mp3文件在项目中的绝对路径
+
+        audio.play(); //播放
+      })["catch"](function (error) {
+        return console.log('error', error);
+      });
+      this.query('#menu').classList.add('no-show');
+    },
+    "clear": function clear() {
+      this.data.activeEl.outerHTML = this.data.activeEl.innerHTML;
+      document.querySelector('#tool-menu').style.display = 'none';
+      this.save();
+    },
+    "tingquanwen": function tingquanwen() {
+      var selectText = document.querySelector('#ozoom').innerText;
+      var audio = new Audio("http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=4&text=" + selectText); //这里的路径写上mp3文件在项目中的绝对路径
+
+      audio.play(); //播放
+    },
+    "save": function save() {
+      fetch("http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveAll/" + userID + "/" + activePart, {
+        method: 'POST',
+        headers: {},
+        body: document.querySelector('.home').innerHTML,
+        redirect: 'follow'
+      }).then(function (response) {
+        return response.text();
+      }).then(function (result) {
+        owo.tool.toast('数据保存成功!');
+      })["catch"](function (error) {
+        return console.log('error', error);
+      });
+    }
+  }
+};
+</script>
+
+    <script src="https://cunchu.site/owo/script/idangerous.swiper2.7.6.min.js" type="text/javascript"  charset="UTF-8"></script>
+    <script src="https://cunchu.site/owo/script/jquery-1.11.1.min.js" type="text/javascript"  charset="UTF-8"></script>
+    <script src="./static/js/main.js" type="text/javascript"  charset="UTF-8"></script>
+
+    <script src="./static/js/notice.js" type="text/javascript"  charset="UTF-8"></script>
+    <script src="./static/js/toast.js" type="text/javascript"  charset="UTF-8"></script>
+  </body>
 </html>

@@ -3,7 +3,7 @@ String.prototype.replaceAll = function(s1, s2) {
 }
 
 function clear (s1) {
-  s1 = s1.replace(new RegExp(`\\\\r`, "gm"), '');
+  s1 = s1.replace(new RegExp("\\\\r", "gm"), '');
   s1 = s1.replace(new RegExp("\\\\n", "gm"), '');
   s1 = s1.replace(new RegExp("\\\"", "gm"), '"');
   return s1
@@ -63,13 +63,56 @@ var userID = 1
 var activePart = ''
 function getData (part) {
   activePart = part
-  fetch(`http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/${userID}/` + part)
-  .then(response => response.text())
-  .then(result => {
-    // console.log(result)
-    document.querySelector('.home').innerHTML = result
-    owo.script.page.initPaper()
-  })
-  .catch(error => console.log('error', error));
+  var settings = {
+    "url": "http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/" + userID + "/" + part,
+    "method": "GET",
+    "timeout": 0,
+  };
   
+  $.ajax(settings).done(function (response) {
+    document.querySelector('.home').innerHTML = response
+    setTimeout(function () {
+      owo.script.page.initPaper()
+    }, 0);
+  });
+}
+
+function wode () {
+  document.querySelector('.right-main .title').innerHTML = '我的空间'
+  
+  var settings = {
+    "url": "https://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getUserInfo/" + userID,
+    "method": "GET",
+    "timeout": 0,
+  };
+  
+  $.ajax(settings).done(function (response) {
+    response = JSON.parse(response)
+    console.log(response);
+    var newhtml = '<div class="news"><ul class="news-list">'
+    response.forEach(function (element) {
+      newhtml += "<li><span>·</span><a href=" + element.key + ">" + element.titleStr +"</a></li>"
+    })
+    newhtml += "</ul></div>"
+    if (document.querySelector('.article-box')) {
+      document.querySelector('.article-box').outerHTML = newhtml
+    } else {
+      document.querySelector('.right-main .news').outerHTML = newhtml
+    }
+    
+  });
+}
+
+function closeInput () {
+  document.querySelector('.biji-box').style.display = 'none'
+}
+
+function showPhoneInput (callBack) {
+  document.querySelector('.shouji-box').style.display = 'block'
+  document.querySelector('.shouji-box .button').onclick = callBack
+}
+
+function showBijiInput (callBack) {
+  document.querySelector('.biji-box').style.display = 'block'
+  document.querySelector('.biji-box .button').onclick = callBack
 }
