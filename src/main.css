@@ -247,6 +247,10 @@ margin-top:10px;
   margin-bottom:1px;
   margin-right:1px;
   text-indent: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 14px;
 }
 .main .swiper-box .swiper-container .swiper-slide a {
   color: #fff;

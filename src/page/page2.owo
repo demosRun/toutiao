@@ -1,10 +1,13 @@
 <template lang="pug">
 .dubao-box
   #menu.no-show
+    .menu.huaxian(o-tap="huaxian()") 划线
+    .menu.qxhx(o-tap="clear('huaxian')") 取消划线
+    .menu.beijing(o-tap="beijing()") 加背景
+    .menu.qxbj(o-tap="clear('beijing')") 取消背景
+    .menu.biji(o-tap="biji()") 做笔记
+    .menu.qxbiji(o-tap="clear('memo')") 取消笔记
     .menu(o-tap="copyText()") 复制
-    .menu(o-tap="huaxian()") 划线
-    .menu(o-tap="beijing()") 加背景
-    .menu(o-tap="biji()") 做笔记
   //- img.tingshu(src="@|tingshu.png|" o-tap="langdu()" o-animation="shrink")
   #tool-menu
     .text
@@ -26,21 +29,40 @@
 <script>
   module.exports = {
     data: {
-      activeEl: null
+      activeEl: null,
+      toolHover: false,
+      huaxianIng: false
     },
     created: function (params) {
       if (!localStorage.getItem("userInfo")) {
         showPhoneInput((e) => {
           console.log(e.target)
-          userID = userID + '-pc'
+          
           userID = document.querySelector('.shouji-input input').value
+          userID = userID + 'pc'
           localStorage.setItem("userInfo", userID)
           document.querySelector('.shouji-box').style.display = 'none'
         })
       } else {
         userID = localStorage.getItem("userInfo")
       }
-      getData('now')
+      if (location.hash) {
+        var temp = location.hash.replace('#', '')
+        getData(temp)
+      } else {
+        getData('now')
+      }
+      this.query('#menu').onmouseover = (e) => {
+        this.data.toolHover = true
+      }
+      this.query('#menu').onmouseout = (e) => {
+        this.data.toolHover = false
+        setTimeout(() => {
+          if (!this.data.toolHover && !this.data.huaxianIng) {
+            this.query('#menu').classList.add('no-show')
+          }
+        }, 500);
+      }
     },
     copyText: function () {
       owo.tool.notice('复制成功!')
@@ -76,25 +98,53 @@
         this.save()
       }
     },
+    checkDom: function (target) {
+      if($(target).hasClass("beijing") || $(target).find('.beijing')[0]){
+        document.querySelector('#menu .beijing').style.display = 'none'
+        document.querySelector('#menu .qxbj').style.display = 'block'
+      } else {
+        document.querySelector('#menu .beijing').style.display = 'block'
+        document.querySelector('#menu .qxbj').style.display = 'none'
+      }
+      if($(target).hasClass("underline") || $(target).find('.underline')[0]){
+        document.querySelector('#menu .huaxian').style.display = 'none'
+        document.querySelector('#menu .qxhx').style.display = 'block'
+      } else {
+        document.querySelector('#menu .huaxian').style.display = 'block'
+        document.querySelector('#menu .qxhx').style.display = 'none'
+      }
+      if($(target).hasClass("memo") || $(target).find('.memo')[0]){
+        document.querySelector('#menu .biji').style.display = 'none'
+        document.querySelector('#menu .qxbiji').style.display = 'block'
+      } else {
+        document.querySelector('#menu .biji').style.display = 'block'
+        document.querySelector('#menu .qxbiji').style.display = 'none'
+      }
+    },
     initText: function () {
       console.log('重新生成!')
       for (let index = 0; index < this.queryAll('.article .dubao').length; index++) {
         const element = this.queryAll('.article .dubao')[index];
         element.onmouseover = (e) => {
+          this.data.toolHover = true
           this.data.activeEl = e.target
-          console.log(e)
-          // 判断是否是标注
-          if (e.target.getAttribute("text")) {
-            document.querySelector('#tool-menu .text').innerText = unescape(e.target.getAttribute("text"))
-            document.querySelector('#tool-menu').classList.add('biji-show')
-          } else {
-            document.querySelector('#tool-menu').classList.remove('biji-show')
-          }
-          document.querySelector('#tool-menu').style.left = (e.layerX - 100) + 'px'
-          document.querySelector('#tool-menu').style.top = e.pageY - 50 + 'px'
-          document.querySelector('#tool-menu').style.display = 'block'
-        } 
+          
+          this.checkDom(e.target)
+          document.querySelector('#menu').style.left = (e.layerX - 100) + 'px'
+          document.querySelector('#menu').style.top = e.pageY - 50 + 'px'
+          document.querySelector('#menu').style.display = 'flex'
+          this.query('#menu').classList.remove('no-show')
+        }
+        element.onmouseout = (e) => {
+          this.data.toolHover = false
+          setTimeout(() => {
+            if (!this.data.toolHover && !this.data.huaxianIng) {
+              this.query('#menu').classList.add('no-show')
+            }
+          }, 500);
+        }
       }
+      this.queryAll('.article .dubao')
       if (document.querySelector('#go-top')) {
         document.querySelector('#go-top').onclick = function(){
           document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -120,15 +170,23 @@
       if (document.querySelector('.article-box .article')) {
         document.querySelector('.article-box .article').onmouseup = (e) => {
           console.log(e)
+          this.data.huaxianIng = true
           const selectText = etSelectedText()
           if (selectText.length) {
             const parent = window.getSelection().baseNode ? window.getSelection().baseNode.parentElement : window.getSelection().focusNode
             console.log(parent)
+            this.checkDom(parent)
             const textIndex = parent.innerText.indexOf(selectText)
             this.query('#menu').style.left = (e.layerX - 100) + 'px'
             this.query('#menu').style.top = (e.pageY - 60) + 'px'
             document.querySelector('#tool-menu').style.display = 'none'
             this.query('#menu').classList.remove('no-show')
+            setTimeout(() => {
+              if (!this.data.toolHover) {
+                this.data.huaxianIng = false
+                this.query('#menu').classList.add('no-show')
+              }
+            }, 2000);
           } else {
             this.query('#menu').classList.add('no-show')
           }
@@ -161,10 +219,21 @@
       
       this.query('#menu').classList.add('no-show')
     },
-    clear: function () {
-      this.data.activeEl.outerHTML = this.data.activeEl.innerHTML
-      document.querySelector('#tool-menu').style.display = 'none'
+    clear: function (classStr) {
+      $(this.data.activeEl).hasClass(classStr) {
+        this.data.activeEl.outerHTML = this.data.activeEl.innerHTML
+      }
+      
+      this.query('#menu').classList.add('no-show')
+      console.log('---------------')
+      console.log(this.data.activeEl)
+      this.data.activeEl.querySelectorAll('.' + classStr).forEach(element => {
+        console.log('---------------')
+        console.log(element)
+        element.outerHTML = element.innerHTML
+      });
       this.save()
+      this.initText()
     },
     tingquanwen: function () {
       const selectText = document.querySelector('#ozoom').innerText
@@ -190,7 +259,7 @@
 
 <style lang="less">
 #menu {
-  width: 280px;
+  width: 310px;
   overflow: hidden;
   box-shadow: 0 1px 6px #888;
   position: absolute;
@@ -245,7 +314,7 @@
     border-radius: 5px;
   }
 }
-.beijing {
+.dubao.beijing {
   background: #ff0;
 }
 .memo {
@@ -263,6 +332,8 @@
   z-index: 999;
 }
 .memo {
+  background-image: url('@|biji.png|');
+  padding-right: 20px;
   background-size: 20px;
   background-repeat: no-repeat;
   background-position: center right;
@@ -386,5 +457,11 @@
   a {
     margin-right: 10px;
   }
+}
+.qxhx, .qxbj, .qxbiji {
+  display: none;
+}
+.dubao {
+  cursor: pointer;
 }
 </style>
