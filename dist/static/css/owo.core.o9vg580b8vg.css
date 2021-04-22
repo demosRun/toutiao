@@ -55,7 +55,7 @@ li {
 }
 
 #menu {
-  width: 310px;
+  width: 346px;
   overflow: hidden;
   box-shadow: 0 1px 6px #888;
   position: absolute;
@@ -67,11 +67,9 @@ li {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  top: 1137px;
   left: 1150px;
   right: 0;
   margin: auto;
-  display: flex;
   z-index: 99;
   padding: 5px;
 }
@@ -81,9 +79,11 @@ li {
   line-height: 25px;
   text-align: left;
   font-size: 16px;
-  padding: 0 10px;
   color: #333;
+  float: left;
   border-right: 1px solid #ccc;
+  width: 84px;
+  text-align: center;
 }
 
 .menu:hover {
@@ -140,11 +140,10 @@ li {
 }
 
 .memo {
-  background-image: url('../resource/biji.png');
-  padding-right: 20px;
   background-size: 20px;
   background-repeat: no-repeat;
   background-position: center right;
+  margin-right: 20px;
 }
 
 .baocun {
@@ -183,7 +182,6 @@ li {
 }
 
 .dubao .memo {
-  background-color: transparent;
   border-bottom: none;
 }
 
@@ -288,6 +286,37 @@ li {
 }
 
 .dubao {
+  cursor: pointer;
+  position: relative;
+}
+
+.biji-input .bottom-bar {
+  width: 420px;
+}
+
+.biji-input .bottom-bar .button {
+  margin: 0 20px;
+}
+
+.dubao i.anno {
+  position: absolute;
+  right: -20px;
+  top: -15px;
+  z-index: 2;
+  font-size: 12px;
+  width: 24px;
+  height: 24px;
+  line-height: 23px;
+  border-radius: 12px;
+  color: #1497fc;
+  border: 2px solid #1497fc;
+  text-align: center;
+  font-weight: bold;
+  font-style: normal;
+  background: #fff;
+}
+
+svg {
   cursor: pointer;
 }
 

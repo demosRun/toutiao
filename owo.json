@@ -122,7 +122,7 @@
 			"server": true,
 			"autoReload": true,
 			"remoteDebug": false,
-			"title": "测试预览页面"
+			"title": "人民日报"
 		},
 		"build": {
 			"debug": false,
@@ -135,7 +135,7 @@
 			"embedSize": 0,
 			"merge": false,
 			"allAnimate": false,
-			"title": "{TAG_14226_TAG}",
+			"title": "人民日报",
 			"handleLink": true
 		}
 	}

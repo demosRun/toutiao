@@ -63,13 +63,8 @@ var userID = 1
 var activePart = ''
 function getData (part) {
   activePart = part
-  var settings = {
-    "url": "http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/" + userID + "/" + part,
-    "method": "GET",
-    "timeout": 0,
-  };
   
-  $.ajax(settings).done(function (response) {
+  $.ajax({"url": "http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/" + userID + "/" + part,"method": "GET","timeout": 0,}).done(function (response) {
     document.querySelector('.home').innerHTML = response
     setTimeout(function () {
       owo.script.page.initPaper()
@@ -119,14 +114,18 @@ function showBijiInput (callBack) {
 
 
 function shanchu(name) {
-  var settings = {
-    "url": "http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/delete/" + userID + "/" + name,
-    "method": "GET",
-    "timeout": 0,
-  };
+  var r=confirm("确定要删除记录: " + name.split('-')[2] + ' 吗!');
+  if (r==true) {
+    var settings = {
+      "url": "http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/delete/" + userID + "/" + name,
+      "method": "GET",
+      "timeout": 0,
+    };
+    
+    $.ajax(settings).done(function (response) {
+      wode()
+      alert('删除成功!')
+    })
+  }
   
-  $.ajax(settings).done(function (response) {
-    wode()
-    alert('删除成功!')
-  })
 }

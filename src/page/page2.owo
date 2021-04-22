@@ -1,13 +1,14 @@
 <template lang="pug">
 .dubao-box
   #menu.no-show
-    .menu.huaxian(o-tap="huaxian()") 划线
-    .menu.qxhx(o-tap="clear('underline')") 取消划线
-    .menu.beijing(o-tap="beijing()") 加背景
-    .menu.qxbj(o-tap="clear('beijing')") 取消背景
-    .menu.biji(o-tap="biji()") 做笔记
-    .menu.qxbiji(o-tap="clear('memo')") 取消笔记
-    .menu(o-tap="copyText()") 复制
+    .menu-bottom.clear
+      .menu.huaxian(o-tap="huaxian()") 划线
+      .menu.qxhx(o-tap="clear('underline')") 取消划线
+      .menu.beijing(o-tap="beijing()") 加背景
+      .menu.qxbj(o-tap="clear('beijing')") 取消背景
+      .menu.biji(o-tap="biji()") 做笔记
+      .menu.qxbiji(o-tap="clear('memo')") 取消笔记
+      .menu(o-tap="copyText()") 复制
   //- img.tingshu(src="@|tingshu.png|" o-tap="langdu()" o-animation="shrink")
   #tool-menu
     .text
@@ -16,9 +17,12 @@
   .biji-box.shalid
     .biji-input
       <svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg>
-      .title 请输入笔记内容
+      .title 查看或编辑您的笔记
       textarea
-      .button 确认
+      .bottom-bar.clear
+        .button.fl(style="background: #ccc;" o-tap="document.querySelector('.biji-box').style.display = 'none'") 取消
+        .button.fl(style="background: #d03333;" o-tap="clear('memo')") 删除
+        .button.fl(style="background: #1497fc;" o-tap="saveBiji()") 保存
   .shouji-box.shalid
     .shouji-input
       .title 请输入手机号以便保存您的阅读历史:
@@ -31,7 +35,8 @@
     data: {
       activeEl: null,
       toolHover: false,
-      huaxianIng: false
+      huaxianIng: false,
+      clickIng: false
     },
     created: function (params) {
       if (!localStorage.getItem("userInfo")) {
@@ -59,6 +64,7 @@
         this.data.toolHover = false
         setTimeout(() => {
           if (!this.data.toolHover && !this.data.huaxianIng) {
+            console.log('关掉菜单!')
             this.query('#menu').classList.add('no-show')
           }
         }, 500);
@@ -67,38 +73,70 @@
     copyText: function () {
       owo.tool.notice('复制成功!')
     },
+    saveBiji: function () {
+      document.querySelector('.biji-box').style.display = 'none'
+      if (!this.data.activeEl) {
+        this.query('#menu').classList.add('no-show')
+        return
+      }
+      this.data.activeEl.setAttribute('data-val', document.querySelector('.biji-box textarea').value)
+      document.querySelector('.biji-box textarea').value = ''
+      owo.tool.toast('笔记修改成功!')
+    },
     huaxian: function () {
-      let parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode
-      parentElement = parentElement.innerHTML
-      parentElement = parentElement.replace(etSelectedText(), `<span class="dubao underline">${etSelectedText()}</span>`)
-      window.getSelection().focusNode.parentElement.innerHTML = parentElement
-      this.query('#menu').classList.add('no-show')
-      this.initText()
-      this.save()
+      console.log('划线')
+      const select = window.getSelection()
+      let parentNode = window.getSelection().focusNode.parentNode || window.getSelection().focusNode.parentNode
+      parentNode = parentNode.innerHTML
+      const selectText = etSelectedText()
+      console.log(selectText.length)
+      if (selectText) {
+        parentNode = parentNode.replace(selectText, `<span class="dubao underline">${selectText}</span>`)
+        window.getSelection().focusNode.parentNode.innerHTML = parentNode
+        this.query('#menu').classList.add('no-show')
+        this.initText()
+        this.save()
+      } else {
+        owo.tool.toast('未选择内容!')
+      }
     },
     beijing: function () {
-      let parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode
-      parentElement = parentElement.innerHTML
-      parentElement = parentElement.replace(etSelectedText(), `<span class="dubao beijing">${etSelectedText()}</span>`)
-      window.getSelection().focusNode.parentElement.innerHTML = parentElement
-      this.query('#menu').classList.add('no-show')
-      this.initText()
-      this.save()
+      let parentNode = window.getSelection().focusNode.parentNode || window.getSelection().focusNode.parentNode
+      parentNode = parentNode.innerHTML
+      selectText = etSelectedText()
+      if (selectText) {
+        parentNode = parentNode.replace(selectText, `<span class="dubao beijing">${selectText}</span>`)
+        window.getSelection().focusNode.parentNode.innerHTML = parentNode
+        this.query('#menu').classList.add('no-show')
+        this.initText()
+        this.save()
+      } else {
+        owo.tool.toast('未选择内容!')
+      }
+      
     },
     biji: function () {
-      let parentElement = window.getSelection().focusNode.parentElement || window.getSelection().focusNode.parentNode
-      parentElement = parentElement.innerHTML
+      selectText = etSelectedText()
+      if (!selectText) {
+        owo.tool.toast('未选择内容!')
+        return
+      }
+      let parentNode = window.getSelection().focusNode.parentNode || window.getSelection().focusNode.parentNode
+      parentNode = parentNode.innerHTML
       var word = prompt("请输入笔记内容!","");
       console.log(word)
-      if (word) {
-        parentElement = parentElement.replace(etSelectedText(), `<span class="dubao memo" text="${escape(word)}">${etSelectedText()}</span>`)
-        window.getSelection().focusNode.parentElement.innerHTML = parentElement
+      
+      if (word && selectText) {
+        parentNode = parentNode.replace(selectText, `<span class="dubao memo">${selectText}<i class="anno" data-val="${escape(word)}">注</i></span>`)
+        window.getSelection().focusNode.parentNode.innerHTML = parentNode
         this.query('#menu').classList.add('no-show')
         this.initText()
         this.save()
       }
     },
     checkDom: function (target) {
+      this.data.clickIng = true
+      console.log('选择元素')
       console.log($(target))
       if($(target).hasClass("beijing") || $(target).find('.beijing')[0]){
         document.querySelector('#menu .beijing').style.display = 'none'
@@ -114,36 +152,57 @@
         document.querySelector('#menu .huaxian').style.display = 'block'
         document.querySelector('#menu .qxhx').style.display = 'none'
       }
-      if($(target).hasClass("memo") || $(target).find('.memo')[0]){
+      if ($(target).hasClass("anno")) {
+        document.querySelector('.biji-box').style.display = 'block'
+        document.querySelector('.biji-input textarea').value = unescape(target.getAttribute('data-val'))
+        setTimeout(() => {
+          document.querySelector('#menu').classList.add('no-show')
+        }, 0);
+        return
+      }
+      const memo = $(target)[0] || $(target).find('.memo')[0]
+      if ($(target).hasClass("memo")) {
         document.querySelector('#menu .biji').style.display = 'none'
         document.querySelector('#menu .qxbiji').style.display = 'block'
+        
       } else {
+        this.data.showText = false
         document.querySelector('#menu .biji').style.display = 'block'
         document.querySelector('#menu .qxbiji').style.display = 'none'
       }
+      setTimeout(() => {
+        this.data.clickIng = false
+      }, 100);
     },
     initText: function () {
       console.log('重新生成!')
       for (let index = 0; index < this.queryAll('.article .dubao').length; index++) {
         const element = this.queryAll('.article .dubao')[index];
-        element.onmouseover = (e) => {
+        const menu = document.querySelector('#menu')
+        element.onclick = (e) => {
           this.data.toolHover = true
           this.data.activeEl = e.target
-          
           this.checkDom(e.target)
-          document.querySelector('#menu').style.left = (e.layerX - 100) + 'px'
-          document.querySelector('#menu').style.top = e.pageY - 50 + 'px'
-          document.querySelector('#menu').style.display = 'flex'
+          menu.style.left = (e.layerX - 100) + 'px'
+          if (this.data.showText) {
+            setTimeout(() => {
+              menu.style.bottom = ((document.body.clientHeight - e.pageY) - 10) - 30 + 'px'
+            }, 0);
+          } else {
+            menu.style.bottom = ((document.body.clientHeight - e.pageY) - 10) - 50 + 'px'
+          }
+          
           this.query('#menu').classList.remove('no-show')
         }
-        element.onmouseout = (e) => {
-          this.data.toolHover = false
-          setTimeout(() => {
-            if (!this.data.toolHover && !this.data.huaxianIng) {
-              this.query('#menu').classList.add('no-show')
-            }
-          }, 500);
-        }
+        // element.onmouseout = (e) => {
+        //   this.data.toolHover = false
+        //   setTimeout(() => {
+        //     if (!this.data.toolHover && !this.data.huaxianIng) {
+        //       console.log('关掉菜单2!')
+        //       this.query('#menu').classList.add('no-show')
+        //     }
+        //   }, 500);
+        // }
       }
       this.queryAll('.article .dubao')
       if (document.querySelector('#go-top')) {
@@ -152,8 +211,11 @@
         }
       }
       
-      console.log(document.querySelector('.right.nav'))
-      document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wode()">我的空间</li>'
+      // console.log(document.querySelector('.right.nav'))
+      if (document.querySelector('.right.nav')) {
+        document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wode()">我的空间</li>'
+      }
+      
     },
     initPaper: function () {
       // document.querySelector('.article').oncontextmenu=function(e){
@@ -170,27 +232,37 @@
       // }
       if (document.querySelector('.article-box .article')) {
         document.querySelector('.article-box .article').onmouseup = (e) => {
-          console.log(e)
-          this.data.huaxianIng = true
-          const selectText = etSelectedText()
-          if (selectText.length) {
-            const parent = window.getSelection().baseNode ? window.getSelection().baseNode.parentElement : window.getSelection().focusNode
-            console.log(parent)
-            this.checkDom(parent)
-            const textIndex = parent.innerText.indexOf(selectText)
-            this.query('#menu').style.left = (e.layerX - 100) + 'px'
-            this.query('#menu').style.top = (e.pageY - 60) + 'px'
-            document.querySelector('#tool-menu').style.display = 'none'
-            this.query('#menu').classList.remove('no-show')
-            setTimeout(() => {
-              if (!this.data.toolHover) {
-                this.data.huaxianIng = false
-                this.query('#menu').classList.add('no-show')
-              }
-            }, 2000);
-          } else {
-            this.query('#menu').classList.add('no-show')
-          }
+          setTimeout(() => {
+            if (this.data.clickIng)
+            return
+            this.data.huaxianIng = true
+            const selectText = etSelectedText()
+            if (selectText.length > 0 || $(e.target).hasClass("dubao")) {
+              let parentNode = window.getSelection().focusNode.parentNode || window.getSelection().focusNode.parentNode
+              let leftStart = window.getSelection().anchorOffset
+              // console.log(parentNode)
+              // console.log(selectText.length)
+              const parent = window.getSelection().baseNode ? window.getSelection().baseNode : window.getSelection().focusNode
+              // console.log(etSelectedText())
+              this.checkDom(parent)
+              const selectTextTemp = parent.parentNode.innerText || parent.data
+              const textIndex = selectTextTemp.indexOf(selectTextTemp)
+              this.query('#menu').style.left = (e.layerX - 100) + 'px'
+              // console.log(e)
+              this.query('#menu').style.bottom = ((document.body.clientHeight - e.pageY) - 60) + 'px'
+              document.querySelector('#tool-menu').style.display = 'none'
+              this.query('#menu').classList.remove('no-show')
+              setTimeout(() => {
+                if (!this.data.toolHover && !this.data.huaxianIng) {
+                  this.data.huaxianIng = false
+                  console.log('关掉菜单3!')
+                  this.query('#menu').classList.add('no-show')
+                }
+              }, 2000);
+            } else {
+              this.query('#menu').classList.add('no-show')
+            }
+          }, 0);
         }
       }
       
@@ -209,14 +281,10 @@
         body: raw,
         redirect: 'follow'
       };
-
-      fetch("http://154.8.196.163:5000/", requestOptions)
-        .then(response => response.text())
-        .then(result => {
-          var audio= new Audio(`http://154.8.196.163:5000/${result}`);//这里的路径写上mp3文件在项目中的绝对路径
-          audio.play();//播放
-        })
-        .catch(error => console.log('error', error));
+      $.ajax({"url": "http://154.8.196.163:5000/","method": "GET","timeout": 0,}).done(function (response) {
+        var audio= new Audio(`http://154.8.196.163:5000/${response}`);//这里的路径写上mp3文件在项目中的绝对路径
+        audio.play();//播放
+      });
       
       this.query('#menu').classList.add('no-show')
     },
@@ -225,7 +293,8 @@
         this.query('#menu').classList.add('no-show')
         return
       }
-     if($(this.data.activeEl).hasClass(classStr)) {
+      console.log(this.data.activeEl)
+      if($(this.data.activeEl).hasClass(classStr)) {
         this.data.activeEl.outerHTML = this.data.activeEl.innerHTML
       }
       
@@ -241,6 +310,7 @@
       });
       this.save()
       this.initText()
+      document.querySelector('.biji-box').style.display = 'none'
     },
     tingquanwen: function () {
       const selectText = document.querySelector('#ozoom').innerText
@@ -248,17 +318,15 @@
       audio.play();//播放
     },
     save: function () {
-      fetch(`http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveAll/${userID}/` + activePart,  {
-        method: 'POST',
-        headers: {},
-        body:document.querySelector('.home').innerHTML,
-        redirect: 'follow'
+      $.ajax({
+        "url": `http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveAll/${userID}/` + activePart,
+        "method": "POST",
+        "timeout": 0,
+        "data": document.querySelector('.home').innerHTML,
+        "success": (response) => {
+          owo.tool.toast('数据保存成功!')
+        }
       })
-      .then(response => response.text())
-      .then(result => {
-        owo.tool.toast('数据保存成功!')
-      })
-      .catch(error => console.log('error', error));
     }
   }
 </script>
@@ -266,7 +334,7 @@
 
 <style lang="less">
 #menu {
-  width: 310px;
+  width: 346px;
   overflow: hidden;
   box-shadow: 0 1px 6px #888;
   position: absolute;
@@ -275,11 +343,9 @@
   line-height: 40px;
   background-color: white;
   user-select: none;
-  top: 1137px;
   left: 1150px;
   right: 0;
   margin: auto;
-  display: flex;
   z-index: 99;
   padding: 5px;
 }
@@ -288,9 +354,11 @@
   line-height: 25px;
   text-align: left;
   font-size: 16px;
-  padding: 0 10px;
   color: #333;
+  float: left;
   border-right: 1px solid #ccc;
+  width: 84px;
+  text-align: center;
 }
 .menu:hover {
   cursor: pointer;
@@ -339,11 +407,10 @@
   z-index: 999;
 }
 .memo {
-  background-image: url('@|biji.png|');
-  padding-right: 20px;
   background-size: 20px;
   background-repeat: no-repeat;
   background-position: center right;
+  margin-right: 20px;
 }
 .baocun {
   position: fixed;
@@ -375,7 +442,7 @@
   height: 0;
 }
 .dubao .memo {
-  background-color: transparent;
+  // background-color: transparent;
   border-bottom: none
 }
 // .swiper-box {
@@ -469,6 +536,35 @@
   display: none;
 }
 .dubao {
+  cursor: pointer;
+  position: relative;
+}
+.biji-input {
+  .bottom-bar {
+    width: 420px;
+    .button {
+      margin: 0 20px;
+    }
+  }
+}
+.dubao i.anno {
+  position: absolute;
+  right: -20px;
+  top: -15px;
+  z-index: 2;
+  font-size: 12px;
+  width: 24px;
+  height: 24px;
+  line-height: 23px;
+  border-radius: 12px;
+  color: #1497fc;
+  border: 2px solid #1497fc;
+  text-align: center;
+  font-weight: bold;
+  font-style: normal;
+  background: #fff;
+}
+svg {
   cursor: pointer;
 }
 </style>
