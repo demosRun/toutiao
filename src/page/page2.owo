@@ -2,7 +2,7 @@
 .dubao-box
   #menu.no-show
     .menu.huaxian(o-tap="huaxian()") 划线
-    .menu.qxhx(o-tap="clear('huaxian')") 取消划线
+    .menu.qxhx(o-tap="clear('underline')") 取消划线
     .menu.beijing(o-tap="beijing()") 加背景
     .menu.qxbj(o-tap="clear('beijing')") 取消背景
     .menu.biji(o-tap="biji()") 做笔记
@@ -99,6 +99,7 @@
       }
     },
     checkDom: function (target) {
+      console.log($(target))
       if($(target).hasClass("beijing") || $(target).find('.beijing')[0]){
         document.querySelector('#menu .beijing').style.display = 'none'
         document.querySelector('#menu .qxbj').style.display = 'block'
@@ -220,13 +221,19 @@
       this.query('#menu').classList.add('no-show')
     },
     clear: function (classStr) {
-      $(this.data.activeEl).hasClass(classStr) {
+      if (!this.data.activeEl) {
+        this.query('#menu').classList.add('no-show')
+        return
+      }
+     if($(this.data.activeEl).hasClass(classStr)) {
         this.data.activeEl.outerHTML = this.data.activeEl.innerHTML
       }
       
       this.query('#menu').classList.add('no-show')
       console.log('---------------')
+      console.log(classStr)
       console.log(this.data.activeEl)
+      
       this.data.activeEl.querySelectorAll('.' + classStr).forEach(element => {
         console.log('---------------')
         console.log(element)

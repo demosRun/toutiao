@@ -29,7 +29,7 @@
   <body>
     
     <!-- 页面[page]-->
-    <div class="dubao-box page" template="page" style="display: block;"><div class="no-show" id="menu"><div class="menu huaxian" o-tap="huaxian()">划线</div><div class="menu qxhx" o-tap="clear('.huaxian')">取消划线</div><div class="menu beijing" o-tap="beijing()">加背景</div><div class="menu qxbj" o-tap="clear('.beijing')">取消背景</div><div class="menu biji" o-tap="biji()">做笔记</div><div class="menu qxbiji" o-tap="clear('.memo')">取消笔记</div><div class="menu" o-tap="copyText()">复制</div></div><div id="tool-menu"><div class="text"></div><div class="tool-clear" o-tap="clear()">清除标记</div></div><div class="home clear main w1000"></div><div class="biji-box shalid"><div class="biji-input"><svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg><div class="title">请输入笔记内容</div><textarea></textarea><div class="button">确认</div></div></div><div class="shouji-box shalid"><div class="shouji-input"><div class="title">请输入手机号以便保存您的阅读历史:</div><input type="text"><div class="button">确认</div></div></div></div>
+    <div class="dubao-box page" template="page" style="display: block;"><div class="no-show" id="menu"><div class="menu huaxian" o-tap="huaxian()">划线</div><div class="menu qxhx" o-tap="clear('underline')">取消划线</div><div class="menu beijing" o-tap="beijing()">加背景</div><div class="menu qxbj" o-tap="clear('beijing')">取消背景</div><div class="menu biji" o-tap="biji()">做笔记</div><div class="menu qxbiji" o-tap="clear('memo')">取消笔记</div><div class="menu" o-tap="copyText()">复制</div></div><div id="tool-menu"><div class="text"></div><div class="tool-clear" o-tap="clear()">清除标记</div></div><div class="home clear main w1000"></div><div class="biji-box shalid"><div class="biji-input"><svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg><div class="title">请输入笔记内容</div><textarea></textarea><div class="button">确认</div></div></div><div class="shouji-box shalid"><div class="shouji-input"><div class="title">请输入手机号以便保存您的阅读历史:</div><input type="text"><div class="button">确认</div></div></div></div>
     
 <!-- 框架script文件 -->
 <script src="./static/js/owo.core.js" type="text/javascript" charset="UTF-8"></script>
@@ -112,6 +112,8 @@ owo.script = {
       }
     },
     "checkDom": function checkDom(target) {
+      console.log($(target));
+
       if ($(target).hasClass("beijing") || $(target).find('.beijing')[0]) {
         document.querySelector('#menu .beijing').style.display = 'none';
         document.querySelector('#menu .qxbj').style.display = 'block';
@@ -249,16 +251,26 @@ owo.script = {
       this.query('#menu').classList.add('no-show');
     },
     "clear": function clear(classStr) {
-      this.data.activeEl.outerHTML = this.data.activeEl.innerHTML;
+      if (!this.data.activeEl) {
+        this.query('#menu').classList.add('no-show');
+        return;
+      }
+
+      if ($(this.data.activeEl).hasClass(classStr)) {
+        this.data.activeEl.outerHTML = this.data.activeEl.innerHTML;
+      }
+
       this.query('#menu').classList.add('no-show');
       console.log('---------------');
+      console.log(classStr);
       console.log(this.data.activeEl);
-      this.data.activeEl.querySelectorAll(classStr).forEach(function (element) {
+      this.data.activeEl.querySelectorAll('.' + classStr).forEach(function (element) {
         console.log('---------------');
         console.log(element);
         element.outerHTML = element.innerHTML;
       });
       this.save();
+      this.initText();
     },
     "tingquanwen": function tingquanwen() {
       var selectText = document.querySelector('#ozoom').innerText;
