@@ -29,7 +29,7 @@
   <body>
     
     <!-- 页面[page]-->
-    <div class="dubao-box page" template="page" style="display: block;"><div class="no-show" id="menu"><div class="menu-bottom clear"><div class="menu huaxian" o-tap="huaxian()">划线</div><div class="menu qxhx" o-tap="clear('underline')">取消划线</div><div class="menu beijing" o-tap="beijing()">加背景</div><div class="menu qxbj" o-tap="clear('beijing')">取消背景</div><div class="menu biji" o-tap="biji()">做笔记</div><div class="menu qxbiji" o-tap="clear('memo')">取消笔记</div><div class="menu" o-tap="copyText()">复制</div></div></div><div class="home clear main w1000"></div><div class="biji-box shalid"><div class="biji-input"><svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg><div class="title">查看或编辑您的笔记</div><textarea></textarea><div class="bottom-bar clear"><div class="button fl" style="background: #ccc;" o-tap="document.querySelector('.biji-box').style.display = 'none'">取消</div><div class="button fl" style="background: #d03333;" o-tap="clear('memo')">删除</div><div class="button fl" style="background: #1497fc;" o-tap="saveBiji()">保存</div></div></div></div><div class="shouji-box shalid"><div class="shouji-input"><div class="title">请输入手机号以便保存您的阅读历史:</div><input type="text"><div class="button">确认</div></div></div></div>
+    <div class="dubao-box page" template="page" style="display: block;"><div class="no-show" id="menu"><div class="menu-bottom clear"><div class="menu huaxian" o-tap="huaxian()">划线</div><div class="menu qxhx" o-tap="clear('underline')">取消划线</div><div class="menu beijing" o-tap="beijing()">加背景</div><div class="menu qxbj" o-tap="clear('beijing')">取消背景</div><div class="menu biji" o-tap="biji()">做笔记</div><div class="menu qxbiji" o-tap="clear('memo')">取消笔记</div><div class="menu" o-tap="copyText()">复制</div></div></div><div class="home clear main w1000"></div><div class="biji-box shalid"><div class="biji-input"><svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg><div class="title">查看或编辑您的笔记</div><textarea></textarea><div class="bottom-bar clear"><div class="button fl" style="background: #ccc;" o-tap="document.querySelector('.biji-box').style.display = 'none'">取消</div><div class="button fl" style="background: #d03333;" o-tap="clearKey('memo')">删除</div><div class="button fl" style="background: #1497fc;" o-tap="saveBiji()">保存</div></div></div></div><div class="shouji-box shalid"><div class="shouji-input"><div class="title">请输入手机号以便保存您的阅读历史:</div><input type="text"><div class="button">确认</div></div></div></div>
     
 <!-- 框架script文件 -->
 <script src="./static/js/owo.core.js" type="text/javascript" charset="UTF-8"></script>
@@ -85,50 +85,46 @@ owo.script = {
     "saveBiji": function saveBiji() {
       document.querySelector('.biji-box').style.display = 'none';
 
-      if (!this.data.activeEl) {
+      if (!activeAnno) {
         this.query('#menu').classList.add('no-show');
         return;
       }
 
-      this.data.activeEl.setAttribute('data-val', document.querySelector('.biji-box textarea').value);
+      activeAnno.setAttribute('data-val', document.querySelector('.biji-box textarea').value);
       document.querySelector('.biji-box textarea').value = '';
       owo.tool.toast('笔记修改成功!');
     },
     "huaxian": function huaxian() {
+      var _this2 = this;
+
       console.log('划线');
-      biaoji('underline'); // const select = window.getSelection()
-      // startEl = window.getSelection().baseNode
-      // endEl = window.getSelection().extentNode
-      // let parentNode = window.getSelection().focusNode.parentNode || window.getSelection().focusNode.parentNode
-      // parentNode = parentNode.innerHTML
-      // const selectText = etSelectedText()
-      // console.log(selectText.length)
-      // if (selectText) {
-      //   parentNode = parentNode.replace(selectText, `<span class="dubao underline">${selectText}</span>`)
-      //   window.getSelection().focusNode.parentNode.innerHTML = parentNode
-      //   this.query('#menu').classList.add('no-show')
-      //   this.initText()
-      //   this.save()
-      // } else {
-      //   owo.tool.toast('未选择内容!')
-      // }
+      biaoji('underline');
+      setTimeout(function () {
+        _this2.save();
+      }, 0);
     },
     "beijing": function beijing() {
       biaoji('beijing');
+      this.save();
     },
     "biji": function biji() {
+      var _this3 = this;
+
       var word = prompt("请输入笔记内容!", "");
 
       if (word) {
         biaoji('memo');
         setTimeout(function () {
           console.log(endEl);
-          endEl.innerHTML = endEl.innerHTML + ("<i class=\"anno\" data-val=\"" + escape(word) + "\">\u6CE8</i></span>");
+          endEl.innerHTML = endEl.innerHTML + ("<i class=\"anno\" data-val=\"" + escape(word) + "\" onclick=\"showZhu(this, '" + endEl.getAttribute('key-memo') + "')\">\u6CE8</i></span>");
+          setTimeout(function () {
+            _this3.save();
+          }, 0);
         }, 100);
       }
     },
     "checkDom": function checkDom(target) {
-      var _this2 = this;
+      var _this4 = this;
 
       this.data.clickIng = true;
       console.log('选择元素');
@@ -149,15 +145,6 @@ owo.script = {
         document.querySelector('#menu .qxhx').style.display = 'none';
       }
 
-      if (chackActive('anno')) {
-        document.querySelector('.biji-box').style.display = 'block';
-        document.querySelector('.biji-input textarea').value = unescape(target.getAttribute('data-val'));
-        setTimeout(function () {
-          document.querySelector('#menu').classList.add('no-show');
-        }, 0);
-        return;
-      }
-
       if (chackActive('memo')) {
         document.querySelector('#menu .biji').style.display = 'none';
         document.querySelector('#menu .qxbiji').style.display = 'block';
@@ -168,28 +155,28 @@ owo.script = {
       }
 
       setTimeout(function () {
-        _this2.data.clickIng = false;
+        _this4.data.clickIng = false;
       }, 100);
     },
     "initText": function initText() {
-      var _this3 = this;
+      var _this5 = this;
 
       console.log('重新生成!');
 
       var _loop = function _loop(index) {
-        var element = _this3.queryAll('.article .dubao')[index];
+        var element = _this5.queryAll('.article .dubao')[index];
 
         var menu = document.querySelector('#menu');
 
         element.onclick = function (e) {
-          _this3.data.toolHover = true;
-          _this3.data.activeEl = e.target;
+          _this5.data.toolHover = true;
+          _this5.data.activeEl = e.target;
 
-          _this3.checkDom(e.target);
+          _this5.checkDom(e.target);
 
           menu.style.left = e.layerX - 100 + 'px';
 
-          if (_this3.data.showText) {
+          if (_this5.data.showText) {
             setTimeout(function () {
               menu.style.bottom = document.body.clientHeight - e.pageY - 10 - 30 + 'px';
             }, 0);
@@ -197,7 +184,7 @@ owo.script = {
             menu.style.bottom = document.body.clientHeight - e.pageY - 10 - 50 + 'px';
           }
 
-          _this3.query('#menu').classList.remove('no-show');
+          _this5.query('#menu').classList.remove('no-show');
         }; // element.onmouseout = (e) => {
         //   this.data.toolHover = false
         //   setTimeout(() => {
@@ -242,7 +229,7 @@ owo.script = {
       }, 0);
     },
     "initPaper": function initPaper() {
-      var _this4 = this;
+      var _this6 = this;
 
       if (document.querySelector('.article-box .article')) {
         // document.querySelector('.article-box .article').onmousedown = (e) => {
@@ -251,30 +238,30 @@ owo.script = {
         // }
         document.querySelector('.article-box .article').onmouseup = function (e) {
           setTimeout(function () {
-            if (_this4.data.clickIng) _this4.data.huaxianIng = true;
+            if (_this6.data.clickIng) _this6.data.huaxianIng = true;
             var selectText = etSelectedText();
 
-            if (selectText.length > 0 || $(e.target).hasClass("dubao")) {
+            if (selectText.length > 0 && window.getSelection().baseNode) {
               startEl = window.getSelection().baseNode.parentElement;
               endEl = window.getSelection().extentNode.parentElement;
-              _this4.query('#menu').style.left = e.layerX - 100 + 'px';
+              _this6.query('#menu').style.left = e.layerX - 100 + 'px';
 
-              _this4.checkDom();
+              _this6.checkDom();
 
-              _this4.query('#menu').style.bottom = document.body.clientHeight - e.pageY - 60 + 'px';
+              _this6.query('#menu').style.bottom = document.body.clientHeight - e.pageY - 60 + 'px';
 
-              _this4.query('#menu').classList.remove('no-show');
+              _this6.query('#menu').classList.remove('no-show');
 
               setTimeout(function () {
-                if (!_this4.data.toolHover && !_this4.data.huaxianIng) {
-                  _this4.data.huaxianIng = false;
+                if (!_this6.data.toolHover && !_this6.data.huaxianIng) {
+                  _this6.data.huaxianIng = false;
                   console.log('关掉菜单3!');
 
-                  _this4.query('#menu').classList.add('no-show');
+                  _this6.query('#menu').classList.add('no-show');
                 }
               }, 2000);
             } else {
-              _this4.query('#menu').classList.add('no-show');
+              _this6.query('#menu').classList.add('no-show');
             }
           }, 0);
         };
@@ -310,8 +297,17 @@ owo.script = {
         }
       }
 
-      document.querySelector('#menu').classList.add('no-show'); // this.save()
-      // this.initText()
+      document.querySelector('#menu').classList.add('no-show');
+      this.save(); // this.initText()
+
+      document.querySelector('.biji-box').style.display = 'none';
+    },
+    "clearKey": function clearKey(classStr) {
+      console.log("[key-" + classStr + "=\"" + activeKey + "\"]");
+      $("[key-" + classStr + "=\"" + activeKey + "\"]").removeClass(classStr);
+      $("[key-" + classStr + "=\"" + activeKey + "\"] .anno").remove();
+      document.querySelector('#menu').classList.add('no-show');
+      this.save(); // this.initText()
 
       document.querySelector('.biji-box').style.display = 'none';
     },

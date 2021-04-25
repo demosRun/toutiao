@@ -29,6 +29,14 @@ var Tool = {
         randomString:function(n){var str = 'abcdefghijklmnopqrstuvwxyz9876543210';var tmp = '',i = 0,l = str.length;for (i = 0; i < n; i++) {tmp += str.charAt(Math.floor(Math.random() * l));}return tmp;},
     },
 }
+function randomString(e) {  
+  e = e || 32;
+  var t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678",
+  a = t.length,
+  n = "";
+  for (i = 0; i < e; i++) n += t.charAt(Math.floor(Math.random() * a));
+  return n
+}
 // document.querySelector('.paper-box').oncontextmenu=function(e){
 //   //取消默认的浏览器自带右键 很重要！！
   
@@ -93,16 +101,30 @@ function wode () {
       response = JSON.parse(response)
       console.log(response);
       var newhtml = '<div class="news"><ul class="news-list">'
+
+      let fenlei = ["未分类"]
       response.forEach(function (element) {
-        var lable = userConfig[element.key] ? userConfig[element.key].lable : ''
-        newhtml += "<li><span>·</span><a href=" + element.key + ">" + element.titleStr +'</a><i class="lable">' + lable +'</i><span class="tool dubao icon" onclick="biaoqian(\'' + element.key + '\')">&#xe602;</span><span class="tool shanchu icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
+        var lable = userConfig[element.key] ? userConfig[element.key].lable : '未分类'
+        if (!fenlei.includes(lable)) {
+          fenlei.push(lable)
+        }
+        newhtml += "<li lable='" + lable + "'><span>·</span><a href=" + element.key + ">" + element.titleStr +'</a><i class="lable">' + lable +'</i><span class="tool dubao icon" onclick="biaoqian(\'' + element.key + '\')">&#xe602;</span><span class="tool shanchu icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
       })
       newhtml += "</ul></div>"
+      // 生成出分类html
+      let fenleiHtml = '<ul class="fenlei-box clearfix">'
+      fenlei.forEach(element => {
+        fenleiHtml += "<li onclick=\"fenlei(this, '" + element + "')\">" + element + "</li>"
+      });
+      fenleiHtml += '</ul>'
       if (document.querySelector('.article-box')) {
-        document.querySelector('.article-box').outerHTML = newhtml
+        document.querySelector('.article-box').outerHTML = fenleiHtml + newhtml
       } else {
         document.querySelector('.right-main .news').outerHTML = newhtml
       }
+      setTimeout(() => {
+        document.querySelector('.fenlei-box li').classList.add('active')
+      }, 0);
     })
   });
 }
@@ -186,10 +208,12 @@ function biaoji (classStr) {
   startEl.classList.add(classStr)
   startKey = parseInt(startEl.getAttribute("key"))
   endKey = parseInt(endEl.getAttribute("key"))
-
+  let keyTemp = randomString(16)
   console.log(startKey, endKey)
   while (startKey <= endKey) {
-    document.querySelector('em[key="' + startKey++ + '"]').classList.add(classStr)
+    document.querySelector('em[key="' + startKey + '"]').classList.add(classStr)
+    document.querySelector('em[key="' + startKey + '"]').setAttribute("key-" + classStr, keyTemp)
+    startKey++
   }
   document.querySelector('#menu').classList.add('no-show')
 }
@@ -227,4 +251,25 @@ function biaoqian (key) {
       }
     })
   }
+}
+
+var activeAnno = null
+var activeKey = null
+function showZhu (target, key) {
+  activeAnno = target
+  activeKey = key
+  document.querySelector('.biji-box').style.display = 'block'
+  document.querySelector('.biji-input textarea').value = unescape(target.getAttribute('data-val'))
+  setTimeout(() => {
+    document.querySelector('#menu').classList.add('no-show')
+  }, 0);
+  return
+}
+
+
+function fenlei (target, name) {
+  $('.news .news-list li').hide()
+  $('.news .news-list li[lable="' + name + '"]').show()
+  $('.fenlei-box li').removeClass('active');
+  $(target).addClass('active');
 }

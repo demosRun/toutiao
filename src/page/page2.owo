@@ -18,7 +18,7 @@
       textarea
       .bottom-bar.clear
         .button.fl(style="background: #ccc;" o-tap="document.querySelector('.biji-box').style.display = 'none'") 取消
-        .button.fl(style="background: #d03333;" o-tap="clear('memo')") 删除
+        .button.fl(style="background: #d03333;" o-tap="clearKey('memo')") 删除
         .button.fl(style="background: #1497fc;" o-tap="saveBiji()") 保存
   .shouji-box.shalid
     .shouji-input
@@ -72,36 +72,24 @@
     },
     saveBiji: function () {
       document.querySelector('.biji-box').style.display = 'none'
-      if (!this.data.activeEl) {
+      if (!activeAnno) {
         this.query('#menu').classList.add('no-show')
         return
       }
-      this.data.activeEl.setAttribute('data-val', document.querySelector('.biji-box textarea').value)
+      activeAnno.setAttribute('data-val', document.querySelector('.biji-box textarea').value)
       document.querySelector('.biji-box textarea').value = ''
       owo.tool.toast('笔记修改成功!')
     },
     huaxian: function () {
       console.log('划线')
       biaoji('underline')
-      // const select = window.getSelection()
-      // startEl = window.getSelection().baseNode
-      // endEl = window.getSelection().extentNode
-      // let parentNode = window.getSelection().focusNode.parentNode || window.getSelection().focusNode.parentNode
-      // parentNode = parentNode.innerHTML
-      // const selectText = etSelectedText()
-      // console.log(selectText.length)
-      // if (selectText) {
-      //   parentNode = parentNode.replace(selectText, `<span class="dubao underline">${selectText}</span>`)
-      //   window.getSelection().focusNode.parentNode.innerHTML = parentNode
-      //   this.query('#menu').classList.add('no-show')
-      //   this.initText()
-      //   this.save()
-      // } else {
-      //   owo.tool.toast('未选择内容!')
-      // }
+      setTimeout(() => {
+        this.save()
+      }, 0);
     },
     beijing: function () {
       biaoji('beijing')
+      this.save()
     },
     biji: function () {
       var word = prompt("请输入笔记内容!","");
@@ -110,7 +98,10 @@
         biaoji('memo')
         setTimeout(() => {
           console.log(endEl)
-          endEl.innerHTML = endEl.innerHTML + `<i class="anno" data-val="${escape(word)}">注</i></span>`
+          endEl.innerHTML = endEl.innerHTML + `<i class="anno" data-val="${escape(word)}" onclick="showZhu(this, '${endEl.getAttribute('key-memo')}')">注</i></span>`
+          setTimeout(() => {
+            this.save()
+          }, 0);
         }, 100);
       }
     },
@@ -130,14 +121,6 @@
       } else {
         document.querySelector('#menu .huaxian').style.display = 'block'
         document.querySelector('#menu .qxhx').style.display = 'none'
-      }
-      if (chackActive('anno')) {
-        document.querySelector('.biji-box').style.display = 'block'
-        document.querySelector('.biji-input textarea').value = unescape(target.getAttribute('data-val'))
-        setTimeout(() => {
-          document.querySelector('#menu').classList.add('no-show')
-        }, 0);
-        return
       }
       if (chackActive('memo')) {
         document.querySelector('#menu .biji').style.display = 'none'
@@ -221,7 +204,7 @@
             if (this.data.clickIng)
             this.data.huaxianIng = true
             const selectText = etSelectedText()
-            if (selectText.length > 0 || $(e.target).hasClass("dubao")) {
+            if (selectText.length > 0 && window.getSelection().baseNode) {
               startEl = window.getSelection().baseNode.parentElement
               endEl = window.getSelection().extentNode.parentElement
               this.query('#menu').style.left = (e.layerX - 100) + 'px'
@@ -267,7 +250,16 @@
         }
       }
       document.querySelector('#menu').classList.add('no-show')
-      // this.save()
+      this.save()
+      // this.initText()
+      document.querySelector('.biji-box').style.display = 'none'
+    },
+    clearKey: function (classStr) {
+      console.log(`[key-${classStr}="${activeKey}"]`)
+      $(`[key-${classStr}="${activeKey}"]`).removeClass(classStr);
+      $(`[key-${classStr}="${activeKey}"] .anno`).remove()
+      document.querySelector('#menu').classList.add('no-show')
+      this.save()
       // this.initText()
       document.querySelector('.biji-box').style.display = 'none'
     },
@@ -418,12 +410,12 @@
   .button {
     width: 100px;
     text-align: center;
-    line-height: 40px;
     border-radius: 5px;
     color: white;
     background-color: #009fe9;
     cursor: pointer;
     user-select: none;
+    line-height: 14px;
   }
 }
 .biji-input {
@@ -500,6 +492,7 @@
 .biji-input {
   .bottom-bar {
     width: 420px;
+    margin: 0 auto;
     .button {
       margin: 0 20px;
     }
