@@ -61,10 +61,6 @@
 	],
 	"scriptList": [
 		{
-			"name": "idangerous.swiper2.7.6.min",
-			"src": "https://cunchu.site/owo/script/idangerous.swiper2.7.6.min.js"
-		},
-		{
 			"name": "jquery1.11.0",
 			"src": "https://cunchu.site/owo/script/jquery-1.11.1.min.js"
 		},
@@ -78,10 +74,22 @@
 			"afterbody": true,
 			"src": "./owo_modules/notice.js"
 		},
+		
+		{
+			"name": "foundation-datepicker",
+			"src": "./owo_modules/foundation-datepicker.js"
+		},
+		{
+			"name": "foundation-datepicker.zh-CN",
+			"src": "./owo_modules/foundation-datepicker.zh-CN.js"
+		},
 		{
 			"name": "toast",
-			"afterbody": true,
 			"src": "./owo_modules/toast.js"
+		},
+		{
+			"name": "pdf",
+			"src": "./src/resource/pdf.js"
 		}
 	],
 	"styleList": [
@@ -90,13 +98,13 @@
 			"src": "http://paper.people.com.cn/rmrb/tplimg/default.css"
 		},
 		{
+			"name": "foundation.min",
+			"src": "./owo_modules/foundation.min.css"
+		},
+		{
 			"name": "main",
 			"src": "./src/main.css",
 			"resource": true
-		},
-		{
-			"name": "idangerous.swiper2.7.6",
-			"src": "http://paper.people.com.cn/rmrb/tplimg/swiper.min.css"
 		}
 	],
 	"pageList": [

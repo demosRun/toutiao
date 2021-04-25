@@ -65,6 +65,10 @@ function getData (part) {
   activePart = part
   
   $.ajax({"url": "http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/" + userID + "/" + part,"method": "GET","timeout": 0,}).done(function (response) {
+    if (response.indexOf('404 Not Found') > 0) {
+      alert('当前日期暂无内容！')
+      return
+    }
     document.querySelector('.home').innerHTML = response
     setTimeout(function () {
       owo.script.page.initPaper()
@@ -72,29 +76,34 @@ function getData (part) {
   });
 }
 
+let userConfig = {}
 function wode () {
   document.querySelector('.right-main .title').innerHTML = '我的空间'
   
-  var settings = {
+  
+  $.ajax({
     "url": "https://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getUserInfo/" + userID,
     "method": "GET",
     "timeout": 0,
-  };
-  
-  $.ajax(settings).done(function (response) {
-    response = JSON.parse(response)
-    console.log(response);
-    var newhtml = '<div class="news"><ul class="news-list">'
-    response.forEach(function (element) {
-      newhtml += "<li><span>·</span><a href=" + element.key + ">" + element.titleStr +'</a><span class="tool shanchu icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
+  }).done(function (response) {
+    // 获取配置
+    $.ajax({"url": "https://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getConfig/" + userID,"method": "GET","timeout": 0,}).done(function (response2) {
+      userConfig = JSON.parse(response2)
+      console.log(userConfig)
+      response = JSON.parse(response)
+      console.log(response);
+      var newhtml = '<div class="news"><ul class="news-list">'
+      response.forEach(function (element) {
+        var lable = userConfig[element.key] ? userConfig[element.key].lable : ''
+        newhtml += "<li><span>·</span><a href=" + element.key + ">" + element.titleStr +'</a><i class="lable">' + lable +'</i><span class="tool dubao icon" onclick="biaoqian(\'' + element.key + '\')">&#xe602;</span><span class="tool shanchu icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
+      })
+      newhtml += "</ul></div>"
+      if (document.querySelector('.article-box')) {
+        document.querySelector('.article-box').outerHTML = newhtml
+      } else {
+        document.querySelector('.right-main .news').outerHTML = newhtml
+      }
     })
-    newhtml += "</ul></div>"
-    if (document.querySelector('.article-box')) {
-      document.querySelector('.article-box').outerHTML = newhtml
-    } else {
-      document.querySelector('.right-main .news').outerHTML = newhtml
-    }
-    
   });
 }
 
@@ -128,4 +137,94 @@ function shanchu(name) {
     })
   }
   
+}
+function dateFormat(fmt, date) {
+  let ret;
+  const opt = {
+      "Y+": date.getFullYear().toString(),        // 年
+      "m+": (date.getMonth() + 1).toString(),     // 月
+      "d+": date.getDate().toString(),            // 日
+      "H+": date.getHours().toString(),           // 时
+      "M+": date.getMinutes().toString(),         // 分
+      "S+": date.getSeconds().toString()          // 秒
+      // 有其他格式化字符需求可以继续添加，必须转化成字符串
+  };
+  for (let k in opt) {
+      ret = new RegExp("(" + k + ")").exec(fmt);
+      if (ret) {
+          fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+      };
+  };
+  return fmt;
+}
+
+if ((window.innerWidth / window.innerHeight) < 1) {
+  window.location.href = 'http://demos.run/mreader/'
+}
+
+function changeP () {
+  
+  let key = 0
+  let allP = document.querySelectorAll('.article p')
+  allP.forEach(el => {
+    if (!$(el).hasClass('dubao')) {
+      el.classList.add('dubao')
+      var newHtml = ''
+      el.innerText.split('').forEach(element => {
+        newHtml += '<em class="sel" key="' + key++ + '">' + element + '</em>'
+      });
+      el.innerHTML = newHtml
+    }
+  });
+}
+
+var startEl = null
+var endEl = null
+
+
+function biaoji (classStr) {
+  startEl.classList.add(classStr)
+  startKey = parseInt(startEl.getAttribute("key"))
+  endKey = parseInt(endEl.getAttribute("key"))
+
+  console.log(startKey, endKey)
+  while (startKey <= endKey) {
+    document.querySelector('em[key="' + startKey++ + '"]').classList.add(classStr)
+  }
+  document.querySelector('#menu').classList.add('no-show')
+}
+
+
+function chackActive (classStr) {
+  startKey = parseInt(startEl.getAttribute("key"))
+  endKey = parseInt(endEl.getAttribute("key"))
+
+  console.log(startKey, endKey)
+  while (startKey <= endKey) {
+    var nowTemp = document.querySelector('em[key="' + startKey++ + '"]')
+    if ($(nowTemp).hasClass(classStr)) {
+      return true
+    }
+  }
+  return false
+}
+
+function biaoqian (key) {
+  var word = prompt("请输入文章标签!","");
+  if (word) {
+    if (!userConfig[key]) {
+      userConfig[key] = {}
+    }
+    userConfig[key]['lable'] = word
+    $.ajax({
+      "url": "https://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveConfig/" + userID,
+      "method": "POST",
+      "timeout": 0,
+      "data": JSON.stringify(userConfig),
+      "success": (response) => {
+        owo.tool.toast('数据保存成功!')
+        wode()
+      }
+    })
+  }
 }

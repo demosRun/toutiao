@@ -10,9 +10,6 @@
       .menu.qxbiji(o-tap="clear('memo')") 取消笔记
       .menu(o-tap="copyText()") 复制
   //- img.tingshu(src="@|tingshu.png|" o-tap="langdu()" o-animation="shrink")
-  #tool-menu
-    .text
-    .tool-clear(o-tap="clear()") 清除标记
   .home.clear.main.w1000
   .biji-box.shalid
     .biji-input
@@ -44,7 +41,7 @@
           console.log(e.target)
           
           userID = document.querySelector('.shouji-input input').value
-          userID = userID + 'pc'
+          userID = userID
           localStorage.setItem("userInfo", userID)
           document.querySelector('.shouji-box').style.display = 'none'
         })
@@ -85,74 +82,56 @@
     },
     huaxian: function () {
       console.log('划线')
-      const select = window.getSelection()
-      let parentNode = window.getSelection().focusNode.parentNode || window.getSelection().focusNode.parentNode
-      parentNode = parentNode.innerHTML
-      const selectText = etSelectedText()
-      console.log(selectText.length)
-      if (selectText) {
-        parentNode = parentNode.replace(selectText, `<span class="dubao underline">${selectText}</span>`)
-        window.getSelection().focusNode.parentNode.innerHTML = parentNode
-        this.query('#menu').classList.add('no-show')
-        this.initText()
-        this.save()
-      } else {
-        owo.tool.toast('未选择内容!')
-      }
+      biaoji('underline')
+      // const select = window.getSelection()
+      // startEl = window.getSelection().baseNode
+      // endEl = window.getSelection().extentNode
+      // let parentNode = window.getSelection().focusNode.parentNode || window.getSelection().focusNode.parentNode
+      // parentNode = parentNode.innerHTML
+      // const selectText = etSelectedText()
+      // console.log(selectText.length)
+      // if (selectText) {
+      //   parentNode = parentNode.replace(selectText, `<span class="dubao underline">${selectText}</span>`)
+      //   window.getSelection().focusNode.parentNode.innerHTML = parentNode
+      //   this.query('#menu').classList.add('no-show')
+      //   this.initText()
+      //   this.save()
+      // } else {
+      //   owo.tool.toast('未选择内容!')
+      // }
     },
     beijing: function () {
-      let parentNode = window.getSelection().focusNode.parentNode || window.getSelection().focusNode.parentNode
-      parentNode = parentNode.innerHTML
-      selectText = etSelectedText()
-      if (selectText) {
-        parentNode = parentNode.replace(selectText, `<span class="dubao beijing">${selectText}</span>`)
-        window.getSelection().focusNode.parentNode.innerHTML = parentNode
-        this.query('#menu').classList.add('no-show')
-        this.initText()
-        this.save()
-      } else {
-        owo.tool.toast('未选择内容!')
-      }
-      
+      biaoji('beijing')
     },
     biji: function () {
-      selectText = etSelectedText()
-      if (!selectText) {
-        owo.tool.toast('未选择内容!')
-        return
-      }
-      let parentNode = window.getSelection().focusNode.parentNode || window.getSelection().focusNode.parentNode
-      parentNode = parentNode.innerHTML
       var word = prompt("请输入笔记内容!","");
-      console.log(word)
-      
-      if (word && selectText) {
-        parentNode = parentNode.replace(selectText, `<span class="dubao memo">${selectText}<i class="anno" data-val="${escape(word)}">注</i></span>`)
-        window.getSelection().focusNode.parentNode.innerHTML = parentNode
-        this.query('#menu').classList.add('no-show')
-        this.initText()
-        this.save()
+      if (word) {
+        
+        biaoji('memo')
+        setTimeout(() => {
+          console.log(endEl)
+          endEl.innerHTML = endEl.innerHTML + `<i class="anno" data-val="${escape(word)}">注</i></span>`
+        }, 100);
       }
     },
     checkDom: function (target) {
       this.data.clickIng = true
       console.log('选择元素')
-      console.log($(target))
-      if($(target).hasClass("beijing") || $(target).find('.beijing')[0]){
+      if(chackActive('beijing')){
         document.querySelector('#menu .beijing').style.display = 'none'
         document.querySelector('#menu .qxbj').style.display = 'block'
       } else {
         document.querySelector('#menu .beijing').style.display = 'block'
         document.querySelector('#menu .qxbj').style.display = 'none'
       }
-      if($(target).hasClass("underline") || $(target).find('.underline')[0]){
+      if(chackActive('underline')){
         document.querySelector('#menu .huaxian').style.display = 'none'
         document.querySelector('#menu .qxhx').style.display = 'block'
       } else {
         document.querySelector('#menu .huaxian').style.display = 'block'
         document.querySelector('#menu .qxhx').style.display = 'none'
       }
-      if ($(target).hasClass("anno")) {
+      if (chackActive('anno')) {
         document.querySelector('.biji-box').style.display = 'block'
         document.querySelector('.biji-input textarea').value = unescape(target.getAttribute('data-val'))
         setTimeout(() => {
@@ -160,8 +139,7 @@
         }, 0);
         return
       }
-      const memo = $(target)[0] || $(target).find('.memo')[0]
-      if ($(target).hasClass("memo")) {
+      if (chackActive('memo')) {
         document.querySelector('#menu .biji').style.display = 'none'
         document.querySelector('#menu .qxbiji').style.display = 'block'
         
@@ -204,53 +182,51 @@
         //   }, 500);
         // }
       }
-      this.queryAll('.article .dubao')
       if (document.querySelector('#go-top')) {
         document.querySelector('#go-top').onclick = function(){
           document.body.scrollTop = document.documentElement.scrollTop = 0;
         }
       }
       
+      
       // console.log(document.querySelector('.right.nav'))
       if (document.querySelector('.right.nav')) {
         document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wode()">我的空间</li>'
       }
+      // 生成日历
+      document.querySelector('.date.left').innerHTML = `<input type="text"  value="" id="demo-1">`
+      setTimeout(() => {
+        const dateDomList = document.querySelectorAll('.hide')
+        $('#demo-1').fdatepicker({
+          format: '选择日期 yyyy-mm-dd',
+          pickTime: false,
+          maxDate: `+1D`
+        }).on('changeDate', function (ev) {
+          // console.log(dateFormat("YYYY_mm_dd_1-01.htm", ev.date))
+          window.location.href = dateFormat("#YYYY_mm_dd_1-01.htm", ev.date)
+        });
+        document.querySelector('#demo-1').value = `选择日期 ${dateDomList[0].innerText}-${dateDomList[1].innerText}-${dateDomList[2].innerText}`
+        changeP()
+      }, 0);
       
     },
     initPaper: function () {
-      // document.querySelector('.article').oncontextmenu=function(e){
-      //   //取消默认的浏览器自带右键 很重要！！
-        
-      //   e.preventDefault();
-      //   //获取我们自定义的右键菜单
-      //   var menu=document.querySelector("#menu");
-      //   //根据事件对象中鼠标点击的位置，进行定位
-      //   menu.style.left=e.clientX+'px';
-      //   menu.style.top=e.clientY+'px';
-      //   //改变自定义菜单的高宽，让它显示出来
-      //   menu.style.height='125px';
-      // }
       if (document.querySelector('.article-box .article')) {
+        // document.querySelector('.article-box .article').onmousedown = (e) => {
+        //   console.log(e.target)
+        //   startEl = e.target
+        // }
         document.querySelector('.article-box .article').onmouseup = (e) => {
           setTimeout(() => {
             if (this.data.clickIng)
-            return
             this.data.huaxianIng = true
             const selectText = etSelectedText()
             if (selectText.length > 0 || $(e.target).hasClass("dubao")) {
-              let parentNode = window.getSelection().focusNode.parentNode || window.getSelection().focusNode.parentNode
-              let leftStart = window.getSelection().anchorOffset
-              // console.log(parentNode)
-              // console.log(selectText.length)
-              const parent = window.getSelection().baseNode ? window.getSelection().baseNode : window.getSelection().focusNode
-              // console.log(etSelectedText())
-              this.checkDom(parent)
-              const selectTextTemp = parent.parentNode.innerText || parent.data
-              const textIndex = selectTextTemp.indexOf(selectTextTemp)
+              startEl = window.getSelection().baseNode.parentElement
+              endEl = window.getSelection().extentNode.parentElement
               this.query('#menu').style.left = (e.layerX - 100) + 'px'
-              // console.log(e)
+              this.checkDom()
               this.query('#menu').style.bottom = ((document.body.clientHeight - e.pageY) - 60) + 'px'
-              document.querySelector('#tool-menu').style.display = 'none'
               this.query('#menu').classList.remove('no-show')
               setTimeout(() => {
                 if (!this.data.toolHover && !this.data.huaxianIng) {
@@ -270,17 +246,6 @@
     },
     langdu: function () {
       const selectText = document.querySelector('#ozoom').innerText
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "text/plain");
-
-      var raw = selectText;
-
-      var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-      };
       $.ajax({"url": "http://154.8.196.163:5000/","method": "GET","timeout": 0,}).done(function (response) {
         var audio= new Audio(`http://154.8.196.163:5000/${response}`);//这里的路径写上mp3文件在项目中的绝对路径
         audio.play();//播放
@@ -289,27 +254,21 @@
       this.query('#menu').classList.add('no-show')
     },
     clear: function (classStr) {
-      if (!this.data.activeEl) {
-        this.query('#menu').classList.add('no-show')
-        return
+      startEl.classList.add(classStr)
+      startKey = parseInt(startEl.getAttribute("key"))
+      endKey = parseInt(endEl.getAttribute("key"))
+
+      console.log(startKey, endKey)
+      while (startKey <= endKey) {
+        document.querySelector('em[key="' + startKey++ + '"]').classList.remove(classStr)
+        if (classStr == 'memo') {
+          const anno = document.querySelector('em[key="' + startKey++ + '"] .anno')
+          if (anno) anno.outerHTML = ''
+        }
       }
-      console.log(this.data.activeEl)
-      if($(this.data.activeEl).hasClass(classStr)) {
-        this.data.activeEl.outerHTML = this.data.activeEl.innerHTML
-      }
-      
-      this.query('#menu').classList.add('no-show')
-      console.log('---------------')
-      console.log(classStr)
-      console.log(this.data.activeEl)
-      
-      this.data.activeEl.querySelectorAll('.' + classStr).forEach(element => {
-        console.log('---------------')
-        console.log(element)
-        element.outerHTML = element.innerHTML
-      });
-      this.save()
-      this.initText()
+      document.querySelector('#menu').classList.add('no-show')
+      // this.save()
+      // this.initText()
       document.querySelector('.biji-box').style.display = 'none'
     },
     tingquanwen: function () {
@@ -389,7 +348,7 @@
     border-radius: 5px;
   }
 }
-.dubao.beijing {
+.sel.beijing {
   background: #ff0;
 }
 .memo {
@@ -410,7 +369,6 @@
   background-size: 20px;
   background-repeat: no-repeat;
   background-position: center right;
-  margin-right: 20px;
 }
 .baocun {
   position: fixed;
@@ -547,15 +505,10 @@
     }
   }
 }
-.dubao i.anno {
-  position: absolute;
-  right: -20px;
-  top: -15px;
+.sel i.anno {
+  padding: 3px;
   z-index: 2;
   font-size: 12px;
-  width: 24px;
-  height: 24px;
-  line-height: 23px;
   border-radius: 12px;
   color: #1497fc;
   border: 2px solid #1497fc;
@@ -563,8 +516,13 @@
   font-weight: bold;
   font-style: normal;
   background: #fff;
+  margin: 0 2px;
 }
 svg {
   cursor: pointer;
+}
+.main .swiper-box .swiper-container {
+  clear: both;
+  overflow: hidden;
 }
 </style>

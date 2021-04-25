@@ -119,7 +119,7 @@ li {
   border-radius: 5px;
 }
 
-.dubao.beijing {
+.sel.beijing {
   background: #ff0;
 }
 
@@ -143,7 +143,6 @@ li {
   background-size: 20px;
   background-repeat: no-repeat;
   background-position: center right;
-  margin-right: 20px;
 }
 
 .baocun {
@@ -298,15 +297,10 @@ li {
   margin: 0 20px;
 }
 
-.dubao i.anno {
-  position: absolute;
-  right: -20px;
-  top: -15px;
+.sel i.anno {
+  padding: 3px;
   z-index: 2;
   font-size: 12px;
-  width: 24px;
-  height: 24px;
-  line-height: 23px;
   border-radius: 12px;
   color: #1497fc;
   border: 2px solid #1497fc;
@@ -314,9 +308,15 @@ li {
   font-weight: bold;
   font-style: normal;
   background: #fff;
+  margin: 0 2px;
 }
 
 svg {
   cursor: pointer;
+}
+
+.main .swiper-box .swiper-container {
+  clear: both;
+  overflow: hidden;
 }
 
