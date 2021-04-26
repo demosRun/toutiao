@@ -22,7 +22,7 @@ var Tool = {
     text: {
         //分割字符串
         cutString:function(original,before,after,index){index = index || 0;if (typeof index === "number") {var P = original.indexOf(before, index);if (P > -1) {if (after) {var f = original.indexOf(after, P + 1);return (f>-1)? original.slice(P + before.toString().length, f):console.error("Tool [在文本中找不到 参数三 "+after+"]");} else {return original.slice(P + before.toString().length);}} else {console.error("Tool [在文本中找不到 参数一 " + before + "]");return}} else {console.error("Tool [sizeTransition:" + index + "不是一个整数!]");}},
-        //根据一个基点分割字符串  实例：http://myweb-10017157.cos.myqcloud.com/20161212/%E7%BB%83%E4%B9%A0.zip
+        //根据一个基点分割字符串  实例：//myweb-10017157.cos.myqcloud.com/20161212/%E7%BB%83%E4%B9%A0.zip
         cutStringPoint:function (original,str, before, after,order, index) {index = index || 0;if (typeof index === "number") {var O = original.indexOf(str, index);var P = (order[0]==="1")?original.lastIndexOf(before, O):original.indexOf(before, O);if (P > -1) {if (after) {var f ;switch (order[1]){case "1":f = original.indexOf(after, P + 1);break;case "2":f = original.indexOf(after, O + 1);break;case "3":f = original.lastIndexOf(after, O + 1);break;}return (f>-1)? original.slice(P + before.toString().length, f):console.error("Tool [在文本中找不到 参数三 "+after+"]");}else {return original.slice(P + before.toString().length);}}else {console.error("Tool [在文本中找不到 参数一 " + before + "]");}} else {console.error("Tool [sizeTransition:" + index + "不是一个整数!]");}},
         //分割字符串组
         cutStringArray:function(original,before,after,index){var aa=[],ab=0;while(original.indexOf(before,index)>0){aa[ab]=Tool.text.cutString(original,before,after,index);index=original.indexOf(before,index)+1;ab++;}return aa;},
@@ -72,7 +72,7 @@ var activePart = ''
 function getData (part) {
   activePart = part
   
-  $.ajax({"url": "http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/" + userID + "/" + part,"method": "GET","timeout": 0,}).done(function (response) {
+  $.ajax({"url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/" + userID + "/" + part,"method": "GET","timeout": 0,}).done(function (response) {
     if (response.indexOf('404 Not Found') > 0) {
       alert('当前日期暂无内容！')
       return
@@ -84,45 +84,49 @@ function getData (part) {
   });
 }
 
-let userConfig = {}
+var userConfig = {}
 function wode () {
   document.querySelector('.right-main .title').innerHTML = '我的空间'
   
   
   $.ajax({
-    "url": "https://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getUserInfo/" + userID,
+    "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getUserInfo/" + userID,
     "method": "GET",
     "timeout": 0,
   }).done(function (response) {
     // 获取配置
-    $.ajax({"url": "https://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getConfig/" + userID,"method": "GET","timeout": 0,}).done(function (response2) {
+    $.ajax({"url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getConfig/" + userID,"method": "GET","timeout": 0,}).done(function (response2) {
       userConfig = JSON.parse(response2)
       console.log(userConfig)
       response = JSON.parse(response)
       console.log(response);
       var newhtml = '<div class="news"><ul class="news-list">'
 
-      let fenlei = ["未分类"]
-      response.forEach(function (element) {
+      var fenlei = ["未分类"]
+      for (var index = 0; index < response.length; index++) {
+        var element = response[index];
         var lable = userConfig[element.key] ? userConfig[element.key].lable : '未分类'
-        if (!fenlei.includes(lable)) {
+        if (fenlei.indexOf(lable) < 0) {
           fenlei.push(lable)
         }
-        newhtml += "<li lable='" + lable + "'><span>·</span><a href=" + element.key + ">" + element.titleStr +'</a><i class="lable">' + lable +'</i><span class="tool dubao icon" onclick="biaoqian(\'' + element.key + '\')">&#xe602;</span><span class="tool shanchu icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
-      })
+        newhtml += "<li lable='" + lable + "'><span>·</span><a href=#" + element.key + ">" + element.titleStr +'</a><i class="lable">' + lable +'</i><span class="tool dubao icon" onclick="biaoqian(\'' + element.key + '\')">&#xe602;</span><span class="tool shanchu icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
+ 
+      }
+      console.log(fenlei)
       newhtml += "</ul></div>"
       // 生成出分类html
-      let fenleiHtml = '<ul class="fenlei-box clearfix">'
-      fenlei.forEach(element => {
+      var fenleiHtml = '<ul class="fenlei-box clearfix">'
+      for (var index = 0; index < fenlei.length; index++) {
+        var element = fenlei[index];
         fenleiHtml += "<li onclick=\"fenlei(this, '" + element + "')\">" + element + "</li>"
-      });
+      }
       fenleiHtml += '</ul>'
       if (document.querySelector('.article-box')) {
         document.querySelector('.article-box').outerHTML = fenleiHtml + newhtml
       } else {
-        document.querySelector('.right-main .news').outerHTML = newhtml
+        document.querySelector('.right-main .news').outerHTML = fenleiHtml + newhtml
       }
-      setTimeout(() => {
+      setTimeout(function() {
         document.querySelector('.fenlei-box li').classList.add('active')
       }, 0);
     })
@@ -148,7 +152,7 @@ function shanchu(name) {
   var r=confirm("确定要删除记录: " + name.split('-')[2] + ' 吗!');
   if (r==true) {
     var settings = {
-      "url": "http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/delete/" + userID + "/" + name,
+      "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/devare/" + userID + "/" + name,
       "method": "GET",
       "timeout": 0,
     };
@@ -161,8 +165,8 @@ function shanchu(name) {
   
 }
 function dateFormat(fmt, date) {
-  let ret;
-  const opt = {
+  var ret;
+  var opt = {
       "Y+": date.getFullYear().toString(),        // 年
       "m+": (date.getMonth() + 1).toString(),     // 月
       "d+": date.getDate().toString(),            // 日
@@ -171,7 +175,7 @@ function dateFormat(fmt, date) {
       "S+": date.getSeconds().toString()          // 秒
       // 有其他格式化字符需求可以继续添加，必须转化成字符串
   };
-  for (let k in opt) {
+  for (var k in opt) {
       ret = new RegExp("(" + k + ")").exec(fmt);
       if (ret) {
           fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
@@ -185,19 +189,37 @@ if ((window.innerWidth / window.innerHeight) < 1) {
 }
 
 function changeP () {
-  
-  let key = 0
-  let allP = document.querySelectorAll('.article p')
-  allP.forEach(el => {
-    if (!$(el).hasClass('dubao')) {
+  var key = 0
+  var allP = document.querySelectorAll('.article p')
+  console.log(allP.length)
+  for (var index = 0; index < allP.length; index++) {
+    var el = allP[index];
+    console.log(el)
+    if ($(el).find('em').length < 10) {
+      // alert(el.innerText)
       el.classList.add('dubao')
       var newHtml = ''
-      el.innerText.split('').forEach(element => {
-        newHtml += '<em class="sel" key="' + key++ + '">' + element + '</em>'
-      });
+      console.log(el.innerText.split(''))
+      for (var index2 = 0; index2 < el.innerText.split('').length; index2++) {
+        var element = el.innerText.split('')[index2];
+        newHtml += '<em class="" key="' + key++ + '">' + element + '</em>' 
+      }
       el.innerHTML = newHtml
     }
-  });
+  }
+  var allh1 = document.querySelectorAll('.article h1')
+  for (var index = 0; index < allh1.length; index++) {
+    var el = allh1[index];
+    if (!$(el).find('em')[0]) {
+      el.classList.add('dubao')
+      var newHtml = ''
+      for (var index2 = 0; index2 < el.innerText.split('').length; index2++) {
+        var element = el.innerText.split('')[index2];
+        newHtml += '<em class="" key="' + key++ + '">' + element + '</em>' 
+      }
+      el.innerHTML = newHtml
+    }
+  }
 }
 
 var startEl = null
@@ -208,10 +230,19 @@ function biaoji (classStr) {
   startEl.classList.add(classStr)
   startKey = parseInt(startEl.getAttribute("key"))
   endKey = parseInt(endEl.getAttribute("key"))
-  let keyTemp = randomString(16)
+  if (endKey < startKey) {
+    var temp = endKey
+    endKey = startKey
+    startKey = temp
+  }
+  if (!window.Promise) {
+    startKey = startKey + 1
+  }
+  var keyTemp = randomString(16)
   console.log(startKey, endKey)
+  console.log($('em[key="' + startKey + '"]').text())
   while (startKey <= endKey) {
-    document.querySelector('em[key="' + startKey + '"]').classList.add(classStr)
+    $('em[key="' + startKey + '"]').addClass(classStr)
     document.querySelector('em[key="' + startKey + '"]').setAttribute("key-" + classStr, keyTemp)
     startKey++
   }
@@ -222,7 +253,11 @@ function biaoji (classStr) {
 function chackActive (classStr) {
   startKey = parseInt(startEl.getAttribute("key"))
   endKey = parseInt(endEl.getAttribute("key"))
-
+  if (endKey < startKey) {
+    var temp = endKey
+    endKey = startKey
+    startKey = temp
+  }
   console.log(startKey, endKey)
   while (startKey <= endKey) {
     var nowTemp = document.querySelector('em[key="' + startKey++ + '"]')
@@ -241,11 +276,11 @@ function biaoqian (key) {
     }
     userConfig[key]['lable'] = word
     $.ajax({
-      "url": "https://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveConfig/" + userID,
+      "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveConfig/" + userID,
       "method": "POST",
       "timeout": 0,
       "data": JSON.stringify(userConfig),
-      "success": (response) => {
+      "success": function (response) {
         owo.tool.toast('数据保存成功!')
         wode()
       }
@@ -260,7 +295,7 @@ function showZhu (target, key) {
   activeKey = key
   document.querySelector('.biji-box').style.display = 'block'
   document.querySelector('.biji-input textarea').value = unescape(target.getAttribute('data-val'))
-  setTimeout(() => {
+  setTimeout(function () {
     document.querySelector('#menu').classList.add('no-show')
   }, 0);
   return

@@ -13,7 +13,7 @@
   .home.clear.main.w1000
   .biji-box.shalid
     .biji-input
-      <svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg>
+      <svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="//www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg>
       .title 查看或编辑您的笔记
       textarea
       .bottom-bar.clear
@@ -94,10 +94,12 @@
     biji: function () {
       var word = prompt("请输入笔记内容!","");
       if (word) {
-        
+        startKey = parseInt(startEl.getAttribute("key"))
+        endKey = parseInt(endEl.getAttribute("key"))
+        // console.log(endKey, startKey)
         biaoji('memo')
         setTimeout(() => {
-          console.log(endEl)
+          console.log(endKey, startKey)
           endEl.innerHTML = endEl.innerHTML + `<i class="anno" data-val="${escape(word)}" onclick="showZhu(this, '${endEl.getAttribute('key-memo')}')">注</i></span>`
           setTimeout(() => {
             this.save()
@@ -229,8 +231,8 @@
     },
     langdu: function () {
       const selectText = document.querySelector('#ozoom').innerText
-      $.ajax({"url": "http://154.8.196.163:5000/","method": "GET","timeout": 0,}).done(function (response) {
-        var audio= new Audio(`http://154.8.196.163:5000/${response}`);//这里的路径写上mp3文件在项目中的绝对路径
+      $.ajax({"url": "//154.8.196.163:5000/","method": "GET","timeout": 0,}).done(function (response) {
+        var audio= new Audio(`//154.8.196.163:5000/${response}`);//这里的路径写上mp3文件在项目中的绝对路径
         audio.play();//播放
       });
       
@@ -240,13 +242,20 @@
       startEl.classList.add(classStr)
       startKey = parseInt(startEl.getAttribute("key"))
       endKey = parseInt(endEl.getAttribute("key"))
-
+      if (endKey < startKey) {
+        var temp = endKey
+        endKey = startKey
+        startKey = temp
+      }
       console.log(startKey, endKey)
       while (startKey <= endKey) {
         document.querySelector('em[key="' + startKey++ + '"]').classList.remove(classStr)
         if (classStr == 'memo') {
-          const anno = document.querySelector('em[key="' + startKey++ + '"] .anno')
-          if (anno) anno.outerHTML = ''
+          setTimeout(function (params) {
+            if (document.querySelector('em[key="' + startKey++ + '"] .anno')) {
+              document.querySelector('em[key="' + startKey++ + '"] .anno').outerHTML = ''
+            }
+          }, 0);
         }
       }
       document.querySelector('#menu').classList.add('no-show')
@@ -265,12 +274,12 @@
     },
     tingquanwen: function () {
       const selectText = document.querySelector('#ozoom').innerText
-      var audio= new Audio(`http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=4&text=${selectText}`);//这里的路径写上mp3文件在项目中的绝对路径
+      var audio= new Audio(`//tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=4&text=${selectText}`);//这里的路径写上mp3文件在项目中的绝对路径
       audio.play();//播放
     },
     save: function () {
       $.ajax({
-        "url": `http://service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveAll/${userID}/` + activePart,
+        "url": `//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveAll/${userID}/` + activePart,
         "method": "POST",
         "timeout": 0,
         "data": document.querySelector('.home').innerHTML,
@@ -340,7 +349,7 @@
     border-radius: 5px;
   }
 }
-.sel.beijing {
+em.beijing {
   background: #ff0;
 }
 .memo {
@@ -498,7 +507,7 @@
     }
   }
 }
-.sel i.anno {
+em i.anno {
   padding: 3px;
   z-index: 2;
   font-size: 12px;
@@ -517,5 +526,8 @@ svg {
 .main .swiper-box .swiper-container {
   clear: both;
   overflow: hidden;
+}
+.dubao-box {
+  padding-bottom: 20px;
 }
 </style>

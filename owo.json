@@ -86,10 +86,6 @@
 		{
 			"name": "toast",
 			"src": "./owo_modules/toast.js"
-		},
-		{
-			"name": "pdf",
-			"src": "./src/resource/pdf.js"
 		}
 	],
 	"styleList": [
