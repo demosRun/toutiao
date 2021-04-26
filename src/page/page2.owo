@@ -88,7 +88,7 @@
       }, 0);
     },
     beijing: function () {
-      biaoji('beijing')
+      biaoji('bgline')
       this.save()
     },
     biji: function () {
@@ -349,7 +349,7 @@
     border-radius: 5px;
   }
 }
-em.beijing {
+em.bgline {
   background: #ff0;
 }
 .memo {

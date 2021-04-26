@@ -9,6 +9,7 @@ function clear (s1) {
   return s1
 }
 
+var issafariBrowser = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
 
 function decode(s) {
   return unescape(s.replace(/\\(u[0-9a-fA-F]{4})/gm, '%$1'));
@@ -100,7 +101,7 @@ function wode () {
       console.log(userConfig)
       response = JSON.parse(response)
       console.log(response);
-      var newhtml = '<div class="news"><ul class="news-list">'
+      var newhtml = '<div class="news-fenlei"><ul class="news-list">'
 
       var fenlei = ["未分类"]
       for (var index = 0; index < response.length; index++) {
@@ -109,7 +110,7 @@ function wode () {
         if (fenlei.indexOf(lable) < 0) {
           fenlei.push(lable)
         }
-        newhtml += "<li lable='" + lable + "'><span>·</span><a href=#" + element.key + ">" + element.titleStr +'</a><i class="lable">' + lable +'</i><span class="tool dubao icon" onclick="biaoqian(\'' + element.key + '\')">&#xe602;</span><span class="tool shanchu icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
+        newhtml += "<li lable='" + lable + "'><span>·</span><a href=#" + element.key + ">" + element.titleStr +'</a><i class="lable">' + lable +'</i><span class="tool dubao icon" onclick="biaoqian(\'' + element.key + '\')">&#xe602;</span><span class="tool shanchu icon" onclick="shanchu(\'' + element.key + '\')">&#xe63c;</span></li>'
  
       }
       console.log(fenlei)
@@ -124,8 +125,9 @@ function wode () {
       if (document.querySelector('.article-box')) {
         document.querySelector('.article-box').outerHTML = fenleiHtml + newhtml
       } else {
-        document.querySelector('.right-main .news').outerHTML = fenleiHtml + newhtml
+        document.querySelector('.right-main .news').outerHTML = '<div class="wode">' + fenleiHtml + newhtml + '</div>'
       }
+      console.log(fenleiHtml)
       setTimeout(function() {
         document.querySelector('.fenlei-box li').classList.add('active')
       }, 0);
@@ -151,15 +153,15 @@ function showBijiInput (callBack) {
 function shanchu(name) {
   var r=confirm("确定要删除记录: " + name.split('-')[2] + ' 吗!');
   if (r==true) {
-    var settings = {
-      "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/devare/" + userID + "/" + name,
-      "method": "GET",
+    $.ajax({
+      "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveConfig/" + userID,
+      "method": "POST",
       "timeout": 0,
-    };
-    
-    $.ajax(settings).done(function (response) {
-      wode()
-      alert('删除成功!')
+      "data": JSON.stringify(userConfig),
+      "success": function (response) {
+        owo.tool.toast('删除成功!')
+        wode()
+      }
     })
   }
   
@@ -175,10 +177,18 @@ function dateFormat(fmt, date) {
       "S+": date.getSeconds().toString()          // 秒
       // 有其他格式化字符需求可以继续添加，必须转化成字符串
   };
+  String.prototype.zpadStart = function (targetLength, padString) {
+    let string = this
+    while (string.length < targetLength) {
+        string = padString + string
+    }
+    return string
+  }
   for (var k in opt) {
       ret = new RegExp("(" + k + ")").exec(fmt);
+      console.log(opt, k)
       if (ret) {
-          fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+          fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].zpadStart(ret[1].length, "0")))
       };
   };
   return fmt;
@@ -199,12 +209,16 @@ function changeP () {
       // alert(el.innerText)
       el.classList.add('dubao')
       var newHtml = ''
-      console.log(el.innerText.split(''))
       for (var index2 = 0; index2 < el.innerText.split('').length; index2++) {
         var element = el.innerText.split('')[index2];
         newHtml += '<em class="" key="' + key++ + '">' + element + '</em>' 
       }
       el.innerHTML = newHtml
+    } else {
+      for (var index2 = 0; index2 < $(el).find('em').length; index2++) {
+        var element = $(el).find('em')[index2];
+        element.setAttribute('key', key++)
+      }
     }
   }
   var allh1 = document.querySelectorAll('.article h1')
@@ -218,6 +232,49 @@ function changeP () {
         newHtml += '<em class="" key="' + key++ + '">' + element + '</em>' 
       }
       el.innerHTML = newHtml
+    } else {
+      for (var index2 = 0; index2 < $(el).find('em').length; index2++) {
+        var element = $(el).find('em')[index2];
+        element.setAttribute('key', key++)
+      }
+    }
+  }
+
+  var allh1 = document.querySelectorAll('.article h2')
+  for (var index = 0; index < allh1.length; index++) {
+    var el = allh1[index];
+    if (!$(el).find('em')[0]) {
+      el.classList.add('dubao')
+      var newHtml = ''
+      for (var index2 = 0; index2 < el.innerText.split('').length; index2++) {
+        var element = el.innerText.split('')[index2];
+        newHtml += '<em class="" key="' + key++ + '">' + element + '</em>' 
+      }
+      el.innerHTML = newHtml
+    } else {
+      for (var index2 = 0; index2 < $(el).find('em').length; index2++) {
+        var element = $(el).find('em')[index2];
+        element.setAttribute('key', key++)
+      }
+    }
+  }
+
+  var allh1 = document.querySelectorAll('.article h3')
+  for (var index = 0; index < allh1.length; index++) {
+    var el = allh1[index];
+    if (!$(el).find('em')[0]) {
+      el.classList.add('dubao')
+      var newHtml = ''
+      for (var index2 = 0; index2 < el.innerText.split('').length; index2++) {
+        var element = el.innerText.split('')[index2];
+        newHtml += '<em class="" key="' + key++ + '">' + element + '</em>' 
+      }
+      el.innerHTML = newHtml
+    } else {
+      for (var index2 = 0; index2 < $(el).find('em').length; index2++) {
+        var element = $(el).find('em')[index2];
+        element.setAttribute('key', key++)
+      }
     }
   }
 }
@@ -227,7 +284,6 @@ var endEl = null
 
 
 function biaoji (classStr) {
-  startEl.classList.add(classStr)
   startKey = parseInt(startEl.getAttribute("key"))
   endKey = parseInt(endEl.getAttribute("key"))
   if (endKey < startKey) {
@@ -235,13 +291,12 @@ function biaoji (classStr) {
     endKey = startKey
     startKey = temp
   }
-  if (!window.Promise) {
+  if (issafariBrowser) {
     startKey = startKey + 1
   }
   var keyTemp = randomString(16)
-  console.log(startKey, endKey)
-  console.log($('em[key="' + startKey + '"]').text())
   while (startKey <= endKey) {
+    console.log(startKey)
     $('em[key="' + startKey + '"]').addClass(classStr)
     document.querySelector('em[key="' + startKey + '"]').setAttribute("key-" + classStr, keyTemp)
     startKey++

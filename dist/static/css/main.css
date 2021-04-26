@@ -541,3 +541,8 @@ i.lable {
   background-color: #009fe9;
   color: white;
 }
+
+.news-list li {
+  line-height: 34px;
+  margin-bottom: 10px;
+}
