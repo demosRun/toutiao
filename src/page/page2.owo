@@ -233,9 +233,14 @@
             if (selectText.length > 0 && window.getSelection().baseNode) {
               startEl = window.getSelection().baseNode.parentElement
               endEl = window.getSelection().extentNode.parentElement
-              this.query('#menu').style.left = (e.layerX - 100) + 'px'
+              this.query('#menu').style.left = (e.pageX - 100) + 'px'
               this.checkDom()
-              this.query('#menu').style.bottom = ((document.body.clientHeight - e.pageY) - 60) + 'px'
+              if ((e.y / window.innerHeight) > 0.8) {
+                this.query('#menu').style.bottom = ((document.body.clientHeight - e.pageY) + 30) + 'px'
+              } else {
+                this.query('#menu').style.bottom = ((document.body.clientHeight - e.pageY) - 60) + 'px'
+              }
+              
               this.query('#menu').classList.remove('no-show')
               setTimeout(() => {
                 if (!this.data.toolHover && !this.data.huaxianIng) {
@@ -332,7 +337,6 @@
   background-color: white;
   user-select: none;
   left: 1150px;
-  right: 0;
   margin: auto;
   z-index: 99;
   padding: 5px;
@@ -427,6 +431,7 @@ em.bgline {
 #menu.no-show {
   padding: 0;
   height: 0;
+  display: none;
 }
 .shalid {
   position: fixed;

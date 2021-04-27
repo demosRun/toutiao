@@ -170,11 +170,13 @@ function shanchu(name) {
   layer.confirm('确定要删除文章记录吗?', {
     btn: ['删除','放弃']
   }, function(){
+    layer.closeAll()
     $.ajax({
       "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/delete/" + userID + "/" + name + '.html',
       "method": "GET",
       "timeout": 0,
       "success": function (response) {
+        
         owo.tool.toast('删除成功!')
         wode()
       }
@@ -186,6 +188,7 @@ function qingli (name) {
   layer.confirm('确定要清理这个标签吗?', {
     btn: ['删除','放弃']
   }, function(){
+    layer.closeAll()
     $.ajax({
       "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveConfig/" + userID,
       "method": "POST",
@@ -349,7 +352,7 @@ function chackActive (classStr) {
     endKey = startKey
     startKey = temp
   }
-  console.log(startKey, endKey)
+  // console.log(startKey, endKey)
   while (startKey <= endKey) {
     var nowTemp = document.querySelector('em[key="' + startKey++ + '"]')
     if ($(nowTemp).hasClass(classStr)) {
@@ -378,7 +381,7 @@ function biaoqian (key) {
       }
     })
   }
-  window.shanchu = function () {
+  window.shanchuBQ = function () {
     userConfig[key] = {"lable":""}
     $.ajax({
       "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveConfig/" + userID,
@@ -399,7 +402,7 @@ function biaoqian (key) {
     anim: 2,
     title: "查看或编辑您的笔记",
     shadeClose: true, //开启遮罩关闭
-    content: '<div class="edit-box"><textarea>' + ((userConfig[key] && userConfig[key].lable) ? userConfig[key].lable : '') + '</textarea><div class="bottom-bar clear"><div class="button fl" style="background: #ccc;" onclick="layer.closeAll()">取消</div><div class="button fl" style="background: #d03333;" onclick="window.shanchu()">删除</div><div class="button fl" style="background: #1497fc;" onclick="window.baocun()">保存</div></div></div>'
+    content: '<div class="edit-box"><textarea>' + ((userConfig[key] && userConfig[key].lable) ? userConfig[key].lable : '') + '</textarea><div class="bottom-bar clear"><div class="button fl" style="background: #ccc;" onclick="layer.closeAll()">取消</div><div class="button fl" style="background: #d03333;" onclick="window.shanchuBQ()">删除</div><div class="button fl" style="background: #1497fc;" onclick="window.baocun()">保存</div></div></div>'
   });
 }
 
