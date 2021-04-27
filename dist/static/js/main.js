@@ -85,7 +85,7 @@ function getData (part) {
   
   $.ajax({"url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/" + userID + "/" + part,"method": "GET","timeout": 0,}).done(function (response) {
     if (response.indexOf('404 Not Found') > 0) {
-      alert('当前日期暂无内容！')
+      layer.msg('当前日期暂无内容!');
       return
     }
     document.querySelector('.home').innerHTML = response
@@ -122,7 +122,7 @@ function wode () {
           fenlei.push(lable)
         }
         if (lable != "全部" && lable != "") {
-          newhtml += "<li lable='" + lable + "'><span>·</span><a href=#" + element.key + ">" + element.titleStr +'</a><i class="lable" onclick="biaoqian(\'' + element.key + '\')">' + lable +'</i><span class="tool dubao icon" onclick="qingli(\'' + element.key + '\')">&#xe6c0;</span><span class="tool qingli icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
+          newhtml += "<li lable='" + lable + "'><span>·</span><a href=#" + element.key + ">" + element.titleStr +'</a><i class="lable" onclick="biaoqian(\'' + element.key + '\')">' + lable +'</i><span class="tool dubao icon" onclick="biaoqian(\'' + element.key + '\')">&#xe602;</span><span class="tool qingli icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
         } else {
           newhtml += "<li lable='" + lable + "'><span>·</span><a href=#" + element.key + ">" + element.titleStr +'</a><span class="tool dubao icon" onclick="biaoqian(\'' + element.key + '\')">&#xe602;</span><span class="tool shanchu icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
         }
@@ -167,8 +167,9 @@ function showBijiInput (callBack) {
 
 
 function shanchu(name) {
-  var r=confirm("确定要删除记录: " + name + ' 吗!');
-  if (r==true) {
+  layer.confirm('确定要删除文章记录吗?', {
+    btn: ['删除','放弃']
+  }, function(){
     $.ajax({
       "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/delete/" + userID + "/" + name + '.html',
       "method": "GET",
@@ -178,14 +179,13 @@ function shanchu(name) {
         wode()
       }
     })
-  }
-  
+  });
 }
 
 function qingli (name) {
-  var r=confirm("确定要清理这个标签吗!")
-  if (r==true) {
-    userConfig[name] = {"lable":""}
+  layer.confirm('确定要清理这个标签吗?', {
+    btn: ['删除','放弃']
+  }, function(){
     $.ajax({
       "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveConfig/" + userID,
       "method": "POST",
@@ -196,8 +196,7 @@ function qingli (name) {
         wode()
       }
     })
-  }
-  
+  });
 }
 
 function dateFormat(fmt, date) {
@@ -361,8 +360,8 @@ function chackActive (classStr) {
 }
 
 function biaoqian (key) {
-  var word = prompt("输入修改后的标签名:","");
-  if (word) {
+  window.baocun = function () {
+    var word = document.querySelector('.edit-box textarea').value
     if (!userConfig[key]) {
       userConfig[key] = {}
     }
@@ -374,10 +373,34 @@ function biaoqian (key) {
       "data": JSON.stringify(userConfig),
       "success": function (response) {
         owo.tool.toast('数据保存成功!')
+        layer.closeAll()
         wode()
       }
     })
   }
+  window.shanchu = function () {
+    userConfig[key] = {"lable":""}
+    $.ajax({
+      "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveConfig/" + userID,
+      "method": "POST",
+      "timeout": 0,
+      "data": JSON.stringify(userConfig),
+      "success": function (response) {
+        owo.tool.toast('标签删除成功!')
+        layer.closeAll()
+        wode()
+      }
+    })
+  }
+  layer.open({
+    type: 1,
+    skin: 'biaoqian-box', //样式类名
+    closeBtn: 0, //不显示关闭按钮
+    anim: 2,
+    title: "查看或编辑您的笔记",
+    shadeClose: true, //开启遮罩关闭
+    content: '<div class="edit-box"><textarea>' + ((userConfig[key] && userConfig[key].lable) ? userConfig[key].lable : '') + '</textarea><div class="bottom-bar clear"><div class="button fl" style="background: #ccc;" onclick="layer.closeAll()">取消</div><div class="button fl" style="background: #d03333;" onclick="window.shanchu()">删除</div><div class="button fl" style="background: #1497fc;" onclick="window.baocun()">保存</div></div></div>'
+  });
 }
 
 var activeAnno = null

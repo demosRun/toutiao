@@ -23,14 +23,14 @@
     <!-- 附属css文件 -->
     <link rel="stylesheet" href="http://paper.people.com.cn/rmrb/tplimg/default.css" charset="utf-8">
     <link rel="stylesheet" href="./static/css/foundation.min.css" charset="utf-8">
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/index.js" charset="utf-8">
+    <link rel="stylesheet" href="http://unpkg.com/layui@2.6.5/dist/css/layui.css" charset="utf-8">
     <link rel="stylesheet" href="./static/css/main.css" charset="utf-8">
       
   </head>
   <body>
     
     <!-- 页面[page]-->
-    <div class="dubao-box page" template="page" style="display: block;"><div class="no-show" id="menu"><div class="menu-bottom clear"><div class="menu huaxian" o-tap="huaxian()">划线</div><div class="menu qxhx" o-tap="clear('underline')">取消划线</div><div class="menu beijing" o-tap="beijing()">加背景</div><div class="menu qxbj" o-tap="clear('beijing')">取消背景</div><div class="menu biji" o-tap="biji()">做笔记</div><div class="menu qxbiji" o-tap="clear('memo')">取消笔记</div><div class="menu" o-tap="copyText()">复制</div></div></div><div class="home clear main w1000"></div><div class="biji-box shalid"><div class="biji-input"><svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="//www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg><div class="title">查看或编辑您的笔记</div><textarea></textarea><div class="bottom-bar clear"><div class="button fl" style="background: #ccc;" o-tap="document.querySelector('.biji-box').style.display = 'none'">取消</div><div class="button fl" style="background: #d03333;" o-tap="clearKey('memo')">删除</div><div class="button fl" style="background: #1497fc;" o-tap="saveBiji()">保存</div></div></div></div><div class="shouji-box shalid"><div class="shouji-input"><div class="title">请输入手机号以便保存您的阅读历史:</div><input type="text"><div class="button">确认</div></div></div></div>
+    <div class="dubao-box page" template="page" style="display: block;"><div class="no-show" id="menu"><div class="menu-bottom clear"><div class="menu huaxian" o-tap="huaxian()">划线</div><div class="menu qxhx" o-tap="clear('underline')">取消划线</div><div class="menu beijing" o-tap="beijing()">加背景</div><div class="menu qxbj" o-tap="clear('beijing')">取消背景</div><div class="menu biji" o-tap="biji()">做笔记</div><div class="menu qxbiji" o-tap="clear('memo')">取消笔记</div><div class="menu" o-tap="copyText()">复制</div></div></div><div class="home clear main w1000"></div><div class="biji-box shalid"><div class="biji-input"><svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="//www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg><div class="title">查看或编辑您的笔记</div><textarea></textarea><div class="bottom-bar clear"><div class="button fl" style="background: #ccc;" o-tap="document.querySelector('.biji-box').style.display = 'none'">取消</div><div class="button fl" style="background: #d03333;" o-tap="clearKey('memo')">删除</div><div class="button fl" style="background: #1497fc;" o-tap="saveBiji()">保存</div></div></div></div><div class="biaoqian-box shalid"><div class="biji-input"><svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="//www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg><div class="title">查看或编辑您的笔记</div><textarea></textarea><div class="bottom-bar clear"><div class="button fl" style="background: #ccc;" o-tap="document.querySelector('.biji-box').style.display = 'none'">取消</div><div class="button fl" style="background: #d03333;" o-tap="clearKey('memo')">删除</div><div class="button fl" style="background: #1497fc;" o-tap="saveBiji()">保存</div></div></div></div><div class="shouji-box shalid"><div class="shouji-input"><div class="title">请输入手机号以便保存您的阅读历史:</div><input type="text"><div class="button">确认</div></div></div></div>
     
 <!-- 框架script文件 -->
 <script src="./static/js/owo.core.js" type="text/javascript" charset="UTF-8"></script>
@@ -47,10 +47,12 @@ owo.script = {
       var _this = this;
 
       if (!localStorage.getItem("userInfo")) {
-        showPhoneInput(function (e) {
-          console.log(e.target);
-          userID = document.querySelector('.shouji-input input').value;
-          userID = userID;
+        layer.prompt({
+          title: '请输入手机号以便保存您的阅读历史:',
+          formType: 2
+        }, function (pass, index) {
+          layer.close(index);
+          userID = pass;
           localStorage.setItem("userInfo", userID);
           document.querySelector('.shouji-box').style.display = 'none';
         });
@@ -120,11 +122,13 @@ owo.script = {
       this.save();
     },
     "biji": function biji() {
-      var _this3 = this;
+      layer.prompt({
+        title: '请输入笔记内容!',
+        formType: 2
+      }, function (word, index) {
+        var _this3 = this;
 
-      var word = prompt("请输入笔记内容!", "");
-
-      if (word) {
+        layer.close(index);
         startKey = parseInt(startEl.getAttribute("key"));
         endKey = parseInt(endEl.getAttribute("key"));
         var fanxiang = false;
@@ -151,7 +155,7 @@ owo.script = {
             _this3.save();
           }, 0);
         }, 100);
-      }
+      });
     },
     "checkDom": function checkDom(target) {
       var _this4 = this;
@@ -249,13 +253,6 @@ owo.script = {
         });
         document.querySelector('#demo-1').value = "\u9009\u62E9\u65E5\u671F " + dateDomList[0].innerText + "-" + dateDomList[1].innerText + "-" + dateDomList[2].innerText;
         changeP();
-
-        document.querySelector('.article').onclick = function (e) {
-          if (e.target.nodeName == 'I') {
-            activeKey = e.target.parentElement.getAttribute('data-memo');
-            showZhu(e.target, activeKey);
-          }
-        };
       }, 0);
     },
     "initPaper": function initPaper() {
@@ -294,6 +291,13 @@ owo.script = {
               _this6.query('#menu').classList.add('no-show');
             }
           }, 0);
+        };
+
+        document.querySelector('.article').onclick = function (e) {
+          if (e.target.nodeName == 'I') {
+            activeKey = e.target.parentElement.getAttribute('data-memo');
+            showZhu(e.target, activeKey);
+          }
         };
       }
 
@@ -372,7 +376,7 @@ owo.script = {
 
     <script src="https://cunchu.site/owo/script/jquery-1.11.1.min.js" type="text/javascript"  charset="UTF-8"></script>
     <script src="./static/js/main.js" type="text/javascript"  charset="UTF-8"></script>
-    <script src="https://unpkg.com/element-ui/lib/theme-chalk/index.css" type="text/javascript"  charset="UTF-8"></script>
+    <script src="http://unpkg.com/layui@2.6.5/dist/layui.js" type="text/javascript"  charset="UTF-8"></script>
     <script src="./static/js/foundation-datepicker.js" type="text/javascript"  charset="UTF-8"></script>
     <script src="./static/js/foundation-datepicker.zh-CN.js" type="text/javascript"  charset="UTF-8"></script>
     <script src="./static/js/toast.js" type="text/javascript"  charset="UTF-8"></script>

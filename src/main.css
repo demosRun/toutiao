@@ -546,3 +546,20 @@ i.lable {
   line-height: 34px;
   margin-bottom: 10px;
 }
+
+.edit-box {
+  width: 500px;
+  height: 235px;
+}
+.edit-box textarea {
+  width: 480px;
+  margin: 10px auto;
+  height: 180px;
+}
+.edit-box .button {
+  height: 35px;
+  line-height: 35px;
+  padding: 0 24px;
+  border-radius: 3px;
+  margin: 0 43px;
+}

@@ -75,8 +75,8 @@
 			"src": "./owo_modules/notice.js"
 		},
 		{
-			"name": "element-ui",
-			"src": "https://unpkg.com/element-ui/lib/theme-chalk/index.css"
+			"name": "layui",
+			"src": "http://unpkg.com/layui@2.6.5/dist/layui.js"
 		},
 		{
 			"name": "foundation-datepicker",
@@ -101,8 +101,8 @@
 			"src": "./owo_modules/foundation.min.css"
 		},
 		{
-			"name": "element-ui",
-			"src": "https://unpkg.com/element-ui/lib/index.js"
+			"name": "layui",
+			"src": "http://unpkg.com/layui@2.6.5/dist/css/layui.css"
 		},
 		{
 			"name": "main",

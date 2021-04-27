@@ -202,7 +202,8 @@ em.bgline {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  line-height: 14px;
+  line-height: 40px;
+  padding: 0;
 }
 
 .biji-input {
