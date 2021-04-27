@@ -74,7 +74,10 @@
 			"afterbody": true,
 			"src": "./owo_modules/notice.js"
 		},
-		
+		{
+			"name": "element-ui",
+			"src": "https://unpkg.com/element-ui/lib/theme-chalk/index.css"
+		},
 		{
 			"name": "foundation-datepicker",
 			"src": "./owo_modules/foundation-datepicker.js"
@@ -96,6 +99,10 @@
 		{
 			"name": "foundation.min",
 			"src": "./owo_modules/foundation.min.css"
+		},
+		{
+			"name": "element-ui",
+			"src": "https://unpkg.com/element-ui/lib/index.js"
 		},
 		{
 			"name": "main",

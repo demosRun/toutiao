@@ -50,6 +50,15 @@
       }
       if (location.hash) {
         var temp = location.hash.replace('#', '')
+        if (temp.indexOf('wode') >= 0) {
+          console.log('wode')
+          setTimeout(() => {
+            wode()
+          }, 800);
+          temp = temp.replace('wode', '')
+          getData(temp)
+          return
+        }
         getData(temp)
       } else {
         getData('now')
@@ -96,11 +105,23 @@
       if (word) {
         startKey = parseInt(startEl.getAttribute("key"))
         endKey = parseInt(endEl.getAttribute("key"))
+        let fanxiang = false
+        if (endKey < startKey) {
+          var temp = endKey
+          endKey = startKey
+          startKey = temp
+          fanxiang = true
+        }
         // console.log(endKey, startKey)
         biaoji('memo')
         setTimeout(() => {
           console.log(endKey, startKey)
-          endEl.innerHTML = endEl.innerHTML + `<i class="anno" data-val="${escape(word)}" onclick="showZhu(this, '${endEl.getAttribute('key-memo')}')">注</i></span>`
+          if (!fanxiang) {
+            endEl.innerHTML = endEl.innerHTML + `<i class="anno" data-val="${escape(word)}">注</i></span>`
+          } else {
+            startEl.innerHTML = startEl.innerHTML + `<i class="anno" data-val="${escape(word)}">注</i></span>`
+          }
+          
           setTimeout(() => {
             this.save()
           }, 0);
@@ -129,7 +150,6 @@
         document.querySelector('#menu .qxbiji').style.display = 'block'
         
       } else {
-        this.data.showText = false
         document.querySelector('#menu .biji').style.display = 'block'
         document.querySelector('#menu .qxbiji').style.display = 'none'
       }
@@ -143,17 +163,12 @@
         const element = this.queryAll('.article .dubao')[index];
         const menu = document.querySelector('#menu')
         element.onclick = (e) => {
+          console.log(e)
           this.data.toolHover = true
           this.data.activeEl = e.target
           this.checkDom(e.target)
           menu.style.left = (e.layerX - 100) + 'px'
-          if (this.data.showText) {
-            setTimeout(() => {
-              menu.style.bottom = ((document.body.clientHeight - e.pageY) - 10) - 30 + 'px'
-            }, 0);
-          } else {
-            menu.style.bottom = ((document.body.clientHeight - e.pageY) - 10) - 50 + 'px'
-          }
+          menu.style.bottom = ((document.body.clientHeight - e.pageY) - 10) - 50 + 'px'
           
           this.query('#menu').classList.remove('no-show')
         }
@@ -176,7 +191,7 @@
       
       // console.log(document.querySelector('.right.nav'))
       if (document.querySelector('.right.nav')) {
-        document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wode()">我的空间</li>'
+        document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wodeStart()">我的空间</li>'
       }
       // 生成日历
       document.querySelector('.date.left').innerHTML = `<input type="text"  value="" id="demo-1">`
@@ -188,10 +203,16 @@
           maxDate: `+1D`
         }).on('changeDate', function (ev) {
           // console.log(dateFormat("YYYY_mm_dd_1-01.htm", ev.date))
-          window.location.href = dateFormat("#YYYY_mm_dd_1-01.htm", ev.date)
+          window.location.href = "#home" + dateFormat("_YYYY_mm_dd_01.htm", ev.date)
         });
         document.querySelector('#demo-1').value = `选择日期 ${dateDomList[0].innerText}-${dateDomList[1].innerText}-${dateDomList[2].innerText}`
         changeP()
+        document.querySelector('.article').onclick = function (e) {
+          if (e.target.nodeName == 'I') {
+            activeKey = e.target.parentElement.getAttribute('data-memo')
+            showZhu(e.target, activeKey)
+          }
+        }
       }, 0);
       
     },
@@ -251,11 +272,9 @@
       while (startKey <= endKey) {
         document.querySelector('em[key="' + startKey++ + '"]').classList.remove(classStr)
         if (classStr == 'memo') {
-          setTimeout(function (params) {
-            if (document.querySelector('em[key="' + startKey++ + '"] .anno')) {
-              document.querySelector('em[key="' + startKey++ + '"] .anno').outerHTML = ''
-            }
-          }, 0);
+          if (document.querySelector('em[key="' + startKey + '"] .anno')) {
+            document.querySelector('em[key="' + startKey + '"] .anno').outerHTML = ''
+          }
         }
       }
       document.querySelector('#menu').classList.add('no-show')
@@ -264,9 +283,9 @@
       document.querySelector('.biji-box').style.display = 'none'
     },
     clearKey: function (classStr) {
-      console.log(`[key-${classStr}="${activeKey}"]`)
-      $(`[key-${classStr}="${activeKey}"]`).removeClass(classStr);
-      $(`[key-${classStr}="${activeKey}"] .anno`).remove()
+      console.log(`[data-${classStr}="${activeKey}"]`)
+      $(`[data-${classStr}="${activeKey}"]`).removeClass(classStr);
+      $(`[data-${classStr}="${activeKey}"] .anno`).remove()
       document.querySelector('#menu').classList.add('no-show')
       this.save()
       // this.initText()
@@ -400,13 +419,6 @@ em.bgline {
   padding: 0;
   height: 0;
 }
-.dubao .memo {
-  // background-color: transparent;
-  border-bottom: none
-}
-// .swiper-box {
-//   display: none;
-// }
 .shalid {
   position: fixed;
   left: 0;
@@ -508,17 +520,23 @@ em.bgline {
   }
 }
 em i.anno {
-  padding: 3px;
+  padding: 1px;
   z-index: 2;
-  font-size: 12px;
   border-radius: 12px;
   color: #1497fc;
-  border: 2px solid #1497fc;
+  border: 1px solid #1497fc;
   text-align: center;
   font-weight: bold;
   font-style: normal;
   background: #fff;
   margin: 0 2px;
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  line-height: 12px;
+  font-size: 12px;
+  top: -12px;
+  right: -12px;
 }
 svg {
   cursor: pointer;
@@ -528,6 +546,9 @@ svg {
   overflow: hidden;
 }
 .dubao-box {
-  padding-bottom: 20px;
+  padding-bottom: 80px;
+}
+em {
+  position: relative;
 }
 </style>

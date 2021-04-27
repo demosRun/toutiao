@@ -64,8 +64,18 @@ function etSelectedText() {
   return ''
 }
 
+function wodeStart () {
+  var temp = location.hash.replace('#', '')
+  location.hash = '#wode' + temp
+}
+
 window.onhashchange = function(ev) {
   var temp = location.hash.replace('#', '')
+  if (temp.indexOf('wode') >= 0) {
+    console.log('wode')
+    wode()
+    return
+  }
   getData(temp)
 }
 var userID = 1
@@ -103,15 +113,19 @@ function wode () {
       console.log(response);
       var newhtml = '<div class="news-fenlei"><ul class="news-list">'
 
-      var fenlei = ["未分类"]
+      var fenlei = ["全部"]
       for (var index = 0; index < response.length; index++) {
         var element = response[index];
-        var lable = userConfig[element.key] ? userConfig[element.key].lable : '未分类'
+        var lable = userConfig[element.key] ? userConfig[element.key].lable : '全部'
+        if (!lable) lable = '全部'
         if (fenlei.indexOf(lable) < 0) {
           fenlei.push(lable)
         }
-        newhtml += "<li lable='" + lable + "'><span>·</span><a href=#" + element.key + ">" + element.titleStr +'</a><i class="lable">' + lable +'</i><span class="tool dubao icon" onclick="biaoqian(\'' + element.key + '\')">&#xe602;</span><span class="tool shanchu icon" onclick="shanchu(\'' + element.key + '\')">&#xe63c;</span></li>'
- 
+        if (lable != "全部" && lable != "") {
+          newhtml += "<li lable='" + lable + "'><span>·</span><a href=#" + element.key + ">" + element.titleStr +'</a><i class="lable" onclick="biaoqian(\'' + element.key + '\')">' + lable +'</i><span class="tool dubao icon" onclick="qingli(\'' + element.key + '\')">&#xe6c0;</span><span class="tool qingli icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
+        } else {
+          newhtml += "<li lable='" + lable + "'><span>·</span><a href=#" + element.key + ">" + element.titleStr +'</a><span class="tool dubao icon" onclick="biaoqian(\'' + element.key + '\')">&#xe602;</span><span class="tool shanchu icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
+        }
       }
       console.log(fenlei)
       newhtml += "</ul></div>"
@@ -123,9 +137,11 @@ function wode () {
       }
       fenleiHtml += '</ul>'
       if (document.querySelector('.article-box')) {
-        document.querySelector('.article-box').outerHTML = fenleiHtml + newhtml
-      } else {
+        document.querySelector('.article-box').outerHTML = '<div class="wode">' + fenleiHtml + newhtml + '</div>'
+      } else if (document.querySelector('.right-main .news')) {
         document.querySelector('.right-main .news').outerHTML = '<div class="wode">' + fenleiHtml + newhtml + '</div>'
+      } else {
+        document.querySelector('.right-main .wode').outerHTML = '<div class="wode">' + fenleiHtml + newhtml + '</div>'
       }
       console.log(fenleiHtml)
       setTimeout(function() {
@@ -151,13 +167,12 @@ function showBijiInput (callBack) {
 
 
 function shanchu(name) {
-  var r=confirm("确定要删除记录: " + name.split('-')[2] + ' 吗!');
+  var r=confirm("确定要删除记录: " + name + ' 吗!');
   if (r==true) {
     $.ajax({
-      "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveConfig/" + userID,
-      "method": "POST",
+      "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/delete/" + userID + "/" + name + '.html',
+      "method": "GET",
       "timeout": 0,
-      "data": JSON.stringify(userConfig),
       "success": function (response) {
         owo.tool.toast('删除成功!')
         wode()
@@ -166,6 +181,25 @@ function shanchu(name) {
   }
   
 }
+
+function qingli (name) {
+  var r=confirm("确定要清理这个标签吗!")
+  if (r==true) {
+    userConfig[name] = {"lable":""}
+    $.ajax({
+      "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveConfig/" + userID,
+      "method": "POST",
+      "timeout": 0,
+      "data": JSON.stringify(userConfig),
+      "success": function (response) {
+        owo.tool.toast('标签删除成功!')
+        wode()
+      }
+    })
+  }
+  
+}
+
 function dateFormat(fmt, date) {
   var ret;
   var opt = {
@@ -178,7 +212,7 @@ function dateFormat(fmt, date) {
       // 有其他格式化字符需求可以继续添加，必须转化成字符串
   };
   String.prototype.zpadStart = function (targetLength, padString) {
-    let string = this
+    var string = this
     while (string.length < targetLength) {
         string = padString + string
     }
@@ -204,7 +238,6 @@ function changeP () {
   console.log(allP.length)
   for (var index = 0; index < allP.length; index++) {
     var el = allP[index];
-    console.log(el)
     if ($(el).find('em').length < 10) {
       // alert(el.innerText)
       el.classList.add('dubao')
@@ -296,16 +329,20 @@ function biaoji (classStr) {
   }
   var keyTemp = randomString(16)
   while (startKey <= endKey) {
-    console.log(startKey)
+    // console.log(startKey)
     $('em[key="' + startKey + '"]').addClass(classStr)
-    document.querySelector('em[key="' + startKey + '"]').setAttribute("key-" + classStr, keyTemp)
+    document.querySelector('em[key="' + startKey + '"]').setAttribute("data-" + classStr, keyTemp)
     startKey++
   }
   document.querySelector('#menu').classList.add('no-show')
+  window.getSelection().empty()
 }
 
 
 function chackActive (classStr) {
+  if (!startEl || !endEl) {
+    return
+  }
   startKey = parseInt(startEl.getAttribute("key"))
   endKey = parseInt(endEl.getAttribute("key"))
   if (endKey < startKey) {
@@ -324,7 +361,7 @@ function chackActive (classStr) {
 }
 
 function biaoqian (key) {
-  var word = prompt("请输入文章标签!","");
+  var word = prompt("输入修改后的标签名:","");
   if (word) {
     if (!userConfig[key]) {
       userConfig[key] = {}
@@ -358,8 +395,13 @@ function showZhu (target, key) {
 
 
 function fenlei (target, name) {
-  $('.news .news-list li').hide()
-  $('.news .news-list li[lable="' + name + '"]').show()
+  $('.wode .news-list li').hide()
+  if (name == '全部' || name == '') {
+    $('.wode .news-list li').show()
+  } else {
+    $('.wode .news-list li[lable="' + name + '"]').show()
+  }
+  
   $('.fenlei-box li').removeClass('active');
   $(target).addClass('active');
 }

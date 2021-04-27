@@ -180,10 +180,6 @@ em.bgline {
   height: 0;
 }
 
-.dubao .memo {
-  border-bottom: none;
-}
-
 .shalid {
   position: fixed;
   left: 0;
@@ -299,17 +295,23 @@ em.bgline {
 }
 
 em i.anno {
-  padding: 3px;
+  padding: 1px;
   z-index: 2;
-  font-size: 12px;
   border-radius: 12px;
   color: #1497fc;
-  border: 2px solid #1497fc;
+  border: 1px solid #1497fc;
   text-align: center;
   font-weight: bold;
   font-style: normal;
   background: #fff;
   margin: 0 2px;
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  line-height: 12px;
+  font-size: 12px;
+  top: -12px;
+  right: -12px;
 }
 
 svg {
@@ -322,6 +324,10 @@ svg {
 }
 
 .dubao-box {
-  padding-bottom: 20px;
+  padding-bottom: 80px;
+}
+
+em {
+  position: relative;
 }
 
