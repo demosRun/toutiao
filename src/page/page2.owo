@@ -11,7 +11,18 @@
       .menu(o-tap="copyText()") 复制
   //- img.tingshu(src="@|tingshu.png|" o-tap="langdu()" o-animation="shrink")
   .home.clear.main.w1000
+  //- 笔记编辑
   .biji-box.shalid
+    .biji-input
+      <svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="//www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg>
+      .title 查看或编辑您的笔记
+      textarea
+      .bottom-bar.clear
+        .button.fl(style="background: #ccc;" o-tap="document.querySelector('.biji-box').style.display = 'none'") 取消
+        .button.fl(style="background: #d03333;" o-tap="clearKey('memo')") 删除
+        .button.fl(style="background: #1497fc;" o-tap="saveBiji()") 保存
+  //- 标签编辑
+  .biaoqian-box.shalid
     .biji-input
       <svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="//www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg>
       .title 查看或编辑您的笔记
@@ -37,14 +48,12 @@
     },
     created: function (params) {
       if (!localStorage.getItem("userInfo")) {
-        showPhoneInput((e) => {
-          console.log(e.target)
-          
-          userID = document.querySelector('.shouji-input input').value
-          userID = userID
+        layer.prompt({title: '请输入手机号以便保存您的阅读历史:', formType: 2}, function(pass, index){
+          layer.close(index);
+          userID = pass
           localStorage.setItem("userInfo", userID)
           document.querySelector('.shouji-box').style.display = 'none'
-        })
+        });
       } else {
         userID = localStorage.getItem("userInfo")
       }
@@ -106,8 +115,8 @@
       this.save()
     },
     biji: function () {
-      var word = prompt("请输入笔记内容!","");
-      if (word) {
+      layer.prompt({title: '请输入笔记内容!', formType: 2}, function(word, index){
+        layer.close(index);
         startKey = parseInt(startEl.getAttribute("key"))
         endKey = parseInt(endEl.getAttribute("key"))
         let fanxiang = false
@@ -131,7 +140,7 @@
             this.save()
           }, 0);
         }, 100);
-      }
+      });
     },
     checkDom: function (target) {
       this.data.clickIng = true
@@ -212,12 +221,6 @@
         });
         document.querySelector('#demo-1').value = `选择日期 ${dateDomList[0].innerText}-${dateDomList[1].innerText}-${dateDomList[2].innerText}`
         changeP()
-        document.querySelector('.article').onclick = function (e) {
-          if (e.target.nodeName == 'I') {
-            activeKey = e.target.parentElement.getAttribute('data-memo')
-            showZhu(e.target, activeKey)
-          }
-        }
       }, 0);
       
     },
@@ -235,9 +238,14 @@
             if (selectText.length > 0 && window.getSelection().baseNode) {
               startEl = window.getSelection().baseNode.parentElement
               endEl = window.getSelection().extentNode.parentElement
-              this.query('#menu').style.left = (e.layerX - 100) + 'px'
+              this.query('#menu').style.left = (e.pageX - 100) + 'px'
               this.checkDom()
-              this.query('#menu').style.bottom = ((document.body.clientHeight - e.pageY) - 60) + 'px'
+              if ((e.y / window.innerHeight) > 0.8) {
+                this.query('#menu').style.bottom = ((document.body.clientHeight - e.pageY) + 30) + 'px'
+              } else {
+                this.query('#menu').style.bottom = ((document.body.clientHeight - e.pageY) - 60) + 'px'
+              }
+              
               this.query('#menu').classList.remove('no-show')
               setTimeout(() => {
                 if (!this.data.toolHover && !this.data.huaxianIng) {
@@ -250,6 +258,12 @@
               this.query('#menu').classList.add('no-show')
             }
           }, 0);
+        }
+        document.querySelector('.article').onclick = function (e) {
+          if (e.target.nodeName == 'I') {
+            activeKey = e.target.parentElement.getAttribute('data-memo')
+            showZhu(e.target, activeKey)
+          }
         }
       }
       
@@ -328,7 +342,6 @@
   background-color: white;
   user-select: none;
   left: 1150px;
-  right: 0;
   margin: auto;
   z-index: 99;
   padding: 5px;
@@ -423,6 +436,7 @@ em.bgline {
 #menu.no-show {
   padding: 0;
   height: 0;
+  display: none;
 }
 .shalid {
   position: fixed;
@@ -441,7 +455,8 @@ em.bgline {
     background-color: #009fe9;
     cursor: pointer;
     user-select: none;
-    line-height: 14px;
+    line-height: 40px;
+    padding: 0;
   }
 }
 .biji-input {
@@ -556,4 +571,5 @@ svg {
 em {
   position: relative;
 }
+
 </style>

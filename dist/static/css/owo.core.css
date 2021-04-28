@@ -68,7 +68,6 @@ li {
       -ms-user-select: none;
           user-select: none;
   left: 1150px;
-  right: 0;
   margin: auto;
   z-index: 99;
   padding: 5px;
@@ -178,6 +177,7 @@ em.bgline {
 #menu.no-show {
   padding: 0;
   height: 0;
+  display: none;
 }
 
 .shalid {
@@ -202,7 +202,8 @@ em.bgline {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  line-height: 14px;
+  line-height: 40px;
+  padding: 0;
 }
 
 .biji-input {
