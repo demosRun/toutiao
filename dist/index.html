@@ -67,7 +67,13 @@ owo.script = {
             wode();
           }, 800);
           temp = temp.replace('wode', '');
-          getData(temp);
+
+          if (temp) {
+            getData(temp);
+          } else {
+            getData('now');
+          }
+
           return;
         }
 
@@ -232,7 +238,7 @@ owo.script = {
 
 
       if (document.querySelector('.right.nav')) {
-        document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wodeStart()">我的空间</li>';
+        document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wodeStart()">我的空间</li><li id="tuichu" onclick="loginout()">退出</li>';
       } // 生成日历
 
 

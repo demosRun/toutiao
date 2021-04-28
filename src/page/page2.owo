@@ -56,7 +56,12 @@
             wode()
           }, 800);
           temp = temp.replace('wode', '')
-          getData(temp)
+          if (temp) {
+            getData(temp)
+          } else {
+            getData('now')
+          }
+          
           return
         }
         getData(temp)
@@ -191,7 +196,7 @@
       
       // console.log(document.querySelector('.right.nav'))
       if (document.querySelector('.right.nav')) {
-        document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wodeStart()">我的空间</li>'
+        document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wodeStart()">我的空间</li><li id="tuichu" onclick="loginout()">退出</li>'
       }
       // 生成日历
       document.querySelector('.date.left').innerHTML = `<input type="text"  value="" id="demo-1">`

@@ -97,6 +97,9 @@ function getData (part) {
 
 var userConfig = {}
 function wode () {
+  if (!document.querySelector('.right-main .title')) {
+    return
+  }
   document.querySelector('.right-main .title').innerHTML = '我的空间'
   
   
@@ -404,4 +407,9 @@ function fenlei (target, name) {
   
   $('.fenlei-box li').removeClass('active');
   $(target).addClass('active');
+}
+
+function loginout () {
+  localStorage.removeItem("userInfo")
+  location.reload();
 }
