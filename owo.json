@@ -147,7 +147,7 @@
 			"merge": false,
 			"allAnimate": false,
 			"title": "人民日报",
-			"handleLink": true
+			"handleLink": false
 		}
 	}
 }

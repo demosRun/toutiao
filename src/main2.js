@@ -9,7 +9,7 @@ function clear (s1) {
   return s1
 }
 
-var issafariBrowser = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+var issafariBrowser = /Safari/.test(navigator.userAgent) && navigator.userAgent.indexOf('Safari/605') < 0;
 
 function decode(s) {
   return unescape(s.replace(/\\(u[0-9a-fA-F]{4})/gm, '%$1'));
@@ -65,6 +65,8 @@ function etSelectedText() {
 }
 
 function wodeStart () {
+  wode()
+  return
   var temp = location.hash.replace('#', '')
   location.hash = '#wode' + temp
 }
@@ -82,8 +84,10 @@ var userID = 1
 var activePart = ''
 function getData (part) {
   activePart = part
-  
+  var temp = 'home_2021_04_29_01.htm'.split('_')
+  window.nowDay = temp[1] + temp[2] + temp[3]
   $.ajax({"url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/" + userID + "/" + part,"method": "GET","timeout": 0,}).done(function (response) {
+    console.log(part)
     if (response.indexOf('404 Not Found') > 0) {
       layer.msg('当前日期暂无内容!');
       return
@@ -96,11 +100,11 @@ function getData (part) {
 }
 
 var userConfig = {}
-function wode () {
-  if (!document.querySelector('.right-main .title')) {
-    return
-  }
-  document.querySelector('.right-main .title').innerHTML = '我的空间'
+function wode (updata) {
+  // if (!document.querySelector('.right-main .title')) {
+  //   return
+  // }
+  // document.querySelector('.right-main .title').innerHTML = '我的空间'
   
   
   $.ajax({
@@ -139,20 +143,36 @@ function wode () {
         fenleiHtml += "<li onclick=\"fenlei(this, '" + element + "')\">" + element + "</li>"
       }
       fenleiHtml += '</ul>'
-      if (document.querySelector('.article-box')) {
-        document.querySelector('.article-box').outerHTML = '<div class="wode">' + fenleiHtml + newhtml + '</div>'
-      } else if (document.querySelector('.right-main .news')) {
-        document.querySelector('.right-main .news').outerHTML = '<div class="wode">' + fenleiHtml + newhtml + '</div>'
+      // if (document.querySelector('.article-box')) {
+      //   document.querySelector('.article-box').outerHTML = '<div class="wode">' + fenleiHtml + newhtml + '</div>'
+      // } else if (document.querySelector('.right-main .news')) {
+      //   document.querySelector('.right-main .news').outerHTML = '<div class="wode">' + fenleiHtml + newhtml + '</div>'
+      // } else {
+      //   document.querySelector('.right-main .wode').outerHTML = '<div class="wode">' + fenleiHtml + newhtml + '</div>'
+      // }
+      if (updata) {
+        document.querySelector('.wode').innerHTML = fenleiHtml + newhtml
+        setTimeout(function() {
+          document.querySelector('.fenlei-box li').classList.add('active')
+        }, 0);
       } else {
-        document.querySelector('.right-main .wode').outerHTML = '<div class="wode">' + fenleiHtml + newhtml + '</div>'
+        layer.open({
+          type: 1,
+          skin: 'layui-layer-rim', //加上边框
+          area: ['620px', '440px'], //宽高
+          title: "我的空间",
+          content: '<div class="wode">' + fenleiHtml + newhtml + '</div>'
+        });
+        console.log(fenleiHtml)
+        setTimeout(function() {
+          document.querySelector('.fenlei-box li').classList.add('active')
+        }, 0);
       }
-      console.log(fenleiHtml)
-      setTimeout(function() {
-        document.querySelector('.fenlei-box li').classList.add('active')
-      }, 0);
+      
     })
   });
 }
+
 
 function closeInput () {
   document.querySelector('.biji-box').style.display = 'none'
@@ -170,10 +190,10 @@ function showBijiInput (callBack) {
 
 
 function shanchu(name) {
-  layer.confirm('确定要删除文章记录吗?', {
+  var temp = layer.confirm('确定要删除文章记录吗?', {
     btn: ['删除','放弃']
   }, function(){
-    layer.closeAll()
+    layer.close(temp)
     $.ajax({
       "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/delete/" + userID + "/" + name + '.html',
       "method": "GET",
@@ -181,7 +201,7 @@ function shanchu(name) {
       "success": function (response) {
         
         owo.tool.toast('删除成功!')
-        wode()
+        wode(true)
       }
     })
   });
@@ -199,7 +219,7 @@ function qingli (name) {
       "data": JSON.stringify(userConfig),
       "success": function (response) {
         owo.tool.toast('标签删除成功!')
-        wode()
+        wode(true)
       }
     })
   });
@@ -207,6 +227,7 @@ function qingli (name) {
 
 function dateFormat(fmt, date) {
   var ret;
+  date = date || new Date()
   var opt = {
       "Y+": date.getFullYear().toString(),        // 年
       "m+": (date.getMonth() + 1).toString(),     // 月
@@ -225,7 +246,7 @@ function dateFormat(fmt, date) {
   }
   for (var k in opt) {
       ret = new RegExp("(" + k + ")").exec(fmt);
-      console.log(opt, k)
+      // console.log(opt, k)
       if (ret) {
           fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].zpadStart(ret[1].length, "0")))
       };
@@ -379,8 +400,8 @@ function biaoqian (key) {
       "data": JSON.stringify(userConfig),
       "success": function (response) {
         owo.tool.toast('数据保存成功!')
-        layer.closeAll()
-        wode()
+        layer.close(window.tempBQ)
+        wode(true)
       }
     })
   }
@@ -393,19 +414,19 @@ function biaoqian (key) {
       "data": JSON.stringify(userConfig),
       "success": function (response) {
         owo.tool.toast('标签删除成功!')
-        layer.closeAll()
-        wode()
+        layer.close(window.tempBQ)
+        wode(true)
       }
     })
   }
-  layer.open({
+  window.tempBQ = layer.open({
     type: 1,
     skin: 'biaoqian-box', //样式类名
     closeBtn: 0, //不显示关闭按钮
     anim: 2,
-    title: "查看或编辑您的笔记",
+    title: "查看或编辑标签",
     shadeClose: true, //开启遮罩关闭
-    content: '<div class="edit-box"><textarea>' + ((userConfig[key] && userConfig[key].lable) ? userConfig[key].lable : '') + '</textarea><div class="bottom-bar clear"><div class="button fl" style="background: #ccc;" onclick="layer.closeAll()">取消</div><div class="button fl" style="background: #d03333;" onclick="window.shanchuBQ()">删除</div><div class="button fl" style="background: #1497fc;" onclick="window.baocun()">保存</div></div></div>'
+    content: '<div class="edit-box"><textarea>' + ((userConfig[key] && userConfig[key].lable) ? userConfig[key].lable : '') + '</textarea><div class="bottom-bar clear"><div class="button fl" style="background: #ccc;" onclick="layer.close(window.tempBQ)">取消</div><div class="button fl" style="background: #d03333;" onclick="window.shanchuBQ()">删除</div><div class="button fl" style="background: #1497fc;" onclick="window.baocun()">保存</div></div></div>'
   });
 }
 
@@ -436,6 +457,62 @@ function fenlei (target, name) {
 }
 
 function loginout () {
-  localStorage.removeItem("userInfo")
-  location.reload();
+  
+  layer.confirm('确定要退出吗?', {
+    btn: ['确定','取消']
+  }, function(){
+    layer.closeAll()
+    localStorage.removeItem("userInfo")
+    location.reload();
+  });
+}
+
+function jiedu() {
+  var nowDay = window.nowDay || dateFormat("YYYYmmdd")
+  $.ajax({
+    "url": "http://172.31.36.223:5000/file?name=" + nowDay,
+    "method": "GET",
+    "timeout": 0,
+  }).done(function (response) {
+    var res = JSON.parse(response)
+    if (res.data.length == 0) {
+      layer.alert('当日暂无内容~', {
+        time: 5*1000
+        ,success: function(layero, index){
+          var timeNum = this.time/1000, setText = function(start){
+            layer.title((start ? timeNum : --timeNum) + ' 秒后关闭', index);
+          };
+          setText(!0);
+          this.timer = setInterval(setText, 1000);
+          if(timeNum <= 0) clearInterval(this.timer);
+        }
+        ,end: function(){
+          clearInterval(this.timer);
+        }
+      });
+      return
+    }
+    var photoList = []
+    for (var index = 0; index < res.data.length; index++) {
+      var element = res.data[index];
+      photoList.push({
+        "alt": "文章解读",
+        "pid": index,
+        "src": element,
+        "thumb": ""
+      })
+    }
+    layer.photos({
+      photos: {
+        "status": 1,
+        "msg": "",
+        "title": "文章解读",
+        "id": 8,
+        "start": 0,
+        "data": photoList
+      },
+      anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机
+    });
+  });
+  
 }

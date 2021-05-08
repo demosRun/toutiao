@@ -4,8 +4,8 @@
     .menu-bottom.clear
       .menu.huaxian(o-tap="huaxian()") 划线
       .menu.qxhx(o-tap="clear('underline')") 取消划线
-      .menu.beijing(o-tap="beijing()") 加背景
-      .menu.qxbj(o-tap="clear('beijing')") 取消背景
+      .menu.bgline(o-tap="bgline()") 加背景
+      .menu.qxbj(o-tap="clear('bgline')") 取消背景
       .menu.biji(o-tap="biji()") 做笔记
       .menu.qxbiji(o-tap="clear('memo')") 取消笔记
       .menu(o-tap="copyText()") 复制
@@ -48,7 +48,7 @@
     },
     created: function (params) {
       if (!localStorage.getItem("userInfo")) {
-        layer.prompt({title: '请输入手机号以便保存您的阅读历史:', formType: 2}, function(pass, index){
+        layer.prompt({title: '请输入手机号以便保存您的阅读历史:', formType: 3}, function(pass, index){
           layer.close(index);
           userID = pass
           localStorage.setItem("userInfo", userID)
@@ -110,7 +110,7 @@
         this.save()
       }, 0);
     },
-    beijing: function () {
+    bgline: function () {
       biaoji('bgline')
       this.save()
     },
@@ -145,11 +145,11 @@
     checkDom: function (target) {
       this.data.clickIng = true
       console.log('选择元素')
-      if(chackActive('beijing')){
-        document.querySelector('#menu .beijing').style.display = 'none'
+      if(chackActive('bgline')){
+        document.querySelector('#menu .bgline').style.display = 'none'
         document.querySelector('#menu .qxbj').style.display = 'block'
       } else {
-        document.querySelector('#menu .beijing').style.display = 'block'
+        document.querySelector('#menu .bgline').style.display = 'block'
         document.querySelector('#menu .qxbj').style.display = 'none'
       }
       if(chackActive('underline')){
@@ -216,13 +216,17 @@
           pickTime: false,
           maxDate: `+1D`
         }).on('changeDate', function (ev) {
+          window.nowDay = dateFormat("YYYYmmdd", ev.date)
           // console.log(dateFormat("YYYY_mm_dd_1-01.htm", ev.date))
           window.location.href = "#home" + dateFormat("_YYYY_mm_dd_01.htm", ev.date)
         });
         document.querySelector('#demo-1').value = `选择日期 ${dateDomList[0].innerText}-${dateDomList[1].innerText}-${dateDomList[2].innerText}`
         changeP()
       }, 0);
-      
+      // 生成解读
+      if (document.querySelector('.date-box .right')) {
+        document.querySelector('.date-box .right').innerHTML = '<span class="prev" onclick="jiedu()">解读</span>' + document.querySelector('.date-box .right').innerHTML
+      }
     },
     initPaper: function () {
       if (document.querySelector('.article-box .article')) {
@@ -571,5 +575,13 @@ svg {
 em {
   position: relative;
 }
-
+.article table {
+  border: none;
+  width: 100%;
+  text-align: center;
+  img {
+    display: block;
+    margin: 0  auto;
+  }
+}
 </style>

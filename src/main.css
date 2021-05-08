@@ -525,7 +525,7 @@ i.lable {
 }
 
 .fenlei-box {
-  margin-top: 20px;
+  margin: 10px;
 }
 
 .fenlei-box li {
@@ -562,4 +562,20 @@ i.lable {
   padding: 0 24px;
   border-radius: 3px;
   margin: 0 43px;
+}
+
+.wode {
+  padding: 10px;
+}
+
+.article-box table tr, .article-box table td {
+  background-color: transparent;
+  width: 570px;
+  display: block;
+}
+
+.date-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

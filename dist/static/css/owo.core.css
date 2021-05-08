@@ -332,3 +332,14 @@ em {
   position: relative;
 }
 
+.article table {
+  border: none;
+  width: 100%;
+  text-align: center;
+}
+
+.article table img {
+  display: block;
+  margin: 0  auto;
+}
+
