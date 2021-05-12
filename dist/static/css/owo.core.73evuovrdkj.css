@@ -55,7 +55,7 @@ li {
 }
 
 #menu {
-  width: 346px;
+  width: 430px;
   overflow: hidden;
   box-shadow: 0 1px 6px #888;
   position: absolute;
@@ -119,7 +119,7 @@ li {
 }
 
 em.bgline {
-  background: #ff0;
+  background: #fbfb9f;
 }
 
 .memo {

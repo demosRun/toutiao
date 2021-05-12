@@ -9,7 +9,7 @@ function clear (s1) {
   return s1
 }
 
-var issafariBrowser = /Safari/.test(navigator.userAgent) && navigator.userAgent.indexOf('Safari/605') < 0;
+var issafariBrowser = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
 
 function decode(s) {
   return unescape(s.replace(/\\(u[0-9a-fA-F]{4})/gm, '%$1'));
@@ -84,8 +84,9 @@ var userID = 1
 var activePart = ''
 function getData (part) {
   activePart = part
-  var temp = 'home_2021_04_29_01.htm'.split('_')
+  var temp = location.hash.split('_')
   window.nowDay = temp[1] + temp[2] + temp[3]
+  console.log(window.nowDay)
   $.ajax({"url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/getAll/" + userID + "/" + part,"method": "GET","timeout": 0,}).done(function (response) {
     console.log(part)
     if (response.indexOf('404 Not Found') > 0) {
@@ -129,9 +130,9 @@ function wode (updata) {
           fenlei.push(lable)
         }
         if (lable != "全部" && lable != "") {
-          newhtml += "<li lable='" + lable + "'><span>·</span><a href=#" + element.key + ">" + element.titleStr +'</a><i class="lable" onclick="biaoqian(\'' + element.key + '\')">' + lable +'</i><span class="tool dubao icon" onclick="biaoqian(\'' + element.key + '\')">&#xe602;</span><span class="tool qingli icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
+          newhtml += "<li lable='" + lable + "'><span>·</span><a href=#" + element.key + ">" + element.titleStr + ' - ' + element.key.replace('.htm', '').replace(/_/g, '/') +'</a><i class="lable" onclick="biaoqian(\'' + element.key + '\')">' + lable +'</i><span class="tool dubao icon" onclick="biaoqian(\'' + element.key + '\')">&#xe602;</span><span class="tool qingli icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
         } else {
-          newhtml += "<li lable='" + lable + "'><span>·</span><a href=#" + element.key + ">" + element.titleStr +'</a><span class="tool dubao icon" onclick="biaoqian(\'' + element.key + '\')">&#xe602;</span><span class="tool shanchu icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
+          newhtml += "<li lable='" + lable + "'><span>·</span><a href=#" + element.key + ">" + element.titleStr + ' - ' + element.key.replace('.htm', '').replace(/_/g, '/') +'</a><span class="tool dubao icon" onclick="biaoqian(\'' + element.key + '\')">&#xe602;</span><span class="tool shanchu icon" onclick="shanchu(\'' + element.file + '\')">&#xe63c;</span></li>'
         }
       }
       console.log(fenlei)

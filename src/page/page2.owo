@@ -9,6 +9,7 @@
       .menu.biji(o-tap="biji()") 做笔记
       .menu.qxbiji(o-tap="clear('memo')") 取消笔记
       .menu(o-tap="copyText()") 复制
+      .menu(o-tap="search()") 搜索
   //- img.tingshu(src="@|tingshu.png|" o-tap="langdu()" o-animation="shrink")
   .home.clear.main.w1000
   //- 笔记编辑
@@ -217,15 +218,31 @@
           maxDate: `+1D`
         }).on('changeDate', function (ev) {
           window.nowDay = dateFormat("YYYYmmdd", ev.date)
+          console.log(window.nowDay)
           // console.log(dateFormat("YYYY_mm_dd_1-01.htm", ev.date))
           window.location.href = "#home" + dateFormat("_YYYY_mm_dd_01.htm", ev.date)
         });
         document.querySelector('#demo-1').value = `选择日期 ${dateDomList[0].innerText}-${dateDomList[1].innerText}-${dateDomList[2].innerText}`
         changeP()
+        $.ajax({
+          "url": "http://172.31.36.223:5000/file?name=" + nowDay,
+          "method": "GET",
+          "timeout": 0,
+        }).done(function (response) {
+          var res = JSON.parse(response)
+          if (window.location.href.indexOf('home') >= 0) {
+            if (res.data.length !== 0) {
+              document.querySelector('.date-box .right').classList.add('active')
+            }
+          }
+          
+        });
       }, 0);
       // 生成解读
-      if (document.querySelector('.date-box .right')) {
-        document.querySelector('.date-box .right').innerHTML = '<span class="prev" onclick="jiedu()">解读</span>' + document.querySelector('.date-box .right').innerHTML
+      if (window.location.href.indexOf('home') >= 0) {
+        if (document.querySelector('.date-box .right')) {
+          document.querySelector('.date-box .right').innerHTML = '<span class="jiedu" onclick="jiedu()">解读</span>'
+        }
       }
     },
     initPaper: function () {
@@ -242,7 +259,7 @@
             if (selectText.length > 0 && window.getSelection().baseNode) {
               startEl = window.getSelection().baseNode.parentElement
               endEl = window.getSelection().extentNode.parentElement
-              this.query('#menu').style.left = (e.pageX - 100) + 'px'
+              this.query('#menu').style.left = (e.pageX - 300) + 'px'
               this.checkDom()
               if ((e.y / window.innerHeight) > 0.8) {
                 this.query('#menu').style.bottom = ((document.body.clientHeight - e.pageY) + 30) + 'px'
@@ -272,6 +289,9 @@
       }
       
       this.initText()
+    },
+    search: function () {
+      window.open("https://www.baidu.com/s?wd=" + etSelectedText())
     },
     langdu: function () {
       const selectText = document.querySelector('#ozoom').innerText
@@ -336,7 +356,7 @@
 
 <style lang="less">
 #menu {
-  width: 346px;
+  width: 430px;
   overflow: hidden;
   box-shadow: 0 1px 6px #888;
   position: absolute;
@@ -391,7 +411,7 @@
   }
 }
 em.bgline {
-  background: #ff0;
+  background: #fbfb9f;
 }
 .memo {
   background: #f4f4f4;

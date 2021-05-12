@@ -231,6 +231,15 @@ line-height:160%;
 #ozoom p{
 line-height: 170%;
 padding: 5px 0;
+white-space: normal;
+height: auto;
+
+}
+.dubao {
+  word-break: break-all;
+}
+.dubao em {
+  display: inline;
 }
 .main .article-box .article .sec span{
 margin-top:10px;
@@ -578,4 +587,12 @@ i.lable {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.jiedu {
+  color: #999;
+}
+
+.active .jiedu {
+  color: #333;
 }
