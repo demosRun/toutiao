@@ -10,7 +10,9 @@ function clear (s1) {
 }
 
 var issafariBrowser = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
-
+if (navigator.userAgent.indexOf('Mac OS X 9') > 0 || navigator.userAgent.indexOf('Mac OS X 8') > 0 || navigator.userAgent.indexOf('Mac OS X 7') > 0 || navigator.userAgent.indexOf('Mac OS X 6') > 0) {
+  issafariBrowser = true
+}
 function decode(s) {
   return unescape(s.replace(/\\(u[0-9a-fA-F]{4})/gm, '%$1'));
 }  
@@ -468,10 +470,34 @@ function loginout () {
   });
 }
 
-function jiedu() {
-  var nowDay = window.nowDay || dateFormat("YYYYmmdd")
+
+function jieduList () {
   $.ajax({
-    "url": "http://172.31.36.223:5000/file?name=" + nowDay,
+    "url": "http://154.8.196.163:5000/list",
+    "method": "GET",
+    "timeout": 0,
+  }).done(function (response) {
+    response = JSON.parse(response)
+    var newhtml = '<div class="news-fenlei"><ul class="news-list">'
+    for (var index = 0; index < response.data.length; index++) {
+      var element = response.data[index];
+      newhtml += '<li onclick="jiedu(\''+ element +'\')"><span>·</span>' + element + "</li>"
+    }
+    newhtml += "</ul></div>"
+    layer.open({
+      type: 1,
+      skin: 'layui-layer-rim', //加上边框
+      area: ['620px', '440px'], //宽高
+      title: "文章解读",
+      content: '<div class="wode">' + newhtml + '</div>'
+    });
+  })
+  
+}
+
+function jiedu(name) {
+  $.ajax({
+    "url": "http://154.8.196.163:5000/file?name=" + name,
     "method": "GET",
     "timeout": 0,
   }).done(function (response) {

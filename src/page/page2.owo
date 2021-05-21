@@ -206,7 +206,7 @@
       
       // console.log(document.querySelector('.right.nav'))
       if (document.querySelector('.right.nav')) {
-        document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wodeStart()">我的空间</li><li id="tuichu" onclick="loginout()">退出</li>'
+        document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wodeStart()">我的空间</li><li id="my" onclick="jieduList()">解读</li><li id="tuichu" onclick="loginout()">退出</li>'
       }
       // 生成日历
       document.querySelector('.date.left').innerHTML = `<input type="text"  value="" id="demo-1">`
@@ -238,12 +238,6 @@
           
         });
       }, 0);
-      // 生成解读
-      if (window.location.href.indexOf('home') >= 0) {
-        if (document.querySelector('.date-box .right')) {
-          document.querySelector('.date-box .right').innerHTML = '<span class="jiedu" onclick="jiedu()">解读</span>'
-        }
-      }
     },
     initPaper: function () {
       if (document.querySelector('.article-box .article')) {

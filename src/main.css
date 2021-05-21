@@ -596,3 +596,7 @@ i.lable {
 .active .jiedu {
   color: #333;
 }
+.nav li {
+  width: auto;
+  padding: 0 20px;
+}

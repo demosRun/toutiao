@@ -19,7 +19,7 @@
   <meta name="catalogs" content="{TAG_83943_TAG}" />
 
   <!-- 页面主样式文件 -->
-  <link charset="utf-8" rel="stylesheet" href="./static/css/owo.core.73evuovrdkj.css">
+  <link charset="utf-8" rel="stylesheet" href="./static/css/owo.core.7tc781k8gii.css">
 
   <!-- 附属css文件 -->
   <link rel="stylesheet" href="http://paper.people.com.cn/rmrb/tplimg/default.css" charset="utf-8">
@@ -86,7 +86,7 @@
   </div>
 
   <!-- 框架script文件 -->
-  <script src="./static/js/owo.core.73evuovrdkj.js" type="text/javascript" charset="UTF-8"></script>
+  <script src="./static/js/owo.core.7tc781k8gii.js" type="text/javascript" charset="UTF-8"></script>
   <script type="text/javascript" charset="UTF-8">
     owo.script = {
       "page": {
@@ -295,7 +295,7 @@
 
 
           if (document.querySelector('.right.nav')) {
-            document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wodeStart()">我的空间</li><li id="tuichu" onclick="loginout()">退出</li>';
+            document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wodeStart()">我的空间</li><li id="my" onclick="jieduList()">解读</li><li id="tuichu" onclick="loginout()">退出</li>';
           } // 生成日历
 
 
@@ -327,13 +327,7 @@
                 }
               }
             });
-          }, 0); // 生成解读
-
-          if (window.location.href.indexOf('home') >= 0) {
-            if (document.querySelector('.date-box .right')) {
-              document.querySelector('.date-box .right').innerHTML = '<span class="jiedu" onclick="jiedu()">解读</span>';
-            }
-          }
+          }, 0);
         },
         "initPaper": function initPaper() {
           var _this6 = this;
