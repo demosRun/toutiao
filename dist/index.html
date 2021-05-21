@@ -1,468 +1,414 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+  <head>
+    <!-- 页面的元信息 -->
+    <title>人民日报</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=1000, user-scalable=yes"/>
+    <meta name="format-detection" content="telephone=no, email=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="white"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="filetype" content="1"/>
+    <meta name="publishedtype" content="1"/>
+    <meta name="pagetype" content="2"/>
+    <meta name="description" content="{TAG_59447_TAG}"/>
+    <meta name="keywords" content="{TAG_59446_TAG}"/>
+    <meta name="catalogs" content="{TAG_83943_TAG}"/>
+    
+      <!-- 页面主样式文件 -->
+      <link charset="utf-8"  rel="stylesheet" href="./static/css/owo.core.css">
+      
+    <!-- 附属css文件 -->
+    <link rel="stylesheet" href="http://paper.people.com.cn/rmrb/tplimg/default.css" charset="utf-8">
+    <link rel="stylesheet" href="./static/css/foundation.min.css" charset="utf-8">
+    <link rel="stylesheet" href="http://unpkg.com/layui@2.6.5/dist/css/layui.css" charset="utf-8">
+    <link rel="stylesheet" href="./static/css/main.css" charset="utf-8">
+      
+  </head>
+  <body>
+    
+    <!-- 页面[page]-->
+    <div class="dubao-box page" template="page" style="display: block;"><div class="no-show" id="menu"><div class="menu-bottom clear"><div class="menu huaxian" o-tap="huaxian()">划线</div><div class="menu qxhx" o-tap="clear('underline')">取消划线</div><div class="menu bgline" o-tap="bgline()">加背景</div><div class="menu qxbj" o-tap="clear('bgline')">取消背景</div><div class="menu biji" o-tap="biji()">做笔记</div><div class="menu qxbiji" o-tap="clear('memo')">取消笔记</div><div class="menu" o-tap="copyText()">复制</div><div class="menu" o-tap="search()">搜索</div></div></div><div class="home clear main w1000"></div><div class="biji-box shalid"><div class="biji-input"><svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="//www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg><div class="title">查看或编辑您的笔记</div><textarea></textarea><div class="bottom-bar clear"><div class="button fl" style="background: #ccc;" o-tap="document.querySelector('.biji-box').style.display = 'none'">取消</div><div class="button fl" style="background: #d03333;" o-tap="clearKey('memo')">删除</div><div class="button fl" style="background: #1497fc;" o-tap="saveBiji()">保存</div></div></div></div><div class="biaoqian-box shalid"><div class="biji-input"><svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="//www.w3.org/2000/svg" p-id="2020" width="48" height="48"><path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path><path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path><path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path></svg><div class="title">查看或编辑您的笔记</div><textarea></textarea><div class="bottom-bar clear"><div class="button fl" style="background: #ccc;" o-tap="document.querySelector('.biji-box').style.display = 'none'">取消</div><div class="button fl" style="background: #d03333;" o-tap="clearKey('memo')">删除</div><div class="button fl" style="background: #1497fc;" o-tap="saveBiji()">保存</div></div></div></div><div class="shouji-box shalid"><div class="shouji-input"><div class="title">请输入手机号以便保存您的阅读历史:</div><input type="text"><div class="button">确认</div></div></div></div>
+    
+<!-- 框架script文件 -->
+<script src="./static/js/owo.core.js" type="text/javascript" charset="UTF-8"></script>
+<script type="text/javascript" charset="UTF-8">
+owo.script = {
+  "page": {
+    "data": {
+      "activeEl": null,
+      "toolHover": false,
+      "huaxianIng": false,
+      "clickIng": false
+    },
+    "created": function created(params) {
+      var _this = this;
 
-<head>
-  <!-- 页面的元信息 -->
-  <title>人民日报</title>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=1000, user-scalable=yes" />
-  <meta name="format-detection" content="telephone=no, email=no" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="white" />
-  <meta name="renderer" content="webkit" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="filetype" content="1" />
-  <meta name="publishedtype" content="1" />
-  <meta name="pagetype" content="2" />
-  <meta name="description" content="{TAG_59447_TAG}" />
-  <meta name="keywords" content="{TAG_59446_TAG}" />
-  <meta name="catalogs" content="{TAG_83943_TAG}" />
+      if (!localStorage.getItem("userInfo")) {
+        layer.prompt({
+          title: '请输入手机号以便保存您的阅读历史:',
+          formType: 3
+        }, function (pass, index) {
+          layer.close(index);
+          userID = pass;
+          localStorage.setItem("userInfo", userID);
+          document.querySelector('.shouji-box').style.display = 'none';
+        });
+      } else {
+        userID = localStorage.getItem("userInfo");
+      }
 
-  <!-- 页面主样式文件 -->
-  <link charset="utf-8" rel="stylesheet" href="./static/css/owo.core.7tc781k8gii.css">
+      if (location.hash) {
+        var temp = location.hash.replace('#', '');
 
-  <!-- 附属css文件 -->
-  <link rel="stylesheet" href="http://paper.people.com.cn/rmrb/tplimg/default.css" charset="utf-8">
-  <link rel="stylesheet" href="./static/css/foundation.min.css" charset="utf-8">
-  <link rel="stylesheet" href="http://unpkg.com/layui@2.6.5/dist/css/layui.css" charset="utf-8">
-  <link rel="stylesheet" href="./static/css/main.css" charset="utf-8">
+        if (temp.indexOf('wode') >= 0) {
+          console.log('wode');
+          setTimeout(function () {
+            wode();
+          }, 800);
+          temp = temp.replace('wode', '');
 
-</head>
-
-<body>
-
-  <!-- 页面[page]-->
-  <div class="dubao-box page" template="page" style="display: block;">
-    <div class="no-show" id="menu">
-      <div class="menu-bottom clear">
-        <div class="menu huaxian" o-tap="huaxian()">划线</div>
-        <div class="menu qxhx" o-tap="clear('underline')">取消划线</div>
-        <div class="menu bgline" o-tap="bgline()">加背景</div>
-        <div class="menu qxbj" o-tap="clear('bgline')">取消背景</div>
-        <div class="menu biji" o-tap="biji()">做笔记</div>
-        <div class="menu qxbiji" o-tap="clear('memo')">取消笔记</div>
-        <div class="menu" o-tap="copyText()">复制</div>
-        <div class="menu" o-tap="search()">搜索</div>
-      </div>
-    </div>
-    <div class="home clear main w1000"></div>
-    <div class="biji-box shalid">
-      <div class="biji-input"><svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="//www.w3.org/2000/svg" p-id="2020" width="48" height="48">
-          <path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path>
-          <path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path>
-          <path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path>
-        </svg>
-        <div class="title">查看或编辑您的笔记</div>
-        <textarea></textarea>
-        <div class="bottom-bar clear">
-          <div class="button fl" style="background: #ccc;" o-tap="document.querySelector('.biji-box').style.display = 'none'">取消</div>
-          <div class="button fl" style="background: #d03333;" o-tap="clearKey('memo')">删除</div>
-          <div class="button fl" style="background: #1497fc;" o-tap="saveBiji()">保存</div>
-        </div>
-      </div>
-    </div>
-    <div class="biaoqian-box shalid">
-      <div class="biji-input"><svg onclick="closeInput()" t="1618924850694" class="close" viewBox="0 0 1024 1024" version="1.1" xmlns="//www.w3.org/2000/svg" p-id="2020" width="48" height="48">
-          <path d="M7.67 512.003C7.67 794.773 234.866 1024 515.126 1024c280.27 0 507.457-229.227 507.457-511.997S795.396 0 515.127 0C234.867 0 7.669 229.233 7.669 512.003z" fill="#858585" p-id="2021"></path>
-          <path d="M793.678 233.134c15.083 14.883 15.083 40.913 0 55.802L284.084 791c-15.109 14.853-41.532 14.853-56.636 0-15.083-14.878-15.083-40.919 0-55.802l509.59-502.063c15.108-14.858 41.537-14.858 56.64 0z" fill="#FFFFFF" p-id="2022"></path>
-          <path d="M236.585 240.824c14.659-14.409 40.295-14.409 54.954 0L785.994 727.66c14.628 14.434 14.628 39.682 0 54.11-14.66 14.403-40.295 14.403-54.96 0L236.586 294.934c-14.633-14.44-14.633-39.682 0-54.11z" fill="#FFFFFF" p-id="2023"></path>
-        </svg>
-        <div class="title">查看或编辑您的笔记</div>
-        <textarea></textarea>
-        <div class="bottom-bar clear">
-          <div class="button fl" style="background: #ccc;" o-tap="document.querySelector('.biji-box').style.display = 'none'">取消</div>
-          <div class="button fl" style="background: #d03333;" o-tap="clearKey('memo')">删除</div>
-          <div class="button fl" style="background: #1497fc;" o-tap="saveBiji()">保存</div>
-        </div>
-      </div>
-    </div>
-    <div class="shouji-box shalid">
-      <div class="shouji-input">
-        <div class="title">请输入手机号以便保存您的阅读历史:</div>
-        <input type="text">
-        <div class="button">确认</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 框架script文件 -->
-  <script src="./static/js/owo.core.7tc781k8gii.js" type="text/javascript" charset="UTF-8"></script>
-  <script type="text/javascript" charset="UTF-8">
-    owo.script = {
-      "page": {
-        "data": {
-          "activeEl": null,
-          "toolHover": false,
-          "huaxianIng": false,
-          "clickIng": false
-        },
-        "created": function created(params) {
-          var _this = this;
-
-          if (!localStorage.getItem("userInfo")) {
-            layer.prompt({
-              title: '请输入手机号以便保存您的阅读历史:',
-              formType: 3
-            }, function(pass, index) {
-              layer.close(index);
-              userID = pass;
-              localStorage.setItem("userInfo", userID);
-              document.querySelector('.shouji-box').style.display = 'none';
-            });
-          } else {
-            userID = localStorage.getItem("userInfo");
-          }
-
-          if (location.hash) {
-            var temp = location.hash.replace('#', '');
-
-            if (temp.indexOf('wode') >= 0) {
-              console.log('wode');
-              setTimeout(function() {
-                wode();
-              }, 800);
-              temp = temp.replace('wode', '');
-
-              if (temp) {
-                getData(temp);
-              } else {
-                getData('now');
-              }
-
-              return;
-            }
-
+          if (temp) {
             getData(temp);
           } else {
             getData('now');
           }
 
-          this.query('#menu').onmouseover = function(e) {
-            _this.data.toolHover = true;
-          };
+          return;
+        }
 
-          this.query('#menu').onmouseout = function(e) {
-            _this.data.toolHover = false;
-            setTimeout(function() {
-              if (!_this.data.toolHover && !_this.data.huaxianIng) {
-                console.log('关掉菜单!');
+        getData(temp);
+      } else {
+        getData('now');
+      }
 
-                _this.query('#menu').classList.add('no-show');
-              }
-            }, 500);
-          };
-        },
-        "copyText": function copyText() {
-          owo.tool.notice('复制成功!');
-        },
-        "saveBiji": function saveBiji() {
-          document.querySelector('.biji-box').style.display = 'none';
+      this.query('#menu').onmouseover = function (e) {
+        _this.data.toolHover = true;
+      };
 
-          if (!activeAnno) {
-            this.query('#menu').classList.add('no-show');
-            return;
+      this.query('#menu').onmouseout = function (e) {
+        _this.data.toolHover = false;
+        setTimeout(function () {
+          if (!_this.data.toolHover && !_this.data.huaxianIng) {
+            console.log('关掉菜单!');
+
+            _this.query('#menu').classList.add('no-show');
+          }
+        }, 500);
+      };
+    },
+    "copyText": function copyText() {
+      owo.tool.notice('复制成功!');
+    },
+    "saveBiji": function saveBiji() {
+      document.querySelector('.biji-box').style.display = 'none';
+
+      if (!activeAnno) {
+        this.query('#menu').classList.add('no-show');
+        return;
+      }
+
+      activeAnno.setAttribute('data-val', document.querySelector('.biji-box textarea').value);
+      document.querySelector('.biji-box textarea').value = '';
+      owo.tool.toast('笔记修改成功!');
+    },
+    "huaxian": function huaxian() {
+      var _this2 = this;
+
+      console.log('划线');
+      biaoji('underline');
+      setTimeout(function () {
+        _this2.save();
+      }, 0);
+    },
+    "bgline": function bgline() {
+      biaoji('bgline');
+      this.save();
+    },
+    "biji": function biji() {
+      layer.prompt({
+        title: '请输入笔记内容!',
+        formType: 2
+      }, function (word, index) {
+        var _this3 = this;
+
+        layer.close(index);
+        startKey = parseInt(startEl.getAttribute("key"));
+        endKey = parseInt(endEl.getAttribute("key"));
+        var fanxiang = false;
+
+        if (endKey < startKey) {
+          var temp = endKey;
+          endKey = startKey;
+          startKey = temp;
+          fanxiang = true;
+        } // console.log(endKey, startKey)
+
+
+        biaoji('memo');
+        setTimeout(function () {
+          console.log(endKey, startKey);
+
+          if (!fanxiang) {
+            endEl.innerHTML = endEl.innerHTML + ("<i class=\"anno\" data-val=\"" + escape(word) + "\">\u6CE8</i></span>");
+          } else {
+            startEl.innerHTML = startEl.innerHTML + ("<i class=\"anno\" data-val=\"" + escape(word) + "\">\u6CE8</i></span>");
           }
 
-          activeAnno.setAttribute('data-val', document.querySelector('.biji-box textarea').value);
-          document.querySelector('.biji-box textarea').value = '';
-          owo.tool.toast('笔记修改成功!');
-        },
-        "huaxian": function huaxian() {
-          var _this2 = this;
-
-          console.log('划线');
-          biaoji('underline');
-          setTimeout(function() {
-            _this2.save();
+          setTimeout(function () {
+            _this3.save();
           }, 0);
-        },
-        "bgline": function bgline() {
-          biaoji('bgline');
-          this.save();
-        },
-        "biji": function biji() {
-          layer.prompt({
-            title: '请输入笔记内容!',
-            formType: 2
-          }, function(word, index) {
-            var _this3 = this;
+        }, 100);
+      });
+    },
+    "checkDom": function checkDom(target) {
+      var _this4 = this;
 
-            layer.close(index);
-            startKey = parseInt(startEl.getAttribute("key"));
-            endKey = parseInt(endEl.getAttribute("key"));
-            var fanxiang = false;
+      this.data.clickIng = true;
+      console.log('选择元素');
 
-            if (endKey < startKey) {
-              var temp = endKey;
-              endKey = startKey;
-              startKey = temp;
-              fanxiang = true;
-            } // console.log(endKey, startKey)
+      if (chackActive('bgline')) {
+        document.querySelector('#menu .bgline').style.display = 'none';
+        document.querySelector('#menu .qxbj').style.display = 'block';
+      } else {
+        document.querySelector('#menu .bgline').style.display = 'block';
+        document.querySelector('#menu .qxbj').style.display = 'none';
+      }
+
+      if (chackActive('underline')) {
+        document.querySelector('#menu .huaxian').style.display = 'none';
+        document.querySelector('#menu .qxhx').style.display = 'block';
+      } else {
+        document.querySelector('#menu .huaxian').style.display = 'block';
+        document.querySelector('#menu .qxhx').style.display = 'none';
+      }
+
+      if (chackActive('memo')) {
+        document.querySelector('#menu .biji').style.display = 'none';
+        document.querySelector('#menu .qxbiji').style.display = 'block';
+      } else {
+        document.querySelector('#menu .biji').style.display = 'block';
+        document.querySelector('#menu .qxbiji').style.display = 'none';
+      }
+
+      setTimeout(function () {
+        _this4.data.clickIng = false;
+      }, 100);
+    },
+    "initText": function initText() {
+      var _this5 = this;
+
+      console.log('重新生成!');
+
+      var _loop = function _loop(index) {
+        var element = _this5.queryAll('.article .dubao')[index];
+
+        var menu = document.querySelector('#menu');
+
+        element.onclick = function (e) {
+          console.log(e);
+          _this5.data.toolHover = true;
+          _this5.data.activeEl = e.target;
+
+          _this5.checkDom(e.target);
+
+          menu.style.left = e.layerX - 100 + 'px';
+          menu.style.bottom = document.body.clientHeight - e.pageY - 10 - 50 + 'px';
+
+          _this5.query('#menu').classList.remove('no-show');
+        }; // element.onmouseout = (e) => {
+        //   this.data.toolHover = false
+        //   setTimeout(() => {
+        //     if (!this.data.toolHover && !this.data.huaxianIng) {
+        //       console.log('关掉菜单2!')
+        //       this.query('#menu').classList.add('no-show')
+        //     }
+        //   }, 500);
+        // }
+
+      };
+
+      for (var index = 0; index < this.queryAll('.article .dubao').length; index++) {
+        _loop(index);
+      }
+
+      if (document.querySelector('#go-top')) {
+        document.querySelector('#go-top').onclick = function () {
+          document.body.scrollTop = document.documentElement.scrollTop = 0;
+        };
+      } // console.log(document.querySelector('.right.nav'))
 
 
-            biaoji('memo');
-            setTimeout(function() {
-              console.log(endKey, startKey);
+      if (document.querySelector('.right.nav')) {
+        document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wodeStart()">我的空间</li><li id="my" onclick="jieduList()">解读</li><li id="tuichu" onclick="loginout()">退出</li>';
+      } // 生成日历
 
-              if (!fanxiang) {
-                endEl.innerHTML = endEl.innerHTML + ("<i class=\"anno\" data-val=\"" + escape(word) + "\">\u6CE8</i></span>");
+
+      document.querySelector('.date.left').innerHTML = "<input type=\"text\"  value=\"\" id=\"demo-1\">";
+      setTimeout(function () {
+        var dateDomList = document.querySelectorAll('.hide');
+        $('#demo-1').fdatepicker({
+          format: '选择日期 yyyy-mm-dd',
+          pickTime: false,
+          maxDate: "+1D"
+        }).on('changeDate', function (ev) {
+          window.nowDay = dateFormat("YYYYmmdd", ev.date);
+          console.log(window.nowDay); // console.log(dateFormat("YYYY_mm_dd_1-01.htm", ev.date))
+
+          window.location.href = "#home" + dateFormat("_YYYY_mm_dd_01.htm", ev.date);
+        });
+        document.querySelector('#demo-1').value = "\u9009\u62E9\u65E5\u671F " + dateDomList[0].innerText + "-" + dateDomList[1].innerText + "-" + dateDomList[2].innerText;
+        changeP();
+        $.ajax({
+          "url": "http://172.31.36.223:5000/file?name=" + nowDay,
+          "method": "GET",
+          "timeout": 0
+        }).done(function (response) {
+          var res = JSON.parse(response);
+
+          if (window.location.href.indexOf('home') >= 0) {
+            if (res.data.length !== 0) {
+              document.querySelector('.date-box .right').classList.add('active');
+            }
+          }
+        });
+      }, 0);
+    },
+    "initPaper": function initPaper() {
+      var _this6 = this;
+
+      if (document.querySelector('.article-box .article')) {
+        // document.querySelector('.article-box .article').onmousedown = (e) => {
+        //   console.log(e.target)
+        //   startEl = e.target
+        // }
+        document.querySelector('.article-box .article').onmouseup = function (e) {
+          setTimeout(function () {
+            if (_this6.data.clickIng) _this6.data.huaxianIng = true;
+            var selectText = etSelectedText();
+
+            if (selectText.length > 0 && window.getSelection().baseNode) {
+              startEl = window.getSelection().baseNode.parentElement;
+              endEl = window.getSelection().extentNode.parentElement;
+              _this6.query('#menu').style.left = e.pageX - 300 + 'px';
+
+              _this6.checkDom();
+
+              if (e.y / window.innerHeight > 0.8) {
+                _this6.query('#menu').style.bottom = document.body.clientHeight - e.pageY + 30 + 'px';
               } else {
-                startEl.innerHTML = startEl.innerHTML + ("<i class=\"anno\" data-val=\"" + escape(word) + "\">\u6CE8</i></span>");
+                _this6.query('#menu').style.bottom = document.body.clientHeight - e.pageY - 60 + 'px';
               }
 
-              setTimeout(function() {
-                _this3.save();
-              }, 0);
-            }, 100);
-          });
-        },
-        "checkDom": function checkDom(target) {
-          var _this4 = this;
+              _this6.query('#menu').classList.remove('no-show');
 
-          this.data.clickIng = true;
-          console.log('选择元素');
+              setTimeout(function () {
+                if (!_this6.data.toolHover && !_this6.data.huaxianIng) {
+                  _this6.data.huaxianIng = false;
+                  console.log('关掉菜单3!');
 
-          if (chackActive('bgline')) {
-            document.querySelector('#menu .bgline').style.display = 'none';
-            document.querySelector('#menu .qxbj').style.display = 'block';
-          } else {
-            document.querySelector('#menu .bgline').style.display = 'block';
-            document.querySelector('#menu .qxbj').style.display = 'none';
-          }
-
-          if (chackActive('underline')) {
-            document.querySelector('#menu .huaxian').style.display = 'none';
-            document.querySelector('#menu .qxhx').style.display = 'block';
-          } else {
-            document.querySelector('#menu .huaxian').style.display = 'block';
-            document.querySelector('#menu .qxhx').style.display = 'none';
-          }
-
-          if (chackActive('memo')) {
-            document.querySelector('#menu .biji').style.display = 'none';
-            document.querySelector('#menu .qxbiji').style.display = 'block';
-          } else {
-            document.querySelector('#menu .biji').style.display = 'block';
-            document.querySelector('#menu .qxbiji').style.display = 'none';
-          }
-
-          setTimeout(function() {
-            _this4.data.clickIng = false;
-          }, 100);
-        },
-        "initText": function initText() {
-          var _this5 = this;
-
-          console.log('重新生成!');
-
-          var _loop = function _loop(index) {
-            var element = _this5.queryAll('.article .dubao')[index];
-
-            var menu = document.querySelector('#menu');
-
-            element.onclick = function(e) {
-              console.log(e);
-              _this5.data.toolHover = true;
-              _this5.data.activeEl = e.target;
-
-              _this5.checkDom(e.target);
-
-              menu.style.left = e.layerX - 100 + 'px';
-              menu.style.bottom = document.body.clientHeight - e.pageY - 10 - 50 + 'px';
-
-              _this5.query('#menu').classList.remove('no-show');
-            }; // element.onmouseout = (e) => {
-            //   this.data.toolHover = false
-            //   setTimeout(() => {
-            //     if (!this.data.toolHover && !this.data.huaxianIng) {
-            //       console.log('关掉菜单2!')
-            //       this.query('#menu').classList.add('no-show')
-            //     }
-            //   }, 500);
-            // }
-
-          };
-
-          for (var index = 0; index < this.queryAll('.article .dubao').length; index++) {
-            _loop(index);
-          }
-
-          if (document.querySelector('#go-top')) {
-            document.querySelector('#go-top').onclick = function() {
-              document.body.scrollTop = document.documentElement.scrollTop = 0;
-            };
-          } // console.log(document.querySelector('.right.nav'))
-
-
-          if (document.querySelector('.right.nav')) {
-            document.querySelector('.right.nav').innerHTML = '<li id="my" onclick="wodeStart()">我的空间</li><li id="my" onclick="jieduList()">解读</li><li id="tuichu" onclick="loginout()">退出</li>';
-          } // 生成日历
-
-
-          document.querySelector('.date.left').innerHTML = "<input type=\"text\"  value=\"\" id=\"demo-1\">";
-          setTimeout(function() {
-            var dateDomList = document.querySelectorAll('.hide');
-            $('#demo-1').fdatepicker({
-              format: '选择日期 yyyy-mm-dd',
-              pickTime: false,
-              maxDate: "+1D"
-            }).on('changeDate', function(ev) {
-              window.nowDay = dateFormat("YYYYmmdd", ev.date);
-              console.log(window.nowDay); // console.log(dateFormat("YYYY_mm_dd_1-01.htm", ev.date))
-
-              window.location.href = "#home" + dateFormat("_YYYY_mm_dd_01.htm", ev.date);
-            });
-            document.querySelector('#demo-1').value = "\u9009\u62E9\u65E5\u671F " + dateDomList[0].innerText + "-" + dateDomList[1].innerText + "-" + dateDomList[2].innerText;
-            changeP();
-            $.ajax({
-              "url": "http://172.31.36.223:5000/file?name=" + nowDay,
-              "method": "GET",
-              "timeout": 0
-            }).done(function(response) {
-              var res = JSON.parse(response);
-
-              if (window.location.href.indexOf('home') >= 0) {
-                if (res.data.length !== 0) {
-                  document.querySelector('.date-box .right').classList.add('active');
-                }
-              }
-            });
-          }, 0);
-        },
-        "initPaper": function initPaper() {
-          var _this6 = this;
-
-          if (document.querySelector('.article-box .article')) {
-            // document.querySelector('.article-box .article').onmousedown = (e) => {
-            //   console.log(e.target)
-            //   startEl = e.target
-            // }
-            document.querySelector('.article-box .article').onmouseup = function(e) {
-              setTimeout(function() {
-                if (_this6.data.clickIng) _this6.data.huaxianIng = true;
-                var selectText = etSelectedText();
-
-                if (selectText.length > 0 && window.getSelection().baseNode) {
-                  startEl = window.getSelection().baseNode.parentElement;
-                  endEl = window.getSelection().extentNode.parentElement;
-                  _this6.query('#menu').style.left = e.pageX - 300 + 'px';
-
-                  _this6.checkDom();
-
-                  if (e.y / window.innerHeight > 0.8) {
-                    _this6.query('#menu').style.bottom = document.body.clientHeight - e.pageY + 30 + 'px';
-                  } else {
-                    _this6.query('#menu').style.bottom = document.body.clientHeight - e.pageY - 60 + 'px';
-                  }
-
-                  _this6.query('#menu').classList.remove('no-show');
-
-                  setTimeout(function() {
-                    if (!_this6.data.toolHover && !_this6.data.huaxianIng) {
-                      _this6.data.huaxianIng = false;
-                      console.log('关掉菜单3!');
-
-                      _this6.query('#menu').classList.add('no-show');
-                    }
-                  }, 2000);
-                } else {
                   _this6.query('#menu').classList.add('no-show');
                 }
-              }, 0);
-            };
-
-            document.querySelector('.article').onclick = function(e) {
-              if (e.target.nodeName == 'I') {
-                activeKey = e.target.parentElement.getAttribute('data-memo');
-                showZhu(e.target, activeKey);
-              }
-            };
-          }
-
-          this.initText();
-        },
-        "search": function search() {
-          window.open("https://www.baidu.com/s?wd=" + etSelectedText());
-        },
-        "langdu": function langdu() {
-          var selectText = document.querySelector('#ozoom').innerText;
-          $.ajax({
-            "url": "//154.8.196.163:5000/",
-            "method": "GET",
-            "timeout": 0
-          }).done(function(response) {
-            var audio = new Audio("//154.8.196.163:5000/" + response); //这里的路径写上mp3文件在项目中的绝对路径
-
-            audio.play(); //播放
-          });
-          this.query('#menu').classList.add('no-show');
-        },
-        "clear": function clear(classStr) {
-          startEl.classList.add(classStr);
-          startKey = parseInt(startEl.getAttribute("key"));
-          endKey = parseInt(endEl.getAttribute("key"));
-
-          if (endKey < startKey) {
-            var temp = endKey;
-            endKey = startKey;
-            startKey = temp;
-          }
-
-          console.log(startKey, endKey);
-
-          while (startKey <= endKey) {
-            document.querySelector('em[key="' + startKey++ + '"]').classList.remove(classStr);
-
-            if (classStr == 'memo') {
-              if (document.querySelector('em[key="' + startKey + '"] .anno')) {
-                document.querySelector('em[key="' + startKey + '"] .anno').outerHTML = '';
-              }
+              }, 2000);
+            } else {
+              _this6.query('#menu').classList.add('no-show');
             }
+          }, 0);
+        };
+
+        document.querySelector('.article').onclick = function (e) {
+          if (e.target.nodeName == 'I') {
+            activeKey = e.target.parentElement.getAttribute('data-memo');
+            showZhu(e.target, activeKey);
           }
+        };
+      }
 
-          document.querySelector('#menu').classList.add('no-show');
-          this.save(); // this.initText()
+      this.initText();
+    },
+    "search": function search() {
+      window.open("https://www.baidu.com/s?wd=" + etSelectedText());
+    },
+    "langdu": function langdu() {
+      var selectText = document.querySelector('#ozoom').innerText;
+      $.ajax({
+        "url": "//154.8.196.163:5000/",
+        "method": "GET",
+        "timeout": 0
+      }).done(function (response) {
+        var audio = new Audio("//154.8.196.163:5000/" + response); //这里的路径写上mp3文件在项目中的绝对路径
 
-          document.querySelector('.biji-box').style.display = 'none';
-        },
-        "clearKey": function clearKey(classStr) {
-          console.log("[data-" + classStr + "=\"" + activeKey + "\"]");
-          $("[data-" + classStr + "=\"" + activeKey + "\"]").removeClass(classStr);
-          $("[data-" + classStr + "=\"" + activeKey + "\"] .anno").remove();
-          document.querySelector('#menu').classList.add('no-show');
-          this.save(); // this.initText()
+        audio.play(); //播放
+      });
+      this.query('#menu').classList.add('no-show');
+    },
+    "clear": function clear(classStr) {
+      startEl.classList.add(classStr);
+      startKey = parseInt(startEl.getAttribute("key"));
+      endKey = parseInt(endEl.getAttribute("key"));
 
-          document.querySelector('.biji-box').style.display = 'none';
-        },
-        "tingquanwen": function tingquanwen() {
-          var selectText = document.querySelector('#ozoom').innerText;
-          var audio = new Audio("//tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=4&text=" + selectText); //这里的路径写上mp3文件在项目中的绝对路径
+      if (endKey < startKey) {
+        var temp = endKey;
+        endKey = startKey;
+        startKey = temp;
+      }
 
-          audio.play(); //播放
-        },
-        "save": function save() {
-          $.ajax({
-            "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveAll/" + userID + "/" + activePart,
-            "method": "POST",
-            "timeout": 0,
-            "data": document.querySelector('.home').innerHTML,
-            "success": function success(response) {
-              owo.tool.toast('数据保存成功!');
-            }
-          });
+      console.log(startKey, endKey);
+
+      while (startKey <= endKey) {
+        document.querySelector('em[key="' + startKey++ + '"]').classList.remove(classStr);
+
+        if (classStr == 'memo') {
+          if (document.querySelector('em[key="' + startKey + '"] .anno')) {
+            document.querySelector('em[key="' + startKey + '"] .anno').outerHTML = '';
+          }
         }
       }
-    };
-  </script>
 
-  <script src="https://cunchu.site/owo/script/jquery-1.11.1.min.js" type="text/javascript" charset="UTF-8"></script>
-  <script src="./static/js/main.js" type="text/javascript" charset="UTF-8"></script>
-  <script src="http://unpkg.com/layui@2.6.5/dist/layui.js" type="text/javascript" charset="UTF-8"></script>
-  <script src="./static/js/foundation-datepicker.js" type="text/javascript" charset="UTF-8"></script>
-  <script src="./static/js/foundation-datepicker.zh-CN.js" type="text/javascript" charset="UTF-8"></script>
-  <script src="./static/js/toast.js" type="text/javascript" charset="UTF-8"></script>
+      document.querySelector('#menu').classList.add('no-show');
+      this.save(); // this.initText()
 
-  <script src="./static/js/notice.js" type="text/javascript" charset="UTF-8"></script>
-</body>
+      document.querySelector('.biji-box').style.display = 'none';
+    },
+    "clearKey": function clearKey(classStr) {
+      console.log("[data-" + classStr + "=\"" + activeKey + "\"]");
+      $("[data-" + classStr + "=\"" + activeKey + "\"]").removeClass(classStr);
+      $("[data-" + classStr + "=\"" + activeKey + "\"] .anno").remove();
+      document.querySelector('#menu').classList.add('no-show');
+      this.save(); // this.initText()
 
+      document.querySelector('.biji-box').style.display = 'none';
+    },
+    "tingquanwen": function tingquanwen() {
+      var selectText = document.querySelector('#ozoom').innerText;
+      var audio = new Audio("//tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=4&text=" + selectText); //这里的路径写上mp3文件在项目中的绝对路径
+
+      audio.play(); //播放
+    },
+    "save": function save() {
+      $.ajax({
+        "url": "//service-b39yklt6-1256763111.gz.apigw.tencentcs.com/release/saveAll/" + userID + "/" + activePart,
+        "method": "POST",
+        "timeout": 0,
+        "data": document.querySelector('.home').innerHTML,
+        "success": function success(response) {
+          owo.tool.toast('数据保存成功!');
+        }
+      });
+    }
+  }
+};
+</script>
+
+    <script src="https://cunchu.site/owo/script/jquery-1.11.1.min.js" type="text/javascript"  charset="UTF-8"></script>
+    <script src="./static/js/main.js" type="text/javascript"  charset="UTF-8"></script>
+    <script src="http://unpkg.com/layui@2.6.5/dist/layui.js" type="text/javascript"  charset="UTF-8"></script>
+    <script src="./static/js/foundation-datepicker.js" type="text/javascript"  charset="UTF-8"></script>
+    <script src="./static/js/foundation-datepicker.zh-CN.js" type="text/javascript"  charset="UTF-8"></script>
+    <script src="./static/js/toast.js" type="text/javascript"  charset="UTF-8"></script>
+
+    <script src="./static/js/notice.js" type="text/javascript"  charset="UTF-8"></script>
+  </body>
 </html>

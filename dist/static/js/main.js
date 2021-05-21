@@ -263,27 +263,7 @@ if ((window.innerWidth / window.innerHeight) < 1) {
 
 function changeP () {
   var key = 0
-  var allP = document.querySelectorAll('.article p')
-  console.log(allP.length)
-  for (var index = 0; index < allP.length; index++) {
-    var el = allP[index];
-    if ($(el).find('em').length < 10) {
-      // alert(el.innerText)
-      el.classList.add('dubao')
-      var newHtml = ''
-      for (var index2 = 0; index2 < el.innerText.split('').length; index2++) {
-        var element = el.innerText.split('')[index2];
-        newHtml += '<em class="" key="' + key++ + '">' + element + '</em>' 
-      }
-      el.innerHTML = newHtml
-    } else {
-      for (var index2 = 0; index2 < $(el).find('em').length; index2++) {
-        var element = $(el).find('em')[index2];
-        element.setAttribute('key', key++)
-      }
-    }
-  }
-  var allh1 = document.querySelectorAll('.article h1')
+  var allh1 = document.querySelectorAll('.article p,.article h1,.article h2,.article h3')
   for (var index = 0; index < allh1.length; index++) {
     var el = allh1[index];
     if (!$(el).find('em')[0]) {
@@ -302,43 +282,6 @@ function changeP () {
     }
   }
 
-  var allh1 = document.querySelectorAll('.article h2')
-  for (var index = 0; index < allh1.length; index++) {
-    var el = allh1[index];
-    if (!$(el).find('em')[0]) {
-      el.classList.add('dubao')
-      var newHtml = ''
-      for (var index2 = 0; index2 < el.innerText.split('').length; index2++) {
-        var element = el.innerText.split('')[index2];
-        newHtml += '<em class="" key="' + key++ + '">' + element + '</em>' 
-      }
-      el.innerHTML = newHtml
-    } else {
-      for (var index2 = 0; index2 < $(el).find('em').length; index2++) {
-        var element = $(el).find('em')[index2];
-        element.setAttribute('key', key++)
-      }
-    }
-  }
-
-  var allh1 = document.querySelectorAll('.article h3')
-  for (var index = 0; index < allh1.length; index++) {
-    var el = allh1[index];
-    if (!$(el).find('em')[0]) {
-      el.classList.add('dubao')
-      var newHtml = ''
-      for (var index2 = 0; index2 < el.innerText.split('').length; index2++) {
-        var element = el.innerText.split('')[index2];
-        newHtml += '<em class="" key="' + key++ + '">' + element + '</em>' 
-      }
-      el.innerHTML = newHtml
-    } else {
-      for (var index2 = 0; index2 < $(el).find('em').length; index2++) {
-        var element = $(el).find('em')[index2];
-        element.setAttribute('key', key++)
-      }
-    }
-  }
 }
 
 var startEl = null
@@ -469,6 +412,7 @@ function loginout () {
     location.reload();
   });
 }
+
 
 
 function jieduList () {
